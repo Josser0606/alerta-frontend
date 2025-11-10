@@ -12,7 +12,7 @@ function ProximosCumpleanos() {
         const fetchProximos = async () => {
             try {
                 // ¡Llamamos a la NUEVA URL!
-                const respuesta = await fetch('http://localhost:3001/api/cumpleaneros/proximos');
+                const respuesta = await fetch('httpssa://alerta-backend-57zs.onrender.com/api/cumpleaneros/proximos');
                 
                 if (!respuesta.ok) {
                     throw new Error('Error al obtener los datos de la API');
