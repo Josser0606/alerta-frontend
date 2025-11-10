@@ -20,7 +20,7 @@ function AlertasCumpleanos() {
         const fetchCumpleaneros = async () => {
             try {
                 // ¡IMPORTANTE! Esta es la URL de la API que creamos
-                const respuesta = await fetch('httpsa://alerta-backend-57zs.onrender.com/api/cumpleaneros/hoy');
+                const respuesta = await fetch('https://alerta-backend-57zs.onrender.com/api/cumpleaneros/hoy');
                 
                 if (!respuesta.ok) {
                     // Si el servidor (backend) nos dio un error
