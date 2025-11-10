@@ -1,0 +1,129 @@
+/* ------------------------------- */
+/* ESTILOS GLOBALES Y CONTENEDOR */
+/* ------------------------------- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f0f2f5; /* Un gris claro de fondo */
+  color: #333;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  /* Esto reemplaza el header por defecto de React */
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #282c34;
+  padding: 20px;
+}
+
+h1 {
+  color: #20232a;
+  margin-bottom: 2rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  width: 60%;
+  margin: 2rem 0;
+}
+
+/* ------------------------------- */
+/* ESTILOS DE NUESTRAS TARJETAS */
+/* ------------------------------- */
+
+/* Esta es la "caja" base para todas las alertas */
+.alerta-card {
+  background: #ffffff;
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave */
+  width: 450px;
+  max-width: 90%;
+  margin: 15px 0;
+  padding: 24px;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+}
+
+.alerta-card:hover {
+  transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Títulos dentro de las tarjetas */
+.alerta-card h2, .alerta-card h3 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* ------------------------------- */
+/* ESTILOS ESPECÍFICOS */
+/* ------------------------------- */
+
+/* Tarjeta de HOY */
+.alerta-card.hoy {
+  border-left: 6px solid #d9534f; /* Borde rojo de alerta */
+}
+.alerta-card.hoy h2 {
+  color: #d9534f;
+}
+
+/* Tarjeta de PRÓXIMOS */
+.alerta-card.proximos {
+  border-left: 6px solid #0275d8; /* Borde azul de información */
+}
+.alerta-card.proximos h3 {
+  color: #0275d8;
+}
+
+/* Cuando no hay cumpleaños */
+.alerta-card.empty {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+  border-left: 6px solid #ccc;
+}
+
+/* ------------------------------- */
+/* ESTILOS DE LAS LISTAS */
+/* ------------------------------- */
+.alerta-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+}
+
+.alerta-card li {
+  padding: 12px 5px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alerta-card li:last-child {
+  border-bottom: none;
+}
+
+/* Para la lista de próximos cumpleaños */
+.alerta-card.proximos .nombre {
+  font-weight: 500;
+  color: #333;
+}
+.alerta-card.proximos .fecha {
+  font-size: 0.9em;
+  color: #555;
+  background-color: #f5f5f5;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
