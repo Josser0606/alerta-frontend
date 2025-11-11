@@ -324,3 +324,45 @@ h1 {
   padding: 3px 6px;
   border-radius: 4px;
 }
+
+/* ------------------------------- */
+/* ESTILOS RESPONSIVE (MÓVIL) */
+/* ------------------------------- */
+
+/* Se activa en pantallas de 768px o menos */
+@media (max-width: 768px) {
+
+  /* --- Paso 2 y 3 --- */
+  /* 1. Hacemos que el header permita "envolver" los items */
+  .main-header {
+    flex-wrap: wrap;     /* Permite que los items bajen */
+    padding: 10px 15px; 
+  }
+
+  /* --- Paso 2 --- */
+  /* 2. El logo y la campana se quedan arriba */
+  .logo-area {
+    flex-grow: 1; /* El logo ocupa el espacio disponible */
+  }
+  .notification-area {
+    flex-grow: 0; /* La campana se queda pegada a la derecha */
+  }
+
+  /* --- Paso 3 --- */
+  /* 3. Enviamos la barra de búsqueda abajo */
+  .search-area {
+    order: 3;            /* La manda al final (debajo del logo/campana) */
+    flex-basis: 100%;  /* Ocupa el 100% del ancho */
+    margin-top: 10px;    /* Le da un espacio de la fila de arriba */
+  }
+
+  /* 4. Hacemos que la búsqueda use todo el ancho */
+  .search-widget-container {
+    max-width: 100%; /* Elimina el max-width de 450px en móviles */
+  }
+
+  /* 5. (Opcional) Ajusta las tarjetas a ancho completo */
+  .alerta-card {
+    width: 100%; 
+  }
+}
