@@ -1,17 +1,17 @@
 // En tu archivo App.js
 import React, { useState } from 'react';
 
-// Componentes de tarjetas existentes
+// Componentes
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
-
-// ---- NUEVOS COMPONENTES ----
-import Header from './Header'; // La barra superior
-import SearchBar from './SearchBar'; // El campo de búsqueda
-import NotificationPanel from './NotificationPanel'; // El panel desplegable
-import SearchResults from './SearchResults'; // La tarjeta de resultados
+import Header from './Header';
+import SearchBar from './SearchBar';
+import NotificationPanel from './NotificationPanel';
+// Ya NO importamos SearchResults aquí, Header se encarga.
 
 import './App.css';
+// --- 1. IMPORTAR LA CONFIGURACIÓN DE LA API ---
+import API_BASE_URL from './apiConfig';
 
 function App() {
 
@@ -20,26 +20,26 @@ function App() {
   const togglePanel = () => setPanelAbierto(!panelAbierto);
 
   // ---- ESTADO PARA LA BÚSQUEDA ----
-  const [resultados, setResultados] = useState([]); // Guarda los resultados
-  const [buscando, setBuscando] = useState(false); // Para mostrar "Cargando..."
-  const [haBuscado, setHaBuscado] = useState(false); // Para saber si mostrar la tarjeta de resultados
+  const [resultados, setResultados] = useState([]);
+  const [buscando, setBuscando] = useState(false);
+  const [haBuscado, setHaBuscado] = useState(false);
   
 
   // --- Función que se ejecuta al buscar ---
   const handleSearch = async (query) => {
-    setHaBuscado(true); // Marcamos que el usuario ya buscó algo
-    setBuscando(true); // Mostramos el "cargando"
+    setHaBuscado(true); 
+    setBuscando(true); 
 
     if (!query) {
       setResultados([]);
       setBuscando(false);
-      setHaBuscado(false);
+      setHaBuscado(false); // Oculta el popover si la búsqueda está vacía
       return;
     }
 
     try {
-      // Usamos encodeURIComponent para asegurar que la URL sea válida
-      const response = await fetch(`https://alerta-backend-57zs.onrender.com/api/cumpleaneros/buscar?nombre=${encodeURIComponent(query)}`);
+      // --- 2. USA EL API_BASE_URL ---
+      const response = await fetch(`${API_BASE_URL}/cumpleaneros/buscar?nombre=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
@@ -50,19 +50,23 @@ function App() {
 
     } catch (error) {
       console.error("Error al buscar:", error);
-      setResultados([]); // En caso de error, vaciamos resultados
+      setResultados([]); 
     } finally {
-      setBuscando(false); // Dejamos de cargar
+      setBuscando(false); 
     }
   };
 
 
   return (
-    // Ya no necesitamos el <React.Fragment> (<>)
     <div className="App">
       
-      {/* 1. La nueva barra de Header. Le pasamos el SearchBar COMO HIJO */}
-      <Header onNotificationClick={togglePanel}>
+      {/* 3. PASAR LOS DATOS DE BÚSQUEDA AL HEADER */}
+      <Header 
+        onNotificationClick={togglePanel}
+        searchResults={resultados}
+        searchLoading={buscando}
+        searchHasBeenRun={haBuscado}
+      >
         <SearchBar onSearch={handleSearch} />
       </Header>
 
@@ -72,19 +76,12 @@ function App() {
       {/* 3. El contenido principal de la aplicación */}
       <main className="main-content">
         
-        {/* El h1 ahora está aquí, no en el header */}
         <h1>Tablero de Cumpleaños</h1>
 
         <div className="cards-container">
           
-          {/* 4. Tarjeta de resultados (se muestra condicionalmente) */}
-          {haBuscado && (
-            <SearchResults 
-              resultados={resultados} 
-              cargando={buscando} 
-            />
-          )}
-
+          {/* 4. ELIMINAMOS SearchResults DE AQUÍ */}
+          
           {/* 5. Tus tarjetas existentes */}
           <AlertasCumpleanos />
           <ProximosCumpleanos />
