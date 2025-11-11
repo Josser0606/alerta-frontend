@@ -6,18 +6,25 @@ import './App.css';
 
 function App() {
   return (
+    <>
+    <img src="/logo_saciar.png" alt="Logo de la aplicación" className="logo-standalone" /> 
     <div className="App">
       <header className="App-header">
-        <h1>Mi Sistema de Alertas</h1>
+        <h1>Sistema de Alertas</h1>
         
-        {/* Aquí pones tu componente de alertas */}
-        <AlertasCumpleanos />
+        {/* ▼ ESTE ES EL NUEVO CONTENEDOR QUE AÑADIMOS ▼ */}
+        <div className="cards-container">
 
-        {/* 2. Componente para PRÓXIMOS (opcional) */}
-        <ProximosCumpleanos />
+          {/* Tus dos componentes van DENTRO del nuevo contenedor */}
+          <AlertasCumpleanos />
+          <ProximosCumpleanos />
+
+        </div>
+        {/* ▲ FIN DEL NUEVO CONTENEDOR ▲ */}
 
       </header>
     </div>
+    </>
   );
 }
 

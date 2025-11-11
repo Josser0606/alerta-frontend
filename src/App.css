@@ -11,54 +11,70 @@ body {
   text-align: center;
 }
 
+.logo-standalone {
+    width: 180px; 
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 0px; 
+}
+
 .App-header {
-  /* Esto reemplaza el header por defecto de React */
   background-color: #f0f2f5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: #282c34;
-  padding: 20px;
+  justify-content: flex-start; /* REFINADO: Alinea el contenido arriba */
+  padding: 20px 0;
 }
 
 h1 {
-  color: #20232a;
-  margin-bottom: 2rem;
+  color: #eff1f3;
+  background-color: #4ea526;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 3rem;
 }
 
-hr {
-  border: 0;
-  border-top: 1px solid #ddd;
-  width: 60%;
-  margin: 2rem 0;
+/* ------------------------------- */
+/* CONTENEDOR DE TARJETAS */
+/* ------------------------------- */
+.cards-container {
+  display: flex;
+  flex-direction: row;  /* Pone las tarjetas en horizontal */
+  flex-wrap: wrap;       /* Permite que bajen en pantallas pequeñas (móviles) */
+  justify-content: center; /* Centra las tarjetas horizontalmente */
+  align-items: flex-start; /* Las alinea arriba (si una es más alta) */
+  gap: 20px;             /* Espacio limpio entre tarjetas */
+  width: 95%;
+  max-width: 1400px;
 }
+
 
 /* ------------------------------- */
 /* ESTILOS DE NUESTRAS TARJETAS */
 /* ------------------------------- */
-
-/* Esta es la "caja" base para todas las alertas */
 .alerta-card {
   background: #ffffff;
-  border-radius: 8px; /* Bordes redondeados */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave */
+  border-radius: 8px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   width: 450px;
   max-width: 90%;
-  margin: 15px 0;
+  margin: 0; /* LIMPIEZA: El 'gap' del contenedor ahora maneja el espacio */
   padding: 24px;
   text-align: left;
   transition: all 0.2s ease-in-out;
 }
 
 .alerta-card:hover {
-  transform: translateY(-2px); /* Pequeño efecto al pasar el mouse */
+  transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Títulos dentro de las tarjetas */
 .alerta-card h2, .alerta-card h3 {
   margin-top: 0;
   border-bottom: 2px solid #eee;
@@ -71,22 +87,23 @@ hr {
 
 /* Tarjeta de HOY */
 .alerta-card.hoy {
-  border-left: 6px solid #d9534f; /* Borde rojo de alerta */
+  border-left: 6px solid #4ea526; /* Borde rojo de alerta */
 }
 .alerta-card.hoy h2 {
-  color: #d9534f;
+  color: #4ea526;
 }
 
 /* Tarjeta de PRÓXIMOS */
 .alerta-card.proximos {
-  border-left: 6px solid #0275d8; /* Borde azul de información */
+  border-left: 6px solid #bbce17; /* Borde azul de información */
 }
 .alerta-card.proximos h3 {
-  color: #0275d8;
+  color: #bbce17;
 }
 
-/* Cuando no hay cumpleaños */
-.alerta-card.empty {
+/* Tarjeta de "Vacío" o "Cargando" */
+.alerta-card.empty,
+.alerta-card.cargando { /* AÑADIDO: Estilo para "Cargando..." */
   text-align: center;
   font-style: italic;
   color: #777;
