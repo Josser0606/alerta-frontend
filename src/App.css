@@ -13,7 +13,7 @@ body {
 /* ------------------------------- */
 .main-header {
   display: flex;
-  justify-content: space-between; /* Espacio entre los 3 elementos */
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #ffffff;
@@ -23,10 +23,9 @@ body {
   z-index: 1000;
 }
 
-/* --- Nuevas 3 columnas del Header --- */
 /* 1. Logo (Izquierda) */
 .logo-area {
-  flex: 1; /* Ocupa 1 parte */
+  flex: 1; 
   display: flex;
   align-items: center;
   gap: 15px;
@@ -41,22 +40,20 @@ body {
   color: #333;
 }
 
-/* 2. Búsqueda (Centro) */
+/* 2. Búsqueda (Centro) - MODIFICADO */
 .search-area {
-  flex: 2; /* Ocupa 2 partes (más grande) */
+  flex: 2; 
   display: flex;
   justify-content: center;
-  position: relative; /* CLAVE: para el panel flotante */
+  /* position: relative; Ya no es necesario aquí */
 }
 
 /* 3. Notificaciones (Derecha) */
 .notification-area {
-  flex: 1; /* Ocupa 1 parte */
+  flex: 1; 
   display: flex;
-  justify-content: flex-end; /* Alinea la campana a la derecha */
+  justify-content: flex-end;
 }
-/* --- Fin 3 columnas --- */
-
 
 .notification-icon {
   font-size: 1.5em;
@@ -69,12 +66,22 @@ body {
 }
 
 /* ------------------------------- */
+/* NUEVO: CONTENEDOR DEL WIDGET DE BÚSQUEDA */
+/* ------------------------------- */
+.search-widget-container {
+  position: relative; /* CLAVE: El popover se alinea con este */
+  width: 100%;
+  max-width: 450px; /* CLAVE: El ancho máximo del widget */
+}
+
+
+/* ------------------------------- */
 /* BARRA DE BÚSQUEDA (RESTYLING) */
 /* ------------------------------- */
 .search-bar {
   display: flex;
-  width: 100%;
-  max-width: 450px; /* Ancho máximo de la barra */
+  width: 100%; /* Ocupa el 100% del search-widget-container */
+  /* max-width: 450px; Ya no se necesita, lo maneja el padre */
 }
 
 .search-input {
@@ -85,25 +92,23 @@ body {
   font-size: 0.9em;
   width: 100%;
 }
-/* --- CAMBIO DE COLOR --- */
 .search-input:focus {
   outline: none;
-  border-color: #4ea526; /* Verde al hacer foco */
-  box-shadow: 0 0 0 1px #4ea526; /* Sombra sutil */
+  border-color: #4ea526; 
+  box-shadow: 0 0 0 1px #4ea526;
 }
 
-/* --- CAMBIO DE COLOR --- */
 .search-button {
   padding: 8px 12px;
-  border: 1px solid #4ea526; /* Borde Verde */
-  background-color: #4ea526; /* Fondo Verde */
+  border: 1px solid #4ea526; 
+  background-color: #4ea526; 
   color: white;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
   font-size: 0.9em;
 }
 .search-button:hover {
-  background-color: #3e8e1e; /* Verde oscuro */
+  background-color: #3e8e1e;
   border-color: #3e8e1e;
 }
 
@@ -151,19 +156,19 @@ body {
 }
 
 /* ------------------------------- */
-/* NUEVO: PANEL FLOTANTE DE BÚSQUEDA */
+/* PANEL FLOTANTE DE BÚSQUEDA (MODIFICADO) */
 /* ------------------------------- */
 .search-results-popover {
   position: absolute;
-  top: 100%; /* Justo debajo del contenedor (.search-area) */
+  top: 100%; /* Justo debajo del search-widget-container */
   left: 0;
-  right: 0;
+  width: 100%; /* CLAVE: Ocupa el 100% del search-widget-container */
   background: white;
   border: 1px solid #ddd;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 0 0 8px 8px;
-  z-index: 2000; /* Por encima de todo */
-  margin-top: 2px; /* Pequeño espacio */
+  z-index: 2000; 
+  margin-top: 2px;
   max-height: 400px;
   overflow-y: auto;
 }
@@ -174,7 +179,6 @@ body {
   margin: 0;
 }
 
-/* Estilo para los items de resultado */
 .search-results-popover .search-result-item {
   padding: 12px 16px;
   border-bottom: 1px solid #f0f0f0;
@@ -189,7 +193,6 @@ body {
   background-color: #f9f9f9;
 }
 
-/* Estilo para "Cargando..." o "No encontrado" */
 .search-results-popover .search-info-item {
   padding: 16px;
   text-align: center;
@@ -274,9 +277,6 @@ h1 {
 .alerta-card.proximos h3 {
   color: #0275d8;
 }
-
-/* YA NO SE USA LA TARJETA DE BÚSQUEDA */
-/* .alerta-card.search { ... } */
 
 /* Tarjeta de "Vacío" o "Cargando" */
 .alerta-card.empty,

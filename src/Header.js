@@ -1,39 +1,65 @@
 // frontend/src/Header.js
-import React from 'react';
-import SearchResults from './SearchResults'; // Importamos los resultados aquí
+import React, { useRef, useEffect } from 'react'; // Importamos hooks
+import SearchResults from './SearchResults';
 import './App.css';
 
-// Recibe los nuevos props de búsqueda desde App.js
 function Header({ 
   onNotificationClick, 
   children, 
   searchResults, 
   searchLoading, 
-  searchHasBeenRun 
+  searchHasBeenRun,
+  onCloseSearch // <-- Recibimos la nueva prop
 }) {
+  
+  // --- 1. LÓGICA PARA CERRAR AL CLICAR FUERA ---
+  const searchAreaRef = useRef(null); // Ref para el contenedor de búsqueda
+
+  useEffect(() => {
+    // Función que se ejecuta en CUALQUIER clic del documento
+    function handleClickOutside(event) {
+      // Si el panel está abierto (searchHasBeenRun) Y
+      // si el clic NO fue dentro del contenedor (searchAreaRef.current)
+      if (searchHasBeenRun && searchAreaRef.current && !searchAreaRef.current.contains(event.target)) {
+         onCloseSearch(); // Llamamos a la función del padre (App.js)
+      }
+    }
+    // Añadimos el listener
+    document.addEventListener("mousedown", handleClickOutside);
+    // Limpiamos el listener cuando el componente se desmonta
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchHasBeenRun, onCloseSearch]); // Depende de estas props
+  // --- FIN DE LA LÓGICA ---
+
+
   return (
     <header className="main-header">
       
-      {/* 1. Área del Logo (Izquierda) */}
       <div className="logo-area">
         <img src="/logo_saciar.png" alt="Logo Saciar" className="header-logo" />
         <span className="header-title">Sistema de Alertas</span>
       </div>
 
-      {/* 2. Área de Búsqueda (Centro) - con posición relativa */}
-      <div className="search-area">
-        {children} {/* Aquí se renderiza <SearchBar /> */}
-        
-        {/* Aquí renderizamos el panel flotante de resultados */}
-        {searchHasBeenRun && (
-          <SearchResults 
-            resultados={searchResults} 
-            cargando={searchLoading} 
-          />
-        )}
+      {/* 2. ÁREA DE BÚSQUEDA (CON REF) ---
+          Le pasamos el ref 'searchAreaRef' a este div */}
+      <div className="search-area" ref={searchAreaRef}>
+        {/* 3. NUEVO CONTENEDOR PARA EL ANCHO 
+            Este div soluciona el problema del ancho (Problema #1) */}
+        <div className="search-widget-container">
+          {children} {/* <SearchBar /> */}
+          
+          {/* El popover de resultados ahora está dentro del contenedor con el ancho correcto */}
+          {searchHasBeenRun && (
+            <SearchResults 
+              resultados={searchResults} 
+              cargando={searchLoading} 
+            />
+          )}
+        </div>
       </div>
 
-      {/* 3. Área de Notificaciones (Derecha) */}
       <div className="notification-area">
         <span 
           className="notification-icon" 
