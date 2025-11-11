@@ -1,73 +1,190 @@
 /* ------------------------------- */
-/* ESTILOS GLOBALES Y CONTENEDOR */
+/* ESTILOS GLOBALES */
 /* ------------------------------- */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f0f2f5; /* Un gris claro de fondo */
+  background-color: #f0f2f5; 
+  color: #333;
+  margin: 0; /* Reseteo global */
+}
+
+/* ------------------------------- */
+/* NUEVA BARRA DE HEADER */
+/* ------------------------------- */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  
+  /* --- Posicionamiento Fijo --- */
+  position: sticky; /* Se queda pegada arriba */
+  top: 0;
+  z-index: 1000; /* Se asegura de estar sobre todo */
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo {
+  height: 40px; /* Logo más pequeño para la barra */
+  width: auto;
+}
+
+.header-title {
+  font-size: 1.1em;
+  font-weight: 600;
   color: #333;
 }
 
-.App {
-  text-align: center;
+.actions-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.logo-standalone {
-    width: 180px; 
-    height: auto;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
-    margin-bottom: 0px; 
+.notification-icon {
+  font-size: 1.5em; /* Tamaño del emoji */
+  cursor: pointer;
+  user-select: none; /* Evita que se seleccione al dar clic */
+  transition: transform 0.1s ease;
+}
+.notification-icon:hover {
+  transform: scale(1.1);
 }
 
-.App-header {
-  background-color: #f0f2f5;
-  min-height: 100vh;
+/* ------------------------------- */
+/* NUEVA BARRA DE BÚSQUEDA */
+/* ------------------------------- */
+.search-bar {
+  display: flex;
+}
+
+.search-input {
+  border: 1px solid #ccc;
+  border-right: none;
+  padding: 8px 12px;
+  border-radius: 4px 0 0 4px;
+  font-size: 0.9em;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #0275d8;
+}
+
+.search-button {
+  padding: 8px 12px;
+  border: 1px solid #0275d8;
+  background-color: #0275d8;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.search-button:hover {
+  background-color: #025aa5;
+}
+
+
+/* ------------------------------- */
+/* NUEVO PANEL DE NOTIFICACIONES */
+/* ------------------------------- */
+.notification-panel {
+  position: absolute;
+  top: 61px; /* Justo debajo del header (60px + 1px de borde) */
+  right: 20px;
+  width: 300px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  z-index: 999; /* Debajo del header, pero sobre el contenido */
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.notification-panel h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.notification-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.notification-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95em;
+}
+.notification-list li strong {
+  font-size: 1.2em;
+  color: #0275d8;
+}
+
+/* ------------------------------- */
+/* CONTENIDO PRINCIPAL Y TARJETAS */
+/* ------------------------------- */
+.main-content {
+  /* Este era tu antiguo '.App-header' */
+  min-height: calc(100vh - 61px); /* Restamos la altura del header */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* REFINADO: Alinea el contenido arriba */
-  padding: 20px 0;
+  justify-content: flex-start;
+  padding: 0; /* El padding lateral ya no es necesario aquí */
+  background-color: #f0f2f5;
 }
 
 h1 {
   color: #eff1f3;
   background-color: #4ea526;
   padding: 10px;
+  margin-bottom: 2rem;
+  /* Estilos para que ocupe todo el ancho */
   width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 3rem;
+  text-align: center;
+  box-sizing: border-box; 
+  margin-top: 0; /* Lo pegamos al header */
 }
 
-/* ------------------------------- */
-/* CONTENEDOR DE TARJETAS */
-/* ------------------------------- */
 .cards-container {
   display: flex;
-  flex-direction: row;  /* Pone las tarjetas en horizontal */
-  flex-wrap: wrap;       /* Permite que bajen en pantallas pequeñas (móviles) */
-  justify-content: center; /* Centra las tarjetas horizontalmente */
-  align-items: flex-start; /* Las alinea arriba (si una es más alta) */
-  gap: 20px;             /* Espacio limpio entre tarjetas */
+  flex-direction: row; 
+  flex-wrap: wrap;       
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 20px;
   width: 95%;
   max-width: 1400px;
+  padding-bottom: 40px; /* Espacio al final */
 }
 
-
-/* ------------------------------- */
-/* ESTILOS DE NUESTRAS TARJETAS */
-/* ------------------------------- */
+/* Base de todas las tarjetas */
 .alerta-card {
   background: #ffffff;
   border-radius: 8px; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   width: 450px;
   max-width: 90%;
-  margin: 0; /* LIMPIEZA: El 'gap' del contenedor ahora maneja el espacio */
+  margin: 0; 
   padding: 24px;
   text-align: left;
   transition: all 0.2s ease-in-out;
+  box-sizing: border-box; /* Buena práctica */
 }
 
 .alerta-card:hover {
@@ -81,29 +198,33 @@ h1 {
   padding-bottom: 10px;
 }
 
-/* ------------------------------- */
-/* ESTILOS ESPECÍFICOS */
-/* ------------------------------- */
-
 /* Tarjeta de HOY */
 .alerta-card.hoy {
-  border-left: 6px solid #4ea526; /* Borde rojo de alerta */
+  border-left: 6px solid #d9534f;
 }
 .alerta-card.hoy h2 {
-  color: #4ea526;
+  color: #d9534f;
 }
 
 /* Tarjeta de PRÓXIMOS */
 .alerta-card.proximos {
-  border-left: 6px solid #bbce17; /* Borde azul de información */
+  border-left: 6px solid #0275d8;
 }
 .alerta-card.proximos h3 {
-  color: #bbce17;
+  color: #0275d8;
+}
+
+/* NUEVA Tarjeta de BÚSQUEDA */
+.alerta-card.search {
+  border-left: 6px solid #5bc0de; /* Color Cian (info) */
+}
+.alerta-card.search h3 {
+  color: #5bc0de;
 }
 
 /* Tarjeta de "Vacío" o "Cargando" */
 .alerta-card.empty,
-.alerta-card.cargando { /* AÑADIDO: Estilo para "Cargando..." */
+.alerta-card.cargando {
   text-align: center;
   font-style: italic;
   color: #777;
@@ -111,7 +232,7 @@ h1 {
 }
 
 /* ------------------------------- */
-/* ESTILOS DE LAS LISTAS */
+/* ESTILOS DE LAS LISTAS INTERNAS */
 /* ------------------------------- */
 .alerta-card ul {
   list-style: none;
@@ -132,12 +253,13 @@ h1 {
   border-bottom: none;
 }
 
-/* Para la lista de próximos cumpleaños */
-.alerta-card.proximos .nombre {
+/* Regla general para los nombres (en negrita) */
+.alerta-card .nombre {
   font-weight: 500;
   color: #333;
 }
-.alerta-card.proximos .fecha {
+/* Regla general para las fechas */
+.alerta-card .fecha {
   font-size: 0.9em;
   color: #555;
   background-color: #f5f5f5;

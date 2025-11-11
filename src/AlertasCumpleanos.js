@@ -70,11 +70,11 @@ function AlertasCumpleanos() {
             <h2>¡Feliz Cumpleaños!</h2>
             <p>Hoy celebramos a:</p>
             <ul>
-                {cumpleaneros.map((persona) => (
-                    <li key={persona.id || persona.nombre_completo}>
-                        {persona.nombre_completo}
-                    </li>
-                ))}
+            {cumpleaneros.map((persona) => (
+                <li key={persona.id || persona.nombre_completo}>
+                <span className="nombre">{persona.nombre_completo}</span>
+                </li>
+            ))}
             </ul>
         </div>
     );
