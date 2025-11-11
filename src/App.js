@@ -23,6 +23,7 @@ function App() {
   const [resultados, setResultados] = useState([]); // Guarda los resultados
   const [buscando, setBuscando] = useState(false); // Para mostrar "Cargando..."
   const [haBuscado, setHaBuscado] = useState(false); // Para saber si mostrar la tarjeta de resultados
+  
 
   // --- Función que se ejecuta al buscar ---
   const handleSearch = async (query) => {
@@ -32,6 +33,7 @@ function App() {
     if (!query) {
       setResultados([]);
       setBuscando(false);
+      setHaBuscado(false);
       return;
     }
 

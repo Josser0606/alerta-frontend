@@ -10,32 +10,23 @@ const formatearFecha = (fechaISO) => {
 
 function SearchResults({ resultados, cargando }) {
   
-  // 1. Estado de Carga
-  if (cargando) {
-    return (
-      <div className="alerta-card cargando">
-        Buscando...
-      </div>
-    );
-  }
-
-  // 2. Estado sin resultados
-  if (resultados.length === 0) {
-    return (
-      <div className="alerta-card empty">
-        <p>No se encontraron resultados.</p>
-      </div>
-    );
-  }
-
-  // 3. Estado con resultados
+  // Renderiza el popover flotante
   return (
-    // Usamos una nueva clase 'search' para darle estilo
-    <div className="alerta-card search">
-      <h3>Resultados de Búsqueda</h3>
+    <div className="search-results-popover">
       <ul>
-        {resultados.map((persona) => (
-          <li key={persona.id || persona.nombre_completo}>
+        {/* 1. Muestra "Buscando..." si está cargando */}
+        {cargando && (
+          <li className="search-info-item">Buscando...</li>
+        )}
+
+        {/* 2. Muestra "No encontrado" si no está cargando Y no hay resultados */}
+        {!cargando && resultados.length === 0 && (
+          <li className="search-info-item">No se encontraron resultados.</li>
+        )}
+
+        {/* 3. Muestra los resultados si no está cargando Y hay resultados */}
+        {!cargando && resultados.map((persona) => (
+          <li key={persona.id || persona.nombre_completo} className="search-result-item">
             <span className="nombre">{persona.nombre_completo}</span>
             <span className="fecha">
               ({formatearFecha(persona.fecha_nacimiento)})

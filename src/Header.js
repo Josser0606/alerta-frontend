@@ -1,24 +1,40 @@
 // frontend/src/Header.js
 import React from 'react';
-import './App.css'; // Usamos los mismos estilos
+import SearchResults from './SearchResults'; // Importamos los resultados aquí
+import './App.css';
 
-// Recibe dos "props":
-// 1. onNotificationClick: La función a ejecutar al dar clic en la campana
-// 2. children: Cualquier cosa que pongamos dentro de <Header> en App.js (en este caso, el SearchBar)
-function Header({ onNotificationClick, children }) {
+// Recibe los nuevos props de búsqueda desde App.js
+function Header({ 
+  onNotificationClick, 
+  children, 
+  searchResults, 
+  searchLoading, 
+  searchHasBeenRun 
+}) {
   return (
     <header className="main-header">
       
-      {/* Logo y Título */}
+      {/* 1. Área del Logo (Izquierda) */}
       <div className="logo-area">
         <img src="/logo_saciar.png" alt="Logo Saciar" className="header-logo" />
         <span className="header-title">Sistema de Alertas</span>
       </div>
 
-      {/* Acciones (Búsqueda e Icono) */}
-      <div className="actions-area">
+      {/* 2. Área de Búsqueda (Centro) - con posición relativa */}
+      <div className="search-area">
         {children} {/* Aquí se renderiza <SearchBar /> */}
         
+        {/* Aquí renderizamos el panel flotante de resultados */}
+        {searchHasBeenRun && (
+          <SearchResults 
+            resultados={searchResults} 
+            cargando={searchLoading} 
+          />
+        )}
+      </div>
+
+      {/* 3. Área de Notificaciones (Derecha) */}
+      <div className="notification-area">
         <span 
           className="notification-icon" 
           onClick={onNotificationClick} 
