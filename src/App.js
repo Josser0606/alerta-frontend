@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 // Componentes
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
-import Header from './Header';
-import SearchBar from './SearchBar';
-import NotificationPanel from './NotificationPanel';
+import Header from './Header'; // La barra superior
+import SearchBar from './SearchBar'; // El campo de búsqueda
+import NotificationPanel from './NotificationPanel'; // El panel desplegable
+// Ya no importamos SearchResults aquí, Header se encarga.
 
 import './App.css';
-// --- 1. IMPORTAR API_BASE_URL (ESTO ARREGLA LA BÚSQUEDA) ---
-import API_BASE_URL from './apiConfig';
+// NO importamos 'apiConfig.js' (como pediste)
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
 
-  // --- Función que se ejecuta al buscar (AHORA CORRECTA) ---
+  // --- Función que se ejecuta al buscar (CORREGIDA) ---
   const handleSearch = async (query) => {
     setHaBuscado(true); 
     setBuscando(true); 
@@ -36,8 +36,9 @@ function App() {
     }
 
     try {
-      // --- 2. USA EL API_BASE_URL (ARREGLADO) ---
-      const response = await fetch(`${API_BASE_URL}/cumpleaneros/buscar?nombre=${encodeURIComponent(query)}`);
+      // --- ESTA ES LA LÍNEA CLAVE ---
+      // Volvemos a la URL de Render que sí te funcionaba
+      const response = await fetch(`https://alerta-backend-57zs.onrender.com/api/cumpleaneros/buscar?nombre=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
@@ -54,7 +55,8 @@ function App() {
     }
   };
 
-  // --- 3. FUNCIÓN PARA CERRAR EL POPOVER (NUEVO) ---
+  // --- Función para cerrar el popover al clicar fuera ---
+  // (Esta función la usa el Header)
   const closeSearchPopover = () => {
     setHaBuscado(false);
   };
@@ -63,7 +65,7 @@ function App() {
   return (
     <div className="App">
       
-      {/* 4. Pasamos la nueva función 'onCloseSearch' al Header */}
+      {/* Pasamos todos los datos y funciones al Header */}
       <Header 
         onNotificationClick={togglePanel}
         searchResults={resultados}
@@ -74,13 +76,16 @@ function App() {
         <SearchBar onSearch={handleSearch} />
       </Header>
 
+      {/* El panel de notificaciones (se muestra condicionalmente) */}
       {panelAbierto && <NotificationPanel />}
 
+      {/* El contenido principal de la aplicación */}
       <main className="main-content">
         
         <h1>Tablero de Cumpleaños</h1>
 
         <div className="cards-container">
+          {/* Ya no mostramos los resultados aquí */}
           <AlertasCumpleanos />
           <ProximosCumpleanos />
         </div>
