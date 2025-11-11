@@ -53,6 +53,7 @@ body {
   flex: 1; 
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .notification-icon {
@@ -89,7 +90,7 @@ body {
   border: 1px solid #ccc;
   border-right: none;
   padding: 8px 12px;
-  border-radius: 4px 0 0 4px;
+  border-radius: 15px 0 0 15px;
   font-size: 0.9em;
   width: 100%;
 }
