@@ -1,5 +1,5 @@
 // frontend/src/App.js
-import React, { useState } from 'react'; // No necesitamos useRef/useEffect aquí
+import React, { useState } from 'react';
 
 // Componentes
 import AlertasCumpleanos from './AlertasCumpleanos';
@@ -9,7 +9,7 @@ import SearchBar from './SearchBar';
 import NotificationPanel from './NotificationPanel';
 
 import './App.css';
-// --- 1. IMPORTAR API_BASE_URL (¡ESTE ERA EL ERROR!) ---
+// --- 1. IMPORTAR API_BASE_URL (ESTO ARREGLA LA BÚSQUEDA) ---
 import API_BASE_URL from './apiConfig';
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
     }
 
     try {
-      // --- 2. USAR EL API_BASE_URL (ARREGLADO) ---
+      // --- 2. USA EL API_BASE_URL (ARREGLADO) ---
       const response = await fetch(`${API_BASE_URL}/cumpleaneros/buscar?nombre=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
@@ -69,7 +69,7 @@ function App() {
         searchResults={resultados}
         searchLoading={buscando}
         searchHasBeenRun={haBuscado}
-        onCloseSearch={closeSearchPopover} // <-- Prop nueva
+        onCloseSearch={closeSearchPopover} // Prop para cerrar el panel
       >
         <SearchBar onSearch={handleSearch} />
       </Header>
