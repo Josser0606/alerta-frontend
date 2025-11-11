@@ -31,7 +31,7 @@ body {
   gap: 15px;
 }
 .header-logo {
-  height: 40px;
+  height: 60px;
   width: auto;
 }
 .header-title {
@@ -56,7 +56,8 @@ body {
 }
 
 .notification-icon {
-  font-size: 1.5em;
+  color: #3e8e1e;
+  font-size: 1.6em;
   cursor: pointer;
   user-select: none;
   transition: transform 0.1s ease;

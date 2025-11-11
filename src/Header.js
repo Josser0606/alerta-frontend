@@ -1,6 +1,7 @@
 // frontend/src/Header.js
 import React, { useRef, useEffect } from 'react'; // Importamos hooks
 import SearchResults from './SearchResults';
+import { IoNotificationsOutline } from "react-icons/io5";
 import './App.css';
 
 function Header({ 
@@ -39,7 +40,6 @@ function Header({
       
       <div className="logo-area">
         <img src="/logo_saciar.png" alt="Logo Saciar" className="header-logo" />
-        <span className="header-title">Sistema de Alertas</span>
       </div>
 
       {/* 2. ÁREA DE BÚSQUEDA (CON REF) ---
@@ -68,7 +68,7 @@ function Header({
           tabIndex="0"
           aria-label="Ver notificaciones"
         >
-          🔔
+          <IoNotificationsOutline />
         </span>
       </div>
 
