@@ -266,18 +266,18 @@ h1 {
 
 /* Tarjeta de HOY */
 .alerta-card.hoy {
-  border-left: 6px solid #d9534f;
+  border-left: 6px solid #3e8e1e;
 }
 .alerta-card.hoy h2 {
-  color: #d9534f;
+  color: #3e8e1e;
 }
 
 /* Tarjeta de PRÓXIMOS */
 .alerta-card.proximos {
-  border-left: 6px solid #0275d8;
+  border-left: 6px solid #3e8e1e;
 }
 .alerta-card.proximos h3 {
-  color: #0275d8;
+  color: #3e8e1e;
 }
 
 /* Tarjeta de "Vacío" o "Cargando" */
