@@ -573,3 +573,29 @@ h1 {
   background-color: #f5f5f5; /* Gris claro */
   color: #777;
 }
+/* ------------------------------- */
+/* ESTILOS HEADER (MODIFICACIONES) */
+/* ------------------------------- */
+
+/* Botón de Cerrar Sesión */
+.logout-button {
+  background-color: #d9534f; /* Rojo */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 20px; /* Espacio de la campana (si existe) */
+  transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #c9302c; /* Rojo oscuro */
+}
+
+/* Espaciador para centrar (cuando la búsqueda no está) */
+.search-area-spacer {
+  flex: 2; /* Ocupa el mismo espacio que la búsqueda */
+}

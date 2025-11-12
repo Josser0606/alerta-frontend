@@ -1,38 +1,34 @@
 // frontend/src/Header.js
-import React, { useRef, useEffect } from 'react'; // Importamos hooks
+import React, { useRef, useEffect } from 'react';
 import SearchResults from './SearchResults';
 import { IoNotificationsOutline } from "react-icons/io5";
 import './App.css';
 
+// --- 1. RECIBIMOS LOS NUEVOS PROPS ---
 function Header({ 
   onNotificationClick, 
   children, 
   searchResults, 
   searchLoading, 
   searchHasBeenRun,
-  onCloseSearch // <-- Recibimos la nueva prop
+  onCloseSearch,
+  usuario,         // <-- Prop de Usuario (para saber el rol)
+  onLogoutClick    // <-- Prop de Función de Logout
 }) {
   
-  // --- 1. LÓGICA PARA CERRAR AL CLICAR FUERA ---
-  const searchAreaRef = useRef(null); // Ref para el contenedor de búsqueda
-
+  // (La lógica para cerrar el popover al clicar fuera se queda igual)
+  const searchAreaRef = useRef(null);
   useEffect(() => {
-    // Función que se ejecuta en CUALQUIER clic del documento
     function handleClickOutside(event) {
-      // Si el panel está abierto (searchHasBeenRun) Y
-      // si el clic NO fue dentro del contenedor (searchAreaRef.current)
       if (searchHasBeenRun && searchAreaRef.current && !searchAreaRef.current.contains(event.target)) {
-         onCloseSearch(); // Llamamos a la función del padre (App.js)
+         onCloseSearch();
       }
     }
-    // Añadimos el listener
     document.addEventListener("mousedown", handleClickOutside);
-    // Limpiamos el listener cuando el componente se desmonta
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [searchHasBeenRun, onCloseSearch]); // Depende de estas props
-  // --- FIN DE LA LÓGICA ---
+  }, [searchHasBeenRun, onCloseSearch]);
 
 
   return (
@@ -42,34 +38,45 @@ function Header({
         <img src="/logo_saciar.png" alt="Logo Saciar" className="header-logo" />
       </div>
 
-      {/* 2. ÁREA DE BÚSQUEDA (CON REF) ---
-          Le pasamos el ref 'searchAreaRef' a este div */}
-      <div className="search-area" ref={searchAreaRef}>
-        {/* 3. NUEVO CONTENEDOR PARA EL ANCHO 
-            Este div soluciona el problema del ancho (Problema #1) */}
-        <div className="search-widget-container">
-          {children} {/* <SearchBar /> */}
-          
-          {/* El popover de resultados ahora está dentro del contenedor con el ancho correcto */}
-          {searchHasBeenRun && (
-            <SearchResults 
-              resultados={searchResults} 
-              cargando={searchLoading} 
-            />
-          )}
+      {/* --- 2. ÁREA DE BÚSQUEDA CONDICIONAL --- */}
+      {/* Solo se muestra si el rol es 'admin' o 'voluntarios' */}
+      { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') ? (
+        <div className="search-area" ref={searchAreaRef}>
+          <div className="search-widget-container">
+            {children} {/* <SearchBar /> */}
+            {searchHasBeenRun && (
+              <SearchResults 
+                resultados={searchResults} 
+                cargando={searchLoading} 
+              />
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        // Si no, dejamos un espacio vacío para centrar
+        <div className="search-area-spacer"></div>
+      )}
 
+      {/* --- 3. ÁREA DE NOTIFICACIÓN (MODIFICADA) --- */}
       <div className="notification-area">
-        <span 
-          className="notification-icon" 
-          onClick={onNotificationClick} 
-          role="button" 
-          tabIndex="0"
-          aria-label="Ver notificaciones"
-        >
-          <IoNotificationsOutline />
-        </span>
+        
+        {/* Campana condicional (solo 'admin' o 'voluntarios') */}
+        { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
+          <span 
+            className="notification-icon" 
+            onClick={onNotificationClick} 
+            role="button" 
+            tabIndex="0"
+            aria-label="Ver notificaciones"
+          >
+            <IoNotificationsOutline />
+          </span>
+        )}
+        
+        {/* --- 4. NUEVO BOTÓN DE CERRAR SESIÓN --- */}
+        <button onClick={onLogoutClick} className="logout-button">
+          Cerrar Sesión
+        </button>
       </div>
 
     </header>

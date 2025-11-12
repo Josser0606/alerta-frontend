@@ -1,15 +1,10 @@
 // frontend/src/DashboardPage.js
 import React, { useState } from 'react';
 
-// --- 1. IMPORTAMOS EL NUEVO COMPONENTE ---
+// Importamos TODOS los módulos
 import TransporteAlertas from './TransporteAlertas';
-// ------------------------------------------
-
-// Módulo 2: Benefactores
 import BenefactoresCumpleanos from './BenefactoresCumpleanos';
 import BenefactoresPagos from './BenefactoresPagos';
-
-// Módulo 1: Voluntarios
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
 
@@ -21,7 +16,8 @@ import NotificationPanel from './NotificationPanel';
 import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
-function DashboardPage() {
+// --- 1. RECIBIMOS 'usuario' Y 'onLogout' ---
+function DashboardPage({ usuario, onLogout }) {
 
   // ... (La lógica del Header/Búsqueda se queda igual) ...
   const [panelAbierto, setPanelAbierto] = useState(false);
@@ -60,7 +56,10 @@ function DashboardPage() {
 
   return (
     <>
+      {/* --- 2. PASAMOS 'usuario' Y 'onLogout' AL HEADER --- */}
       <Header 
+        usuario={usuario}
+        onLogoutClick={onLogout}
         onNotificationClick={togglePanel}
         searchResults={resultados}
         searchLoading={buscando}
@@ -70,22 +69,36 @@ function DashboardPage() {
         <SearchBar onSearch={handleSearch} />
       </Header>
 
+      {/* El panel de notificaciones (se mostrará u ocultará junto con el Header) */}
       {panelAbierto && <NotificationPanel />}
 
       <main className="main-content">
-        <h1>Tablero de Cumpleaños</h1>
+        <h1>Tablero de Alertas</h1>
         <div className="cards-container">
-          {/* Módulo de Voluntarios */}
-          <AlertasCumpleanos />
-          <ProximosCumpleanos />
           
-          {/* Módulo de Benefactores */}
-          <BenefactoresCumpleanos />
-          <BenefactoresPagos />
+          {/* --- 3. LÓGICA DE ROLES (RENDERIZADO CONDICIONAL) --- */}
+
+          {/* Módulo Voluntarios (Solo para 'admin' o 'voluntarios') */}
+          { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
+            <>
+              <AlertasCumpleanos />
+              <ProximosCumpleanos />
+            </>
+          )}
           
-          {/* --- 2. AÑADIMOS LA NUEVA TARJETA --- */}
-          <TransporteAlertas />
-          {/* ----------------------------------- */}
+          {/* Módulo Benefactores (Solo para 'admin' o 'benefactores') */}
+          { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
+            <>
+              <BenefactoresCumpleanos />
+              <BenefactoresPagos />
+            </>
+          )}
+
+          {/* Módulo Transporte (Solo para 'admin' o 'transporte') */}
+          { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
+            <TransporteAlertas />
+          )}
+          
         </div>
       </main>
     </>
