@@ -1,5 +1,6 @@
 // frontend/src/ProximosCumpleanos.js
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from './apiConfig';
 // NO importamos apiConfig.js
 
 function ProximosCumpleanos() {
@@ -11,7 +12,7 @@ function ProximosCumpleanos() {
         const fetchProximos = async () => {
             try {
                 // --- APUNTAMOS DIRECTO A RENDER ---
-                const respuesta = await fetch('https://alerta-backend-57zs.onrender.com/api/cumpleaneros/proximos');
+                const respuesta = await fetch(`${API_BASE_URL}/voluntarios/proximos`);
                 
                 if (!respuesta.ok) {
                     throw new Error('Error al obtener los datos de la API');

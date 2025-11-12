@@ -1,5 +1,6 @@
 // frontend/src/AlertasCumpleanos.js
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from './apiConfig';
 // NO importamos apiConfig.js
 
 function AlertasCumpleanos() {
@@ -11,7 +12,7 @@ function AlertasCumpleanos() {
         const fetchCumpleaneros = async () => {
             try {
                 // --- APUNTAMOS DIRECTO A RENDER ---
-                const respuesta = await fetch('https://alerta-backend-57zs.onrender.com/api/cumpleaneros/hoy');
+                const respuesta = await fetch(`${API_BASE_URL}/voluntarios/hoy`);
                 
                 if (!respuesta.ok) {
                     throw new Error('Error al obtener los datos de la API');

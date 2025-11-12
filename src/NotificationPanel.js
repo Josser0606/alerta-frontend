@@ -1,6 +1,7 @@
 // frontend/src/NotificationPanel.js
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import API_BASE_URL from './apiConfig';
 // NO importamos apiConfig.js
 
 function NotificationPanel() {
@@ -12,7 +13,7 @@ function NotificationPanel() {
     const fetchResumen = async () => {
       try {
         // --- APUNTAMOS DIRECTO A RENDER ---
-        const response = await fetch('https://alerta-backend-57zs.onrender.com/api/cumpleaneros/resumen');
+        const response = await fetch(`${API_BASE_URL}/voluntarios/resumen`);
 
         if (!response.ok) {
           throw new Error('Error al cargar resumen');
