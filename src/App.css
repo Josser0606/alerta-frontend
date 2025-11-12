@@ -491,3 +491,85 @@ h1 {
   background-color: #fdf2f2; /* Fondo rojo claro */
   color: #d9534f;
 }
+
+/* ------------------------------- */
+/* ESTILOS MÓDULO 3: TRANSPORTE */
+/* ------------------------------- */
+
+/* Tarjeta de Transporte */
+.alerta-card.transporte {
+  border-left: 6px solid #5bc0de; /* Azul Info */
+}
+.alerta-card.transporte h3 {
+  color: #5bc0de;
+}
+
+/* Lista de vehículos */
+.vencimiento-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre cada vehículo */
+}
+
+.vencimiento-item {
+  padding: 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+}
+
+.vencimiento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.vencimiento-header .nombre {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #333;
+}
+.descripcion-vehiculo {
+  font-size: 0.9em;
+  font-style: italic;
+  color: #777;
+}
+
+.vencimiento-detalles {
+  display: flex;
+  justify-content: space-around; /* Distribuye SOAT/Tecno/Licencia */
+  gap: 10px;
+}
+
+.detalle-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.detalle-fecha strong {
+  color: #555;
+}
+
+/* Reutilizamos las clases de estado de Benefactores, 
+   pero les damos colores más fuertes */
+.estado-vencido {
+  background-color: #d9534f; /* Rojo sólido */
+  color: #ffffff;
+  font-weight: bold;
+}
+.estado-proximo {
+  background-color: #f0ad4e; /* Amarillo sólido */
+  color: #ffffff;
+  font-weight: bold;
+}
+.estado-na {
+  background-color: #f5f5f5; /* Gris claro */
+  color: #777;
+}
