@@ -458,3 +458,36 @@ h1 {
   padding: 10px;
   margin-bottom: 1.5rem;
 }
+
+/* ------------------------------- */
+/* ESTILOS MÓDULO 2: BENEFACTORES */
+/* ------------------------------- */
+
+/* Tarjeta de Cumpleaños (Benefactores) */
+.alerta-card.benefactores {
+  border-left: 6px solid #4ea526; /* Verde Saciar */
+}
+.alerta-card.benefactores h2 {
+  color: #4ea526;
+}
+
+/* Tarjeta de Pagos */
+.alerta-card.pagos {
+  border-left: 6px solid #f0ad4e; /* Amarillo (Warning) */
+}
+.alerta-card.pagos h3 {
+  color: #f0ad4e;
+}
+
+/* Estilos para las fechas de pago */
+.alerta-card.pagos .fecha {
+  font-weight: bold;
+}
+.alerta-card.pagos .estado-pendiente {
+  background-color: #fdf8e2; /* Fondo amarillo claro */
+  color: #8a6d3b;
+}
+.alerta-card.pagos .estado-vencido {
+  background-color: #fdf2f2; /* Fondo rojo claro */
+  color: #d9534f;
+}

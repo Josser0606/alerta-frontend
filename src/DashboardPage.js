@@ -1,24 +1,26 @@
 // frontend/src/DashboardPage.js
 import React, { useState } from 'react';
 
-// Componentes del Dashboard
+// --- 1. IMPORTAMOS LOS NUEVOS COMPONENTES ---
+import BenefactoresCumpleanos from './BenefactoresCumpleanos';
+import BenefactoresPagos from './BenefactoresPagos';
+// ------------------------------------------
+
+// Componentes del Dashboard (Voluntarios)
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import NotificationPanel from './NotificationPanel';
-// (SearchResults es importado por Header)
 
 import './App.css';
-import API_BASE_URL from './apiConfig'; // Importamos la URL
+import API_BASE_URL from './apiConfig'; 
 
 function DashboardPage() {
 
-  // --- Toda esta lógica es la que ya tenías en App.js ---
-  
+  // ... (Toda la lógica del Header, Búsqueda y Notificaciones se queda igual) ...
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
-
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
@@ -26,18 +28,15 @@ function DashboardPage() {
   const handleSearch = async (query) => {
     setHaBuscado(true); 
     setBuscando(true); 
-
     if (!query) {
       setResultados([]);
       setBuscando(false);
       setHaBuscado(false);
       return;
     }
-
     try {
-      // --- RUTA CORREGIDA ---
+      // (La búsqueda sigue siendo solo para Voluntarios por ahora)
       const response = await fetch(`${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`);
-      
       if (!response.ok) {
         throw new Error('Error en la búsqueda');
       }
@@ -50,12 +49,10 @@ function DashboardPage() {
       setBuscando(false); 
     }
   };
-
   const closeSearchPopover = () => {
     setHaBuscado(false);
   };
 
-  // --- El return es tu app antigua ---
   return (
     <>
       <Header 
@@ -71,10 +68,16 @@ function DashboardPage() {
       {panelAbierto && <NotificationPanel />}
 
       <main className="main-content">
-        <h1>Tablero de Cumpleaños (Voluntarios)</h1>
+        <h1>Tablero de Cumpleaños</h1>
         <div className="cards-container">
+          {/* Módulo de Voluntarios */}
           <AlertasCumpleanos />
           <ProximosCumpleanos />
+          
+          {/* --- 2. AÑADIMOS LAS NUEVAS TARJETAS --- */}
+          <BenefactoresCumpleanos />
+          <BenefactoresPagos />
+          {/* ----------------------------------- */}
         </div>
       </main>
     </>
