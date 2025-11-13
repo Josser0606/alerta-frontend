@@ -1,27 +1,30 @@
 // frontend/src/DashboardPage.js
 import React, { useState } from 'react';
 
-// Importamos TODOS los módulos
 import TransporteAlertas from './TransporteAlertas';
 import BenefactoresCumpleanos from './BenefactoresCumpleanos';
 import BenefactoresPagos from './BenefactoresPagos';
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
-
-// Componentes del Header
 import Header from './Header';
 import SearchBar from './SearchBar';
 import NotificationPanel from './NotificationPanel';
 
+// --- 1. IMPORTAR EL NUEVO FORMULARIO ---
+import BenefactorForm from './BenefactorForm'; 
+
 import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
-// --- 1. RECIBIMOS 'usuario' Y 'onLogout' ---
 function DashboardPage({ usuario, onLogout }) {
 
-  // ... (La lógica del Header/Búsqueda se queda igual) ...
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
+  
+  // --- 2. ESTADO PARA MOSTRAR/OCULTAR EL FORMULARIO ---
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+
+  // (Lógica de búsqueda... sin cambios)
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
@@ -37,9 +40,7 @@ function DashboardPage({ usuario, onLogout }) {
     }
     try {
       const response = await fetch(`${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`);
-      if (!response.ok) {
-        throw new Error('Error en la búsqueda');
-      }
+      if (!response.ok) throw new Error('Error en la búsqueda');
       const data = await response.json();
       setResultados(data);
     } catch (error) {
@@ -49,14 +50,16 @@ function DashboardPage({ usuario, onLogout }) {
       setBuscando(false); 
     }
   };
-  const closeSearchPopover = () => {
-    setHaBuscado(false);
-  };
+  const closeSearchPopover = () => { setHaBuscado(false); };
 
 
   return (
     <>
-      {/* --- 2. PASAMOS 'usuario' Y 'onLogout' AL HEADER --- */}
+      {/* --- 3. RENDERIZAR EL FORMULARIO SI EL ESTADO ES TRUE --- */}
+      {mostrarFormulario && (
+        <BenefactorForm onClose={() => setMostrarFormulario(false)} />
+      )}
+
       <Header 
         usuario={usuario}
         onLogoutClick={onLogout}
@@ -69,16 +72,27 @@ function DashboardPage({ usuario, onLogout }) {
         <SearchBar onSearch={handleSearch} />
       </Header>
 
-      {/* El panel de notificaciones (se mostrará u ocultará junto con el Header) */}
       {panelAbierto && <NotificationPanel />}
 
       <main className="main-content">
-        <h1>Tablero de Alertas</h1>
+        
+        <div className="titulo-y-acciones">
+            <h1>Tablero de Alertas</h1>
+            
+            {/* --- 4. BOTÓN "AGREGAR" (Solo Admin y Benefactores) --- */}
+            { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
+                <button 
+                    className="btn-agregar-benefactor" 
+                    onClick={() => setMostrarFormulario(true)}
+                >
+                    + Agregar Benefactor
+                </button>
+            )}
+        </div>
+
         <div className="cards-container">
           
-          {/* --- 3. LÓGICA DE ROLES (RENDERIZADO CONDICIONAL) --- */}
-
-          {/* Módulo Voluntarios (Solo para 'admin' o 'voluntarios') */}
+          {/* Módulo Voluntarios */}
           { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
             <>
               <AlertasCumpleanos />
@@ -86,7 +100,7 @@ function DashboardPage({ usuario, onLogout }) {
             </>
           )}
           
-          {/* Módulo Benefactores (Solo para 'admin' o 'benefactores') */}
+          {/* Módulo Benefactores */}
           { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
             <>
               <BenefactoresCumpleanos />
@@ -94,7 +108,7 @@ function DashboardPage({ usuario, onLogout }) {
             </>
           )}
 
-          {/* Módulo Transporte (Solo para 'admin' o 'transporte') */}
+          {/* Módulo Transporte */}
           { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
             <TransporteAlertas />
           )}

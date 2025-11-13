@@ -598,4 +598,116 @@ h1 {
 /* Espaciador para centrar (cuando la búsqueda no está) */
 .search-area-spacer {
   flex: 2; /* Ocupa el mismo espacio que la búsqueda */
+} 
+
+/* ------------------------------- */
+/* ESTILOS BOTÓN DE ACCIÓN */
+/* ------------------------------- */
+.titulo-y-acciones {
+  width: 95%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-agregar-benefactor {
+  background-color: #4ea526;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn-agregar-benefactor:hover {
+  background-color: #3e8e1e;
+}
+
+/* ------------------------------- */
+/* ESTILOS DEL MODAL (Formulario Flotante) */
+/* ------------------------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Por encima de todo */
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 900px; /* Ancho máximo */
+  max-height: 90vh; /* No más alto que la pantalla */
+  overflow-y: auto; /* Scroll si es muy alto */
+  border-radius: 8px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #777;
+}
+
+/* Grid para el formulario (2 columnas) */
+.benefactor-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  gap: 20px;
+}
+
+/* En móviles, 1 sola columna */
+@media (max-width: 768px) {
+  .benefactor-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.full-width {
+  grid-column: span 2; /* Ocupa las dos columnas */
+}
+@media (max-width: 768px) {
+  .full-width {
+    grid-column: span 1;
+  }
+}
+
+.save-button {
+  background-color: #0275d8;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.save-button:hover {
+  background-color: #025aa5;
 }
