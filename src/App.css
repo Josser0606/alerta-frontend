@@ -1,5 +1,5 @@
 /* ------------------------------- */
-/* ESTILOS GLOBALES Y CONTENEDOR */
+/* ESTILOS GLOBALES */
 /* ------------------------------- */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -8,12 +8,8 @@ body {
   margin: 0;
 }
 
-.App {
-  text-align: center;
-}
-
 /* ------------------------------- */
-/* BARRA DE HEADER Y NAVEGACIÓN */
+/* BARRA DE HEADER (MODIFICADA) */
 /* ------------------------------- */
 .main-header {
   display: flex;
@@ -35,7 +31,7 @@ body {
   gap: 15px;
 }
 .header-logo {
-  height: 40px;
+  height: 60px;
   width: auto;
 }
 .header-title {
@@ -44,31 +40,24 @@ body {
   color: #333;
 }
 
-/* 2. Búsqueda (Centro) */
+/* 2. Búsqueda (Centro) - MODIFICADO */
 .search-area {
   flex: 2; 
   display: flex;
   justify-content: center;
+  /* position: relative; Ya no es necesario aquí */
 }
 
-/* Contenedor para alinear popover de búsqueda */
-.search-widget-container {
-  position: relative; /* Clave para el popover */
-  width: 100%;
-  max-width: 450px; /* Ancho máximo de la barra de búsqueda */
-}
-
-/* 3. Notificaciones y Logout (Derecha) */
+/* 3. Notificaciones (Derecha) */
 .notification-area {
   flex: 1; 
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 20px; /* Espacio entre campana y botón */
 }
 
 .notification-icon {
-  color: #4ea526; /* Verde Saciar */
+  color: #3e8e1e;
   font-size: 1.6em;
   cursor: pointer;
   user-select: none;
@@ -78,33 +67,23 @@ body {
   transform: scale(1.1);
 }
 
-.logout-button {
-  background-color: #d9534f; /* Rojo */
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+/* ------------------------------- */
+/* NUEVO: CONTENEDOR DEL WIDGET DE BÚSQUEDA */
+/* ------------------------------- */
+.search-widget-container {
+  position: relative; /* CLAVE: El popover se alinea con este */
+  width: 100%;
+  max-width: 450px; /* CLAVE: El ancho máximo del widget */
 }
 
-.logout-button:hover {
-  background-color: #c9302c; /* Rojo oscuro */
-}
-
-/* Espaciador para cuando la búsqueda está oculta */
-.search-area-spacer {
-  flex: 2;
-}
 
 /* ------------------------------- */
-/* BARRA DE BÚSQUEDA Y POPOVER */
+/* BARRA DE BÚSQUEDA (RESTYLING) */
 /* ------------------------------- */
 .search-bar {
   display: flex;
-  width: 100%; 
+  width: 100%; /* Ocupa el 100% del search-widget-container */
+  /* max-width: 450px; Ya no se necesita, lo maneja el padre */
 }
 
 .search-input {
@@ -114,7 +93,6 @@ body {
   border-radius: 15px 0 0 15px;
   font-size: 0.9em;
   width: 100%;
-  box-sizing: border-box;
 }
 .search-input:focus {
   outline: none;
@@ -136,47 +114,6 @@ body {
   border-color: #3e8e1e;
 }
 
-.search-results-popover {
-  position: absolute;
-  top: 100%; 
-  left: 0;
-  width: 100%; /* Ocupa el 100% del .search-widget-container */
-  background: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 8px 8px;
-  z-index: 2000; 
-  margin-top: 2px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.search-results-popover ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.search-results-popover .search-result-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.search-results-popover .search-result-item:last-child {
-  border-bottom: none;
-}
-.search-results-popover .search-result-item:hover {
-  background-color: #f9f9f9;
-}
-
-.search-results-popover .search-info-item {
-  padding: 16px;
-  text-align: center;
-  font-style: italic;
-  color: #777;
-}
 
 /* ------------------------------- */
 /* PANEL DE NOTIFICACIONES (Igual) */
@@ -221,6 +158,52 @@ body {
 }
 
 /* ------------------------------- */
+/* PANEL FLOTANTE DE BÚSQUEDA (MODIFICADO) */
+/* ------------------------------- */
+.search-results-popover {
+  position: absolute;
+  top: 100%; /* Justo debajo del search-widget-container */
+  left: 0;
+  width: 100%; /* CLAVE: Ocupa el 100% del search-widget-container */
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  z-index: 2000; 
+  margin-top: 2px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.search-results-popover ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results-popover .search-result-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-results-popover .search-result-item:last-child {
+  border-bottom: none;
+}
+.search-results-popover .search-result-item:hover {
+  background-color: #f9f9f9;
+}
+
+.search-results-popover .search-info-item {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}
+
+
+/* ------------------------------- */
 /* CONTENIDO PRINCIPAL Y TARJETAS */
 /* ------------------------------- */
 .main-content {
@@ -244,38 +227,6 @@ h1 {
   margin-top: 0;
 }
 
-/* Contenedor del botón Agregar y Título */
-.titulo-y-acciones {
-  width: 95%;
-  max-width: 1400px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.btn-agregar-benefactor {
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #007bff; /* Azul primario */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.btn-agregar-benefactor:hover {
-  background-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-/* Contenedor de todas las tarjetas */
 .cards-container {
   display: flex;
   flex-direction: row; 
@@ -313,20 +264,20 @@ h1 {
   padding-bottom: 10px;
 }
 
-/* Tarjeta de HOY (Voluntarios) */
+/* Tarjeta de HOY */
 .alerta-card.hoy {
-  border-left: 6px solid #d9534f; /* Rojo */
+  border-left: 6px solid #3e8e1e;
 }
 .alerta-card.hoy h2 {
-  color: #d9534f;
+  color: #3e8e1e;
 }
 
-/* Tarjeta de PRÓXIMOS (Voluntarios) */
+/* Tarjeta de PRÓXIMOS */
 .alerta-card.proximos {
-  border-left: 6px solid #0275d8; /* Azul */
+  border-left: 6px solid #3e8e1e;
 }
 .alerta-card.proximos h3 {
-  color: #0275d8;
+  color: #3e8e1e;
 }
 
 /* Tarjeta de "Vacío" o "Cargando" */
@@ -336,6 +287,176 @@ h1 {
   font-style: italic;
   color: #777;
   border-left: 6px solid #ccc;
+}
+
+/* ------------------------------- */
+/* ESTILOS DE LAS LISTAS INTERNAS (Tarjetas) */
+/* ------------------------------- */
+.alerta-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
+}
+
+.alerta-card li {
+  padding: 12px 5px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.alerta-card li:last-child {
+  border-bottom: none;
+}
+
+/* Reglas generales para las listas (usadas en tarjetas Y popover) */
+.alerta-card .nombre,
+.search-results-popover .nombre {
+  font-weight: 500;
+  color: #333;
+}
+.alerta-card .fecha,
+.search-results-popover .fecha {
+  font-size: 0.9em;
+  color: #555;
+  background-color: #f5f5f5;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+/* ------------------------------- */
+/* ESTILOS RESPONSIVE (MÓVIL) */
+/* ------------------------------- */
+
+/* Se activa en pantallas de 768px o menos */
+@media (max-width: 768px) {
+
+  /* --- Paso 2 y 3 --- */
+  /* 1. Hacemos que el header permita "envolver" los items */
+  .main-header {
+    flex-wrap: wrap;     /* Permite que los items bajen */
+    padding: 10px 15px; 
+  }
+
+  /* --- Paso 2 --- */
+  /* 2. El logo y la campana se quedan arriba */
+  .logo-area {
+    flex-grow: 1; /* El logo ocupa el espacio disponible */
+  }
+  .notification-area {
+    flex-grow: 0; /* La campana se queda pegada a la derecha */
+  }
+
+  /* --- Paso 3 --- */
+  /* 3. Enviamos la barra de búsqueda abajo */
+  .search-area {
+    order: 3;            /* La manda al final (debajo del logo/campana) */
+    flex-basis: 100%;  /* Ocupa el 100% del ancho */
+    margin-top: 10px;    /* Le da un espacio de la fila de arriba */
+  }
+
+  /* 4. Hacemos que la búsqueda use todo el ancho */
+  .search-widget-container {
+    max-width: 100%; /* Elimina el max-width de 450px en móviles */
+  }
+
+  /* 5. (Opcional) Ajusta las tarjetas a ancho completo */
+  .alerta-card {
+    width: 100%; 
+  }
+}
+
+/* ------------------------------- */
+/* ESTILOS PÁGINA DE LOGIN */
+/* ------------------------------- */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form {
+  background: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.logo-login {
+  width: 150px;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Importante para que el padding no desborde */
+}
+.form-group input:focus {
+  outline: none;
+  border-color: #4ea526;
+  box-shadow: 0 0 0 1px #4ea526;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4ea526;
+  color: white;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #3e8e1e;
+}
+
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-mensaje {
+  color: #d9534f;
+  background-color: #fdf2f2;
+  border: 1px solid #d9534f;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 1.5rem;
 }
 
 /* ------------------------------- */
@@ -434,246 +555,114 @@ h1 {
 
 .detalle-fecha strong {
   color: #555;
-  font-weight: 600;
-  font-size: 0.9em;
-  margin-bottom: 4px;
 }
 
-/* Clases de estado para vencimientos */
+/* Reutilizamos las clases de estado de Benefactores, 
+   pero les damos colores más fuertes */
 .estado-vencido {
   background-color: #d9534f; /* Rojo sólido */
-  color: #ffffff !important;
+  color: #ffffff;
   font-weight: bold;
-  padding: 3px 6px;
-  border-radius: 4px;
 }
 .estado-proximo {
   background-color: #f0ad4e; /* Amarillo sólido */
-  color: #ffffff !important;
+  color: #ffffff;
   font-weight: bold;
-  padding: 3px 6px;
-  border-radius: 4px;
 }
 .estado-na {
-  color: #999;
-  font-style: italic;
+  background-color: #f5f5f5; /* Gris claro */
+  color: #777;
 }
-
-
 /* ------------------------------- */
-/* ESTILOS DE LISTAS (Genérico) */
+/* ESTILOS HEADER (MODIFICACIONES) */
 /* ------------------------------- */
-.alerta-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-top: 15px;
-}
 
-.alerta-card li {
-  padding: 12px 5px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.alerta-card li:last-child {
-  border-bottom: none;
-}
-
-.alerta-card .nombre,
-.search-results-popover .nombre {
-  font-weight: 500;
-  color: #333;
-}
-.alerta-card .fecha,
-.search-results-popover .fecha {
-  font-size: 0.9em;
-  color: #555;
-  background-color: #f5f5f5;
-  padding: 3px 6px;
-  border-radius: 4px;
-}
-
-
-/* ------------------------------- */
-/* ESTILOS RESPONSIVE (MÓVIL) */
-/* ------------------------------- */
-@media (max-width: 768px) {
-  .main-header {
-    flex-wrap: wrap;
-    padding: 10px 15px; 
-  }
-  .logo-area {
-    flex-grow: 1;
-  }
-  .notification-area {
-    flex-grow: 0; 
-  }
-  /* Ocultamos el título en el header del móvil */
-  .header-title {
-    display: none;
-  }
-  /* La barra de búsqueda ahora va abajo */
-  .search-area {
-    order: 3;
-    flex-basis: 100%;
-    margin-top: 10px;
-    justify-content: center; /* Centrar la barra en móvil */
-  }
-  .search-widget-container {
-    max-width: 100%; /* Ocupa todo el ancho en móvil */
-  }
-  .alerta-card {
-    width: 100%; 
-  }
-  .titulo-y-acciones {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .btn-agregar-benefactor {
-    width: 100%;
-  }
-}
-
-/* ------------------------------- */
-/* ESTILOS PÁGINA DE LOGIN */
-/* ------------------------------- */
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.login-form {
-  background: #ffffff;
-  padding: 2.5rem 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.logo-login {
-  width: 150px;
-  height: auto;
-  margin-bottom: 1.5rem;
-}
-
-.login-form h2 {
-  margin-top: 0;
-  margin-bottom: 2rem;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #555;
-  font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box; 
-  background-color: #fdfdfd;
-}
-
-/* Efecto de foco verde */
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #4ea526;
-  box-shadow: 0 0 0 3px rgba(78, 165, 38, 0.15);
-}
-
-.login-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #4ea526;
+/* Botón de Cerrar Sesión */
+.logout-button {
+  background-color: #d9534f; /* Rojo */
   color: white;
-  font-size: 1.1em;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
   font-weight: 600;
   cursor: pointer;
+  margin-left: 20px; /* Espacio de la campana (si existe) */
   transition: background-color 0.2s ease;
 }
 
-.login-button:hover {
+.logout-button:hover {
+  background-color: #c9302c; /* Rojo oscuro */
+}
+
+/* Espaciador para centrar (cuando la búsqueda no está) */
+.search-area-spacer {
+  flex: 2; /* Ocupa el mismo espacio que la búsqueda */
+} 
+
+/* ------------------------------- */
+/* ESTILOS BOTÓN DE ACCIÓN */
+/* ------------------------------- */
+.titulo-y-acciones {
+  width: 95%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-agregar-benefactor {
+  background-color: #4ea526;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn-agregar-benefactor:hover {
   background-color: #3e8e1e;
 }
+/* =================================================================== */
+/* ESTILOS DEL MODAL DE BENEFACTOR (Formulario Flotante)
+/* =================================================================== */
 
-.login-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.error-mensaje {
-  color: #d9534f;
-  background-color: #fdf2f2;
-  border: 1px solid #d9534f;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 1.5rem;
-}
-
-/* ------------------------------- */
-/* ESTILOS DEL MODAL (Formulario Flotante - MEJORADO) */
-/* ------------------------------- */
-
+/* --- 1. El Fondo Oscuro (Overlay) --- */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Fondo más oscuro */
+  inset: 0; /* Cubre toda la pantalla */
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+  backdrop-filter: blur(4px); /* Efecto vidrio esmerilado en el fondo */
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Alinea arriba para ver el inicio del formulario */
+  align-items: center; /* Centra el modal verticalmente */
   z-index: 2000;
-  padding: 50px 20px; /* Más espacio arriba y abajo */
-  backdrop-filter: blur(5px);
-  overflow-y: auto; /* Permite scroll en el overlay si el modal es muy grande */
-  animation: fadeIn 0.3s ease-out;
+  padding: 1rem; /* Espacio para que no pegue a los bordes en móvil */
+  animation: fadeIn 0.3s ease-out; /* Animación de entrada */
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
+/* --- 2. El Contenedor del Formulario --- */
 .modal-content {
   background: #ffffff;
   width: 100%;
-  max-width: 900px; /* Un poco más ancho para el grid */
+  max-width: 900px; /* Ancho máximo, ideal para formularios grandes */
+  max-height: 90vh; /* Altura máxima, 90% del alto de la pantalla */
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Clave para los bordes redondeados */
-  animation: slideIn 0.3s ease-out;
+  overflow: hidden; /* Oculta el contenido que se sale de los bordes redondeados */
+  animation: slideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Animaciones --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideIn {
@@ -681,20 +670,21 @@ h1 {
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* --- 3. Encabezado del Modal --- */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #f7f7f7; /* Header del modal con color sutil */
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e9ecef; /* Línea divisoria sutil */
+  background-color: #f7f9fa; /* Fondo de cabecera ligero */
 }
 
 .modal-header h2 {
-  color: #333;
   margin: 0;
+  color: #2c3e50;
   font-size: 1.5rem;
-  font-weight: 600; /* Un poco más grueso */
+  font-weight: 600;
 }
 
 .close-button {
@@ -706,19 +696,20 @@ h1 {
   cursor: pointer;
   padding: 0;
   line-height: 1;
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
 }
 .close-button:hover {
-  color: #d9534f; /* Rojo al pasar el mouse */
+  color: #d9534f;
+  transform: rotate(90deg);
 }
 
-/* 4. Cuerpo del Formulario (con Scroll) */
+/* --- 4. Cuerpo del Formulario (con Scroll) --- */
 .benefactor-form-grid {
-  padding: 30px;
-  overflow-y: auto; /* El scroll va aquí dentro */
+  padding: 2rem;
+  overflow-y: auto; /* El scroll SÓLO aplica al formulario */
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas */
-  gap: 25px; /* Más espacio entre campos */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
+  gap: 1.25rem 1.5rem; /* Espacio vertical y horizontal */
 }
 
 /* Personalización del Scrollbar */
@@ -736,7 +727,7 @@ h1 {
   background: #aaa;
 }
 
-/* 5. Campos (Inputs y Selects) */
+/* --- 5. Campos (Inputs y Selects) --- */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -744,10 +735,9 @@ h1 {
 }
 
 .form-group label {
-  font-weight: 600; /* Más legible */
+  font-weight: 600;
   color: #444;
-  font-size: 0.9rem;
-  letter-spacing: 0.3px;
+  font-size: 0.875rem; /* 14px */
 }
 
 .form-group input[type="text"],
@@ -758,23 +748,23 @@ h1 {
 .form-group textarea {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #e0e0e0; /* Borde más sutil */
+  border: 1px solid #ced4da; /* Borde más sutil */
   border-radius: 8px; /* Bordes más redondeados */
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #333;
-  transition: all 0.2s ease;
+  transition: all 0.2s ease-in-out;
   box-sizing: border-box; 
   background-color: #fdfdfd;
 }
 
-/* Efecto al hacer clic en un campo */
+/* Efecto de foco verde (usando tu color corporativo) */
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #4ea526; /* Verde Saciar */
+  border-color: #4ea526;
   background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(78, 165, 38, 0.15); /* Resplandor verde suave */
+  box-shadow: 0 0 0 4px rgba(78, 165, 38, 0.1); /* Resplandor verde suave */
 }
 
 .form-group textarea {
@@ -782,11 +772,12 @@ h1 {
   resize: vertical;
 }
 
-/* Campos que ocupan todo el ancho */
+/* Campo que ocupa todo el ancho del grid */
 .full-width {
-  grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
+  grid-column: 1 / -1;
 }
 
+/* Divisor horizontal */
 .full-width-hr {
   grid-column: 1 / -1;
   border: 0;
@@ -794,10 +785,10 @@ h1 {
   margin: 10px 0;
 }
 
-/* Grupos dinámicos (Teléfono y Correo) */
+/* --- 6. Grupos Dinámicos (Teléfono y Correo) --- */
 .dynamic-input-group {
   display: flex;
-  gap: 10px;
+  gap: 8px; /* Espacio entre los elementos */
   margin-bottom: 5px;
 }
 
@@ -811,11 +802,12 @@ h1 {
 .add-btn, .remove-btn {
   background-color: #f0f0f0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px; /* Bordes redondeados */
   padding: 0 10px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.2rem; /* Ícono más grande */
   line-height: 1;
+  transition: all 0.2s ease;
 }
 
 .add-btn {
@@ -828,12 +820,13 @@ h1 {
 
 .remove-btn {
   color: #d9534f;
-  background-color: #fdf2f2;
+  background-color: #fff;
   border-color: #d9534f;
 }
 
 .add-btn:hover {
   background-color: #e9e9e9;
+  border-color: #bbb;
 }
 
 .remove-btn:hover {
@@ -841,13 +834,12 @@ h1 {
   color: white;
 }
 
-/* 6. Pie de Formulario (Botón Guardar) */
+/* --- 7. Pie de Formulario (Botón Guardar) --- */
 .form-actions {
   grid-column: 1 / -1;
   padding: 1.5rem 2rem;
-  padding-top: 20px;
   border-top: 1px solid #eee;
-  background-color: #f7f7f7;
+  background-color: #f7f9fa;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   text-align: right; /* Alinea el botón a la derecha */
