@@ -647,8 +647,7 @@ h1 {
 
 /* --- 2. El Contenedor del Formulario --- */
 .modal-content {
-  background: #4ea526;
-  color: #ffffff;
+  background: #ffffff;
   width: 100%;
   max-width: 900px; /* Ancho máximo, ideal para formularios grandes */
   max-height: 90vh; /* Altura máxima, 90% del alto de la pantalla */
@@ -678,12 +677,12 @@ h1 {
   align-items: center;
   padding: 1.25rem 2rem;
   border-bottom: 1px solid #e9ecef; /* Línea divisoria sutil */
-  background-color: #f7f9fa; /* Fondo de cabecera ligero */
+  background-color: #4ea526; /* Fondo de cabecera ligero */
 }
 
 .modal-header h2 {
   margin: 0;
-  color: #2c3e50;
+  color: #ffffff;
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -693,7 +692,7 @@ h1 {
   border: none;
   font-size: 2.2rem;
   font-weight: 300;
-  color: #888;
+  color: #ffffff;
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -801,18 +800,18 @@ h1 {
 }
 
 .add-btn, .remove-btn {
-  background-color: #f0f0f0;
+  background-color: #4ea526;
   border: 1px solid #ccc;
   border-radius: 8px; /* Bordes redondeados */
   padding: 0 10px;
   cursor: pointer;
-  font-size: 1.2rem; /* Ícono más grande */
+  font-size: 1.1rem; /* Ícono más grande */
   line-height: 1;
   transition: all 0.2s ease;
 }
 
 .add-btn {
-  color: #4ea526;
+  color: #ffffff;
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -839,8 +838,7 @@ h1 {
 .form-actions {
   grid-column: 1 / -1;
   padding: 1.5rem 2rem;
-  border-top: 1px solid #eee;
-  background-color: #f7f9fa;
+  border-top: 2px solid #eee;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   text-align: right; /* Alinea el botón a la derecha */
