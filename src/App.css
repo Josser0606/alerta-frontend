@@ -633,22 +633,28 @@ h1 {
 /* ------------------------------- */
 
 /* 1. Fondo con desenfoque (Glassmorphism) */
+/* ------------------------------- */
+/* ESTILOS DEL MODAL (Formulario Flotante - MEJORADO) */
+/* ------------------------------- */
+
+/* 1. Fondo con desenfoque (Glassmorphism) */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Oscuro */
-  backdrop-filter: blur(5px); /* Efecto borroso en el fondo */
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  padding: 20px;
-  animation: fadeIn 0.3s ease-in-out;
+  /* align-items: center; <-- Eliminamos esto */
+  z-index: 2000;
+  padding-top: 5vh; /* Añadimos espacio superior */
+  padding-bottom: 5vh; /* Añadimos espacio inferior */
+  backdrop-filter: blur(5px);
+  /* Permitimos el scroll de toda la ventana si el modal es muy grande */
+  overflow-y: auto; 
 }
-
 /* Animación de entrada */
 @keyframes fadeIn {
   from { opacity: 0; }
