@@ -1,5 +1,5 @@
 /* ------------------------------- */
-/* ESTILOS GLOBALES */
+/* ESTILOS GLOBALES Y CONTENEDOR */
 /* ------------------------------- */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -8,8 +8,12 @@ body {
   margin: 0;
 }
 
+.App {
+  text-align: center;
+}
+
 /* ------------------------------- */
-/* BARRA DE HEADER (MODIFICADA) */
+/* BARRA DE HEADER Y NAVEGACIÓN */
 /* ------------------------------- */
 .main-header {
   display: flex;
@@ -31,7 +35,7 @@ body {
   gap: 15px;
 }
 .header-logo {
-  height: 60px;
+  height: 40px;
   width: auto;
 }
 .header-title {
@@ -40,24 +44,31 @@ body {
   color: #333;
 }
 
-/* 2. Búsqueda (Centro) - MODIFICADO */
+/* 2. Búsqueda (Centro) */
 .search-area {
   flex: 2; 
   display: flex;
   justify-content: center;
-  /* position: relative; Ya no es necesario aquí */
 }
 
-/* 3. Notificaciones (Derecha) */
+/* Contenedor para alinear popover de búsqueda */
+.search-widget-container {
+  position: relative; /* Clave para el popover */
+  width: 100%;
+  max-width: 450px; /* Ancho máximo de la barra de búsqueda */
+}
+
+/* 3. Notificaciones y Logout (Derecha) */
 .notification-area {
   flex: 1; 
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 20px; /* Espacio entre campana y botón */
 }
 
 .notification-icon {
-  color: #3e8e1e;
+  color: #4ea526; /* Verde Saciar */
   font-size: 1.6em;
   cursor: pointer;
   user-select: none;
@@ -67,23 +78,33 @@ body {
   transform: scale(1.1);
 }
 
-/* ------------------------------- */
-/* NUEVO: CONTENEDOR DEL WIDGET DE BÚSQUEDA */
-/* ------------------------------- */
-.search-widget-container {
-  position: relative; /* CLAVE: El popover se alinea con este */
-  width: 100%;
-  max-width: 450px; /* CLAVE: El ancho máximo del widget */
+.logout-button {
+  background-color: #d9534f; /* Rojo */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
+.logout-button:hover {
+  background-color: #c9302c; /* Rojo oscuro */
+}
+
+/* Espaciador para cuando la búsqueda está oculta */
+.search-area-spacer {
+  flex: 2;
+}
 
 /* ------------------------------- */
-/* BARRA DE BÚSQUEDA (RESTYLING) */
+/* BARRA DE BÚSQUEDA Y POPOVER */
 /* ------------------------------- */
 .search-bar {
   display: flex;
-  width: 100%; /* Ocupa el 100% del search-widget-container */
-  /* max-width: 450px; Ya no se necesita, lo maneja el padre */
+  width: 100%; 
 }
 
 .search-input {
@@ -93,6 +114,7 @@ body {
   border-radius: 15px 0 0 15px;
   font-size: 0.9em;
   width: 100%;
+  box-sizing: border-box;
 }
 .search-input:focus {
   outline: none;
@@ -114,6 +136,47 @@ body {
   border-color: #3e8e1e;
 }
 
+.search-results-popover {
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  width: 100%; /* Ocupa el 100% del .search-widget-container */
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 8px 8px;
+  z-index: 2000; 
+  margin-top: 2px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.search-results-popover ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results-popover .search-result-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.search-results-popover .search-result-item:last-child {
+  border-bottom: none;
+}
+.search-results-popover .search-result-item:hover {
+  background-color: #f9f9f9;
+}
+
+.search-results-popover .search-info-item {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}
 
 /* ------------------------------- */
 /* PANEL DE NOTIFICACIONES (Igual) */
@@ -158,52 +221,6 @@ body {
 }
 
 /* ------------------------------- */
-/* PANEL FLOTANTE DE BÚSQUEDA (MODIFICADO) */
-/* ------------------------------- */
-.search-results-popover {
-  position: absolute;
-  top: 100%; /* Justo debajo del search-widget-container */
-  left: 0;
-  width: 100%; /* CLAVE: Ocupa el 100% del search-widget-container */
-  background: white;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 8px 8px;
-  z-index: 2000; 
-  margin-top: 2px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.search-results-popover ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.search-results-popover .search-result-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.search-results-popover .search-result-item:last-child {
-  border-bottom: none;
-}
-.search-results-popover .search-result-item:hover {
-  background-color: #f9f9f9;
-}
-
-.search-results-popover .search-info-item {
-  padding: 16px;
-  text-align: center;
-  font-style: italic;
-  color: #777;
-}
-
-
-/* ------------------------------- */
 /* CONTENIDO PRINCIPAL Y TARJETAS */
 /* ------------------------------- */
 .main-content {
@@ -227,6 +244,38 @@ h1 {
   margin-top: 0;
 }
 
+/* Contenedor del botón Agregar y Título */
+.titulo-y-acciones {
+  width: 95%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-agregar-benefactor {
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #007bff; /* Azul primario */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-agregar-benefactor:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Contenedor de todas las tarjetas */
 .cards-container {
   display: flex;
   flex-direction: row; 
@@ -264,20 +313,20 @@ h1 {
   padding-bottom: 10px;
 }
 
-/* Tarjeta de HOY */
+/* Tarjeta de HOY (Voluntarios) */
 .alerta-card.hoy {
-  border-left: 6px solid #3e8e1e;
+  border-left: 6px solid #d9534f; /* Rojo */
 }
 .alerta-card.hoy h2 {
-  color: #3e8e1e;
+  color: #d9534f;
 }
 
-/* Tarjeta de PRÓXIMOS */
+/* Tarjeta de PRÓXIMOS (Voluntarios) */
 .alerta-card.proximos {
-  border-left: 6px solid #3e8e1e;
+  border-left: 6px solid #0275d8; /* Azul */
 }
 .alerta-card.proximos h3 {
-  color: #3e8e1e;
+  color: #0275d8;
 }
 
 /* Tarjeta de "Vacío" o "Cargando" */
@@ -287,176 +336,6 @@ h1 {
   font-style: italic;
   color: #777;
   border-left: 6px solid #ccc;
-}
-
-/* ------------------------------- */
-/* ESTILOS DE LAS LISTAS INTERNAS (Tarjetas) */
-/* ------------------------------- */
-.alerta-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-top: 15px;
-}
-
-.alerta-card li {
-  padding: 12px 5px;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.alerta-card li:last-child {
-  border-bottom: none;
-}
-
-/* Reglas generales para las listas (usadas en tarjetas Y popover) */
-.alerta-card .nombre,
-.search-results-popover .nombre {
-  font-weight: 500;
-  color: #333;
-}
-.alerta-card .fecha,
-.search-results-popover .fecha {
-  font-size: 0.9em;
-  color: #555;
-  background-color: #f5f5f5;
-  padding: 3px 6px;
-  border-radius: 4px;
-}
-
-/* ------------------------------- */
-/* ESTILOS RESPONSIVE (MÓVIL) */
-/* ------------------------------- */
-
-/* Se activa en pantallas de 768px o menos */
-@media (max-width: 768px) {
-
-  /* --- Paso 2 y 3 --- */
-  /* 1. Hacemos que el header permita "envolver" los items */
-  .main-header {
-    flex-wrap: wrap;     /* Permite que los items bajen */
-    padding: 10px 15px; 
-  }
-
-  /* --- Paso 2 --- */
-  /* 2. El logo y la campana se quedan arriba */
-  .logo-area {
-    flex-grow: 1; /* El logo ocupa el espacio disponible */
-  }
-  .notification-area {
-    flex-grow: 0; /* La campana se queda pegada a la derecha */
-  }
-
-  /* --- Paso 3 --- */
-  /* 3. Enviamos la barra de búsqueda abajo */
-  .search-area {
-    order: 3;            /* La manda al final (debajo del logo/campana) */
-    flex-basis: 100%;  /* Ocupa el 100% del ancho */
-    margin-top: 10px;    /* Le da un espacio de la fila de arriba */
-  }
-
-  /* 4. Hacemos que la búsqueda use todo el ancho */
-  .search-widget-container {
-    max-width: 100%; /* Elimina el max-width de 450px en móviles */
-  }
-
-  /* 5. (Opcional) Ajusta las tarjetas a ancho completo */
-  .alerta-card {
-    width: 100%; 
-  }
-}
-
-/* ------------------------------- */
-/* ESTILOS PÁGINA DE LOGIN */
-/* ------------------------------- */
-.login-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.login-form {
-  background: #ffffff;
-  padding: 2.5rem 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-}
-
-.logo-login {
-  width: 150px;
-  height: auto;
-  margin-bottom: 1.5rem;
-}
-
-.login-form h2 {
-  margin-top: 0;
-  margin-bottom: 2rem;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #555;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Importante para que el padding no desborde */
-}
-.form-group input:focus {
-  outline: none;
-  border-color: #4ea526;
-  box-shadow: 0 0 0 1px #4ea526;
-}
-
-.login-button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  background-color: #4ea526;
-  color: white;
-  font-size: 1.1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.login-button:hover {
-  background-color: #3e8e1e;
-}
-
-.login-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.error-mensaje {
-  color: #d9534f;
-  background-color: #fdf2f2;
-  border: 1px solid #d9534f;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 1.5rem;
 }
 
 /* ------------------------------- */
@@ -555,153 +434,278 @@ h1 {
 
 .detalle-fecha strong {
   color: #555;
+  font-weight: 600;
+  font-size: 0.9em;
+  margin-bottom: 4px;
 }
 
-/* Reutilizamos las clases de estado de Benefactores, 
-   pero les damos colores más fuertes */
+/* Clases de estado para vencimientos */
 .estado-vencido {
   background-color: #d9534f; /* Rojo sólido */
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 4px;
 }
 .estado-proximo {
   background-color: #f0ad4e; /* Amarillo sólido */
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 4px;
 }
 .estado-na {
-  background-color: #f5f5f5; /* Gris claro */
-  color: #777;
-}
-/* ------------------------------- */
-/* ESTILOS HEADER (MODIFICACIONES) */
-/* ------------------------------- */
-
-/* Botón de Cerrar Sesión */
-.logout-button {
-  background-color: #d9534f; /* Rojo */
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 600;
-  cursor: pointer;
-  margin-left: 20px; /* Espacio de la campana (si existe) */
-  transition: background-color 0.2s ease;
+  color: #999;
+  font-style: italic;
 }
 
-.logout-button:hover {
-  background-color: #c9302c; /* Rojo oscuro */
+
+/* ------------------------------- */
+/* ESTILOS DE LISTAS (Genérico) */
+/* ------------------------------- */
+.alerta-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 15px;
 }
 
-/* Espaciador para centrar (cuando la búsqueda no está) */
-.search-area-spacer {
-  flex: 2; /* Ocupa el mismo espacio que la búsqueda */
-} 
-
-/* ------------------------------- */
-/* ESTILOS BOTÓN DE ACCIÓN */
-/* ------------------------------- */
-.titulo-y-acciones {
-  width: 95%;
-  max-width: 1400px;
+.alerta-card li {
+  padding: 12px 5px;
+  border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
-.btn-agregar-benefactor {
+.alerta-card li:last-child {
+  border-bottom: none;
+}
+
+.alerta-card .nombre,
+.search-results-popover .nombre {
+  font-weight: 500;
+  color: #333;
+}
+.alerta-card .fecha,
+.search-results-popover .fecha {
+  font-size: 0.9em;
+  color: #555;
+  background-color: #f5f5f5;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+
+/* ------------------------------- */
+/* ESTILOS RESPONSIVE (MÓVIL) */
+/* ------------------------------- */
+@media (max-width: 768px) {
+  .main-header {
+    flex-wrap: wrap;
+    padding: 10px 15px; 
+  }
+  .logo-area {
+    flex-grow: 1;
+  }
+  .notification-area {
+    flex-grow: 0; 
+  }
+  /* Ocultamos el título en el header del móvil */
+  .header-title {
+    display: none;
+  }
+  /* La barra de búsqueda ahora va abajo */
+  .search-area {
+    order: 3;
+    flex-basis: 100%;
+    margin-top: 10px;
+    justify-content: center; /* Centrar la barra en móvil */
+  }
+  .search-widget-container {
+    max-width: 100%; /* Ocupa todo el ancho en móvil */
+  }
+  .alerta-card {
+    width: 100%; 
+  }
+  .titulo-y-acciones {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .btn-agregar-benefactor {
+    width: 100%;
+  }
+}
+
+/* ------------------------------- */
+/* ESTILOS PÁGINA DE LOGIN */
+/* ------------------------------- */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form {
+  background: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.logo-login {
+  width: 150px;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box; 
+  background-color: #fdfdfd;
+}
+
+/* Efecto de foco verde */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4ea526;
+  box-shadow: 0 0 0 3px rgba(78, 165, 38, 0.15);
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
   background-color: #4ea526;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 1.1em;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease;
 }
-.btn-agregar-benefactor:hover {
+
+.login-button:hover {
   background-color: #3e8e1e;
 }
 
+.login-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-mensaje {
+  color: #d9534f;
+  background-color: #fdf2f2;
+  border: 1px solid #d9534f;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 1.5rem;
+}
+
 /* ------------------------------- */
 /* ESTILOS DEL MODAL (Formulario Flotante - MEJORADO) */
 /* ------------------------------- */
 
-/* 1. Fondo con desenfoque (Glassmorphism) */
-/* ------------------------------- */
-/* ESTILOS DEL MODAL (Formulario Flotante - MEJORADO) */
-/* ------------------------------- */
-
-/* 1. Fondo con desenfoque (Glassmorphism) */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo más oscuro */
   display: flex;
   justify-content: center;
-  /* align-items: center; <-- Eliminamos esto */
+  align-items: flex-start; /* Alinea arriba para ver el inicio del formulario */
   z-index: 2000;
-  padding-top: 5vh; /* Añadimos espacio superior */
-  padding-bottom: 5vh; /* Añadimos espacio inferior */
+  padding: 50px 20px; /* Más espacio arriba y abajo */
   backdrop-filter: blur(5px);
-  /* Permitimos el scroll de toda la ventana si el modal es muy grande */
-  overflow-y: auto; 
+  overflow-y: auto; /* Permite scroll en el overlay si el modal es muy grande */
+  animation: fadeIn 0.3s ease-out;
 }
-/* Animación de entrada */
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* 2. Contenedor del Formulario */
 .modal-content {
   background: #ffffff;
   width: 100%;
-  max-width: 900px;
-  max-height: 90vh; /* Altura máxima */
-  border-radius: 12px; /* Bordes más redondeados */
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Sombra profunda */
-  position: relative;
+  max-width: 900px; /* Un poco más ancho para el grid */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Para que el header no se salga */
+  overflow: hidden; /* Clave para los bordes redondeados */
+  animation: slideIn 0.3s ease-out;
 }
 
-/* 3. Encabezado del Modal */
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .modal-header {
-  background-color: #f8f9fa; /* Gris muy claro */
-  padding: 20px 30px;
-  border-bottom: 1px solid #eaeaea;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky; /* Se queda fijo al hacer scroll */
-  top: 0;
-  z-index: 10;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f7f7f7; /* Header del modal con color sutil */
 }
 
 .modal-header h2 {
+  color: #333;
   margin: 0;
-  color: #2c3e50;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600; /* Un poco más grueso */
 }
 
 .close-button {
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 2rem;
-  line-height: 1;
-  color: #999;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #888;
   cursor: pointer;
+  padding: 0;
+  line-height: 1;
   transition: color 0.2s;
 }
 .close-button:hover {
@@ -736,27 +740,31 @@ h1 {
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 8px; /* Espacio entre label y input */
 }
 
 .form-group label {
-  margin-bottom: 8px;
-  font-weight: 600;
+  font-weight: 600; /* Más legible */
   color: #444;
   font-size: 0.9rem;
   letter-spacing: 0.3px;
 }
 
-.form-group input,
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group input[type="date"],
 .form-group select,
 .form-group textarea {
+  width: 100%;
   padding: 12px 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fcfcfc;
+  border: 1px solid #e0e0e0; /* Borde más sutil */
+  border-radius: 8px; /* Bordes más redondeados */
   font-size: 1rem;
   color: #333;
   transition: all 0.2s ease;
-  font-family: inherit;
+  box-sizing: border-box; 
+  background-color: #fdfdfd;
 }
 
 /* Efecto al hacer clic en un campo */
@@ -766,7 +774,7 @@ h1 {
   outline: none;
   border-color: #4ea526; /* Verde Saciar */
   background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(78, 165, 38, 0.1); /* Resplandor verde suave */
+  box-shadow: 0 0 0 4px rgba(78, 165, 38, 0.15); /* Resplandor verde suave */
 }
 
 .form-group textarea {
@@ -776,177 +784,17 @@ h1 {
 
 /* Campos que ocupan todo el ancho */
 .full-width {
-  grid-column: span 2;
+  grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
 }
 
-/* 6. Botón de Guardar */
-.form-actions {
-  margin-top: 10px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
-}
-
-.save-button {
-  background: linear-gradient(135deg, #4ea526 0%, #3e8e1e 100%); /* Degradado verde */
-  color: white;
-  border: none;
-  padding: 16px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  width: 100%;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(78, 165, 38, 0.2);
-  transition: transform 0.1s ease, box-shadow 0.2s ease;
-}
-
-.save-button:hover {
-  background: linear-gradient(135deg, #5cb830 0%, #46a022 100%);
-  transform: translateY(-2px); /* Se levanta un poco */
-  box-shadow: 0 6px 12px rgba(78, 165, 38, 0.3);
-}
-
-.save-button:active {
-  transform: translateY(0);
-}
-
-.save-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Responsive para móviles */
-@media (max-width: 768px) {
-  .benefactor-form-grid {
-    grid-template-columns: 1fr; /* Una sola columna */
-    padding: 20px;
-    gap: 15px;
-  }
-  
-  .full-width {
-    grid-column: span 1;
-  }
-
-  .modal-content {
-    max-height: 95vh;
-  }
-}
-
-/*
--------------------------------------
- ESTILOS DEL FORMULARIO MODAL
--------------------------------------
-*/
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 2rem;
-  backdrop-filter: blur(5px);
-}
-
-.modal-content {
-  background: #ffffff;
-  width: 100%;
-  max-width: 800px; /* Ancho máximo del modal */
-  max-height: 90vh; /* Altura máxima */
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.modal-header h2 {
-  color: #333;
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.close-button {
-  background: transparent;
-  border: none;
-  font-size: 2rem;
-  font-weight: 300;
-  color: #aaa;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-.close-button:hover {
-  color: #000;
-}
-
-.benefactor-form-grid {
-  padding: 1.5rem 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* 2 columnas */
-  gap: 1.25rem 1.5rem; /* Espacio vertical y horizontal */
-  overflow-y: auto; /* Scroll SÓLO para el contenido del formulario */
-}
-
-/* Estilo para los campos de formulario */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-weight: 500;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box; /* Importante */
-}
-
-/* Efecto de foco verde */
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #4ea526;
-  box-shadow: 0 0 0 3px rgba(78, 165, 38, 0.2);
-}
-
-.form-group textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-/* Ocupa las 2 columnas */
-.full-width {
+.full-width-hr {
   grid-column: 1 / -1;
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 10px 0;
 }
 
-/* Para campos dinámicos (teléfono/email) */
+/* Grupos dinámicos (Teléfono y Correo) */
 .dynamic-input-group {
   display: flex;
   gap: 10px;
@@ -975,10 +823,13 @@ h1 {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
+  font-weight: 600;
 }
 
 .remove-btn {
   color: #d9534f;
+  background-color: #fdf2f2;
+  border-color: #d9534f;
 }
 
 .add-btn:hover {
@@ -990,44 +841,43 @@ h1 {
   color: white;
 }
 
-/* Botón de guardar y mensajes */
+/* 6. Pie de Formulario (Botón Guardar) */
 .form-actions {
   grid-column: 1 / -1;
+  padding: 1.5rem 2rem;
   padding-top: 20px;
   border-top: 1px solid #eee;
-  text-align: right;
+  background-color: #f7f7f7;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  text-align: right; /* Alinea el botón a la derecha */
 }
 
 .save-button {
-  background-color: #4ea526;
+  background: linear-gradient(135deg, #4ea526 0%, #3e8e1e 100%);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 12px 28px; /* Botón más grande */
+  border-radius: 8px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .save-button:hover {
-  background-color: #3e8e1e;
+  background: linear-gradient(135deg, #5cb830 0%, #46a022 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.save-button:active {
+  transform: translateY(0);
 }
 
 .save-button:disabled {
-  background-color: #ccc;
+  background: #ccc;
   cursor: not-allowed;
-}
-
-.error-mensaje {
-  color: #d9534f;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-/* Divisor */
-.form-divider {
-  grid-column: 1 / -1;
-  border-bottom: 1px solid #eee;
-  margin: 11px 0;
+  transform: none;
+  box-shadow: none;
 }
