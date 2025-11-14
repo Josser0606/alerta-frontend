@@ -872,3 +872,18 @@ h1 {
   transform: none;
   box-shadow: none;
 }
+
+/* --- Ocultar flechas en inputs de tipo número --- */
+
+/* Para Chrome, Safari, Edge, y Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox 
+input[type=number] {
+  -moz-appearance: textfield;
+} */
+
