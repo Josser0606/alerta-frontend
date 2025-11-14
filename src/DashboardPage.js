@@ -1,6 +1,7 @@
 // frontend/src/DashboardPage.js
 import React, { useState } from 'react';
 
+// Ya no importamos BenefactorForm aquí
 import TransporteAlertas from './TransporteAlertas';
 import BenefactoresCumpleanos from './BenefactoresCumpleanos';
 import BenefactoresPagos from './BenefactoresPagos';
@@ -9,22 +10,18 @@ import ProximosCumpleanos from './ProximosCumpleanos';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import NotificationPanel from './NotificationPanel';
-
-// --- 1. IMPORTAR EL NUEVO FORMULARIO ---
-import BenefactorForm from './BenefactorForm'; 
-
 import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
-function DashboardPage({ usuario, onLogout }) {
+// Recibimos 'onAbrirFormulario' desde App.js
+function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
   
-  // --- 2. ESTADO PARA MOSTRAR/OCULTAR EL FORMULARIO ---
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  // El estado 'mostrarFormulario' YA NO VIVE AQUÍ
+  // const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-  // (Lógica de búsqueda... sin cambios)
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
@@ -52,13 +49,11 @@ function DashboardPage({ usuario, onLogout }) {
   };
   const closeSearchPopover = () => { setHaBuscado(false); };
 
-
   return (
+    // Cambiamos el Fragment ( <> ) por un div para que el modal de búsqueda (popover) tenga un ancla.
+    // O mejor, dejemos el Fragment, el CSS ya maneja el anclaje relativo.
     <>
-      {/* --- 3. RENDERIZAR EL FORMULARIO SI EL ESTADO ES TRUE --- */}
-      {mostrarFormulario && (
-        <BenefactorForm onClose={() => setMostrarFormulario(false)} />
-      )}
+      {/* El formulario modal YA NO ESTÁ AQUÍ */}
 
       <Header 
         usuario={usuario}
@@ -79,11 +74,11 @@ function DashboardPage({ usuario, onLogout }) {
         <div className="titulo-y-acciones">
             <h1>Tablero de Alertas</h1>
             
-            {/* --- 4. BOTÓN "AGREGAR" (Solo Admin y Benefactores) --- */}
+            {/* ESTE BOTÓN AHORA LLAMA A LA FUNCIÓN DE App.js */}
             { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
                 <button 
                     className="btn-agregar-benefactor" 
-                    onClick={() => setMostrarFormulario(true)}
+                    onClick={onAbrirFormulario} // <-- Cambio aquí
                 >
                     + Agregar Benefactor
                 </button>

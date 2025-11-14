@@ -1,45 +1,59 @@
 // frontend/src/App.js
-import React from 'react';
+
+import React, { useState } from 'react';
 import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
+import BenefactorForm from './BenefactorForm'; // Importa el formulario aquí
 import './App.css';
 
-// Función auxiliar para obtener los datos del usuario guardados
+// Función para obtener los datos del usuario
 function getUserData() {
   const token = localStorage.getItem('token');
   const usuarioString = localStorage.getItem('usuario');
   
   if (token && usuarioString) {
     try {
-      // Devuelve el objeto de usuario (ej: { nombre: 'Joss', rol: 'admin' })
       return JSON.parse(usuarioString); 
     } catch (e) {
-      // Si hay un error (ej. JSON malformado), borra todo
       localStorage.clear();
       return null;
     }
   }
-  return null; // No está autenticado
+  return null;
 }
 
 
 function App() {
   
-  // 1. Leemos el usuario al cargar la app
   const usuario = getUserData();
 
-  // 2. Creamos la función de Logout
+  // Mueve el estado del modal aquí
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    window.location.reload(); // Recarga la página para volver al Login
+    window.location.reload(); 
   };
   
-  // 3. Renderizado condicional
+  // Renderizado condicional
   if (usuario) {
-    // Si está logueado, muestra el Dashboard
-    // y le pasamos el objeto 'usuario' y la función 'handleLogout'
-    return <DashboardPage usuario={usuario} onLogout={handleLogout} />;
+    // Si está logueado, muestra el Dashboard Y el Modal (si está activo)
+    return (
+      <div className="App">
+        <DashboardPage 
+          usuario={usuario} 
+          onLogout={handleLogout} 
+          // Pasamos la función para ABRIR el modal
+          onAbrirFormulario={() => setMostrarFormulario(true)} 
+        />
+        
+        {/* El modal ahora vive aquí, en el nivel superior */}
+        {mostrarFormulario && (
+          <BenefactorForm onClose={() => setMostrarFormulario(false)} />
+        )}
+      </div>
+    );
   } else {
     // Si NO está logueado, muestra solo la página de Login
     return <LoginPage />;
