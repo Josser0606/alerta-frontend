@@ -96,11 +96,11 @@ function BenefactorForm({ onClose }) {
                         <label>1. Tipo de Registro *</label>
                         <select name="cod_1_tipo" value={formData.cod_1_tipo} onChange={handleChange} required>
                             <option value="">Seleccione...</option>
-                            <option value="Beneficiario">Beneficiario</option>
-                            <option value="Contacto Alterno">Contacto Alterno</option>
-                            <option value="Compras - Proveedor">Compras - Proveedor</option>
-                            <option value="Protocolo">Protocolo</option>
-                            <option value="Voluntario">Voluntario</option>
+                            <option value="Beneficiario">1.Beneficiario</option>
+                            <option value="Contacto Alterno">2.Contacto Alterno</option>
+                            <option value="Compras - Proveedor">3.Compras - Proveedor</option>
+                            <option value="Protocolo">4.Protocolo</option>
+                            <option value="Voluntario">5.Voluntario</option>
                         </select>
                     </div>
 
