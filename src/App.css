@@ -647,7 +647,8 @@ h1 {
 
 /* --- 2. El Contenedor del Formulario --- */
 .modal-content {
-  background: #ffffff;
+  background: #4ea526;
+  color: #ffffff;
   width: 100%;
   max-width: 900px; /* Ancho máximo, ideal para formularios grandes */
   max-height: 90vh; /* Altura máxima, 90% del alto de la pantalla */
