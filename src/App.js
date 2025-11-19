@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import BenefactorForm from './BenefactorForm';
-import ListaBenefactores from './components/ListaBenefactores'; // <--- 2. Importar la nueva lista
+import ListaBenefactores from './ListaBenefactores'; // <--- 2. Importar la nueva lista
 import './App.css';
 
 // Función para obtener los datos del usuario
