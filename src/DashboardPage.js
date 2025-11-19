@@ -1,7 +1,7 @@
 // frontend/src/DashboardPage.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
 
-// Ya no importamos BenefactorForm aquí
 import TransporteAlertas from './TransporteAlertas';
 import BenefactoresCumpleanos from './BenefactoresCumpleanos';
 import BenefactoresPagos from './BenefactoresPagos';
@@ -13,15 +13,14 @@ import NotificationPanel from './NotificationPanel';
 import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
-// Recibimos 'onAbrirFormulario' desde App.js
 function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
+
+  // <--- 2. INICIALIZAR EL NAVIGATE
+  const navigate = useNavigate();
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
   
-  // El estado 'mostrarFormulario' YA NO VIVE AQUÍ
-  // const [mostrarFormulario, setMostrarFormulario] = useState(false);
-
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
@@ -50,11 +49,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
   const closeSearchPopover = () => { setHaBuscado(false); };
 
   return (
-    // Cambiamos el Fragment ( <> ) por un div para que el modal de búsqueda (popover) tenga un ancla.
-    // O mejor, dejemos el Fragment, el CSS ya maneja el anclaje relativo.
     <>
-      {/* El formulario modal YA NO ESTÁ AQUÍ */}
-
       <Header 
         usuario={usuario}
         onLogoutClick={onLogout}
@@ -74,14 +69,27 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
         <div className="titulo-y-acciones">
             <h1>Tablero de Alertas</h1>
             
-            {/* ESTE BOTÓN AHORA LLAMA A LA FUNCIÓN DE App.js */}
             { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
-                <button 
-                    className="btn-agregar-benefactor" 
-                    onClick={onAbrirFormulario} // <-- Cambio aquí
-                >
-                    + Agregar Benefactor
-                </button>
+                /* <--- 3. AGREGAMOS UN CONTENEDOR PARA LOS DOS BOTONES */
+                <div style={{ display: 'flex', gap: '10px' }}> 
+                    
+                    {/* BOTÓN NUEVO: LISTA COMPLETA */}
+                    <button 
+                        className="btn-agregar-benefactor" // Puedes crear una clase .btn-lista si quieres otro color
+                        style={{ backgroundColor: '#2C3E50' }} // Ejemplo: color diferente (Azul oscuro)
+                        onClick={() => navigate('/benefactores/lista')} 
+                    >
+                        📋 Ver Lista Completa
+                    </button>
+
+                    {/* BOTÓN EXISTENTE: AGREGAR */}
+                    <button 
+                        className="btn-agregar-benefactor" 
+                        onClick={onAbrirFormulario} 
+                    >
+                        + Agregar Benefactor
+                    </button>
+                </div>
             )}
         </div>
 

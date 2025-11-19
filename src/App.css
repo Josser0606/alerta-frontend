@@ -887,3 +887,82 @@ input[type=number] {
   -moz-appearance: textfield;
 } */
 
+.lista-container {
+    padding: 20px;
+    background-color: #f4f6f8;
+    min-height: 100vh;
+}
+
+.lista-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-volver {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.barra-busqueda {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Contenedor para hacer scroll horizontal si la tabla es muy ancha */
+.tabla-scroll {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tabla-benefactores {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px; /* Fuerza scroll en móviles */
+}
+
+.tabla-benefactores th, .tabla-benefactores td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-benefactores th {
+    background-color: #2C3E50; /* Color oscuro elegante */
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.tabla-benefactores tr:hover {
+    background-color: #f1f1f1;
+}
+
+.etiqueta {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.etiqueta.activo {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.etiqueta.inactivo {
+    background-color: #f8d7da;
+    color: #721c24;
+}
