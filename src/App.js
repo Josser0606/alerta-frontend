@@ -1,88 +1,72 @@
 // frontend/src/App.js
-
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; // <--- 1. IMPORTANTE: Rutas
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import BenefactorForm from './BenefactorForm';
-import ListaBenefactores from './ListaBenefactores'; // <--- 2. Importar la nueva lista
+import ListaBenefactores from '.ListaBenefactores'; // Importa el componente
 import './App.css';
 
-// Función para obtener los datos del usuario
 function getUserData() {
   const token = localStorage.getItem('token');
   const usuarioString = localStorage.getItem('usuario');
-  
   if (token && usuarioString) {
-    try {
-      return JSON.parse(usuarioString); 
-    } catch (e) {
-      localStorage.clear();
-      return null;
-    }
+    try { return JSON.parse(usuarioString); } catch (e) { localStorage.clear(); return null; }
   }
   return null;
 }
 
 function App() {
   const usuario = getUserData();
+  
+  // ESTADOS PARA LOS MODALES
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [mostrarLista, setMostrarLista] = useState(false); // <--- NUEVO ESTADO
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    window.location.href = '/login'; // Forzamos recarga para limpiar estado
+    window.location.href = '/login';
   };
 
   return (
-    // 3. Envolvemos TODA la app en <Router>
     <Router>
       <div className="App">
         <Routes>
+          <Route path="/login" element={!usuario ? <LoginPage /> : <Navigate to="/" />} />
+
+          <Route path="/" element={
+            usuario ? (
+              <>
+                <DashboardPage 
+                  usuario={usuario} 
+                  onLogout={handleLogout} 
+                  // Pasamos las funciones para ABRIR los modales
+                  onAbrirFormulario={() => setMostrarFormulario(true)} 
+                  onAbrirLista={() => setMostrarLista(true)} // <--- NUEVA FUNCIÓN
+                />
+                
+                {/* --- MODALES FLOTANTES --- */}
+
+                {/* 1. Modal Formulario Agregar */}
+                {mostrarFormulario && (
+                  <BenefactorForm onClose={() => setMostrarFormulario(false)} />
+                )}
+
+                {/* 2. Modal Lista Completa (NUEVO) */}
+                {mostrarLista && (
+                  <ListaBenefactores onClose={() => setMostrarLista(false)} />
+                )}
+
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          } />
           
-          {/* RUTA 1: LOGIN */}
-          {/* Si ya está logueado, lo mandamos al Dashboard ("/") */}
-          <Route 
-            path="/login" 
-            element={!usuario ? <LoginPage /> : <Navigate to="/" />} 
-          />
-
-          {/* RUTA 2: DASHBOARD (PRINCIPAL) */}
-          {/* Si NO está logueado, lo mandamos al Login */}
-          <Route 
-            path="/" 
-            element={
-              usuario ? (
-                <>
-                  <DashboardPage 
-                    usuario={usuario} 
-                    onLogout={handleLogout} 
-                    onAbrirFormulario={() => setMostrarFormulario(true)} 
-                  />
-                  
-                  {/* El modal vive aquí, sobre el Dashboard */}
-                  {mostrarFormulario && (
-                    <BenefactorForm onClose={() => setMostrarFormulario(false)} />
-                  )}
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            } 
-          />
-
-          {/* RUTA 3: NUEVA LISTA DE BENEFACTORES */}
-          <Route 
-            path="/benefactores/lista" 
-            element={
-              usuario ? <ListaBenefactores /> : <Navigate to="/login" />
-            } 
-          />
-
-          {/* RUTA COMODÍN: Cualquier otra cosa redirige al inicio */}
+          {/* Ya no necesitamos la ruta /benefactores/lista porque ahora es un modal */}
           <Route path="*" element={<Navigate to={usuario ? "/" : "/login"} />} />
-
         </Routes>
       </div>
     </Router>

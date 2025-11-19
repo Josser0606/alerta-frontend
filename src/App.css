@@ -966,3 +966,140 @@ input[type=number] {
     background-color: #f8d7da;
     color: #721c24;
 }
+
+/* --- ESTILOS DEL MODAL (VENTANA FLOTANTE) --- */
+
+/* Fondo oscuro semitransparente */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Oscurece el fondo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté encima de todo */
+  backdrop-filter: blur(3px); /* Efecto borroso moderno de fondo */
+}
+
+/* Contenedor de la Lista (Más ancho que el formulario normal) */
+.modal-container-large {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 1200px; /* Ancho máximo elegante */
+  height: 85vh; /* Altura fija para permitir scroll interno */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Para que el header no se salga del borde redondeado */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cabecera del Modal */
+.modal-header {
+  background-color: #2C3E50; /* Azul oscuro corporativo */
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.btn-close-modal:hover {
+  transform: scale(1.2);
+  color: #ff6b6b;
+}
+
+/* Cuerpo del Modal (Donde va la tabla) */
+.modal-body {
+  padding: 20px;
+  overflow-y: auto; /* Scroll vertical si la lista es larga */
+  flex-grow: 1;
+  background-color: #f8f9fa;
+}
+
+/* --- ESTILOS DE LA TABLA DENTRO DEL MODAL --- */
+.barra-busqueda {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.tabla-container {
+  overflow-x: auto; /* Scroll horizontal para móviles */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tabla-benefactores {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.tabla-benefactores th {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  position: sticky; /* Encabezado fijo al hacer scroll */
+  top: 0;
+  z-index: 10;
+}
+
+.tabla-benefactores td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.tabla-benefactores tr:hover {
+  background-color: #f1f5f9; /* Efecto hover en filas */
+}
+
+/* Etiquetas de estado */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-activo {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-inactivo {
+  background-color: #ffebee;
+  color: #c62828;
+}

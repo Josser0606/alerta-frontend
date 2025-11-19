@@ -1,30 +1,33 @@
-// frontend/src/DashboardPage.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
 
+// Importamos los componentes de tarjetas (Widgets)
 import TransporteAlertas from './TransporteAlertas';
 import BenefactoresCumpleanos from './BenefactoresCumpleanos';
 import BenefactoresPagos from './BenefactoresPagos';
 import AlertasCumpleanos from './AlertasCumpleanos';
 import ProximosCumpleanos from './ProximosCumpleanos';
+
+// Importamos componentes de estructura
 import Header from './Header';
 import SearchBar from './SearchBar';
 import NotificationPanel from './NotificationPanel';
+
+// Estilos y Configuración
 import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
-function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
-
-  // <--- 2. INICIALIZAR EL NAVIGATE
-  const navigate = useNavigate();
+// Recibimos las funciones para abrir los modales desde App.js
+function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
   
+  // Estados para la barra de búsqueda
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
 
+  // Función de búsqueda de voluntarios
   const handleSearch = async (query) => {
     setHaBuscado(true); 
     setBuscando(true); 
@@ -46,10 +49,12 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
       setBuscando(false); 
     }
   };
+
   const closeSearchPopover = () => { setHaBuscado(false); };
 
   return (
     <>
+      {/* Encabezado con buscador y notificaciones */}
       <Header 
         usuario={usuario}
         onLogoutClick={onLogout}
@@ -62,6 +67,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
         <SearchBar onSearch={handleSearch} />
       </Header>
 
+      {/* Panel lateral de notificaciones (si está abierto) */}
       {panelAbierto && <NotificationPanel />}
 
       <main className="main-content">
@@ -69,20 +75,20 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario }) {
         <div className="titulo-y-acciones">
             <h1>Tablero de Alertas</h1>
             
+            {/* Botones de acción (Solo Admin o Benefactores) */}
             { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
-                /* <--- 3. AGREGAMOS UN CONTENEDOR PARA LOS DOS BOTONES */
                 <div style={{ display: 'flex', gap: '10px' }}> 
                     
-                    {/* BOTÓN NUEVO: LISTA COMPLETA */}
+                    {/* BOTÓN 1: Abrir Lista Completa (Modal) */}
                     <button 
-                        className="btn-agregar-benefactor" // Puedes crear una clase .btn-lista si quieres otro color
-                        style={{ backgroundColor: '#2C3E50' }} // Ejemplo: color diferente (Azul oscuro)
-                        onClick={() => navigate('/benefactores/lista')} 
+                        className="btn-agregar-benefactor" 
+                        style={{ backgroundColor: '#2C3E50' }} // Azul oscuro para diferenciar
+                        onClick={onAbrirLista} 
                     >
                         📋 Ver Lista Completa
                     </button>
 
-                    {/* BOTÓN EXISTENTE: AGREGAR */}
+                    {/* BOTÓN 2: Abrir Formulario de Agregar (Modal) */}
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirFormulario} 
