@@ -919,14 +919,6 @@ input[type=number] {
     font-size: 16px;
 }
 
-/* Contenedor para hacer scroll horizontal si la tabla es muy ancha */
-.tabla-scroll {
-    overflow-x: auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
 .tabla-benefactores {
     width: 100%;
     border-collapse: collapse;
