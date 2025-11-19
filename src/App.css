@@ -154,7 +154,7 @@ body {
 }
 .notification-list li strong {
   font-size: 1.2em;
-  color: #0275d8;
+  color: #4ea526;
 }
 
 /* ------------------------------- */
@@ -582,8 +582,8 @@ h1 {
   background-color: #d9534f; /* Rojo */
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 9px 15px;
+  border-radius: 15px;
   font-size: 0.9em;
   font-weight: 600;
   cursor: pointer;
