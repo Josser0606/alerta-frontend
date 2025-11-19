@@ -1,6 +1,6 @@
 // frontend/src/components/ListaBenefactores.js
 import React, { useEffect, useState } from 'react';
-import API_BASE_URL from '../apiConfig'; // Asegúrate de tener esto o usa la URL directa
+import API_BASE_URL from './apiConfig'; // Asegúrate de tener esto o usa la URL directa
 
 const ListaBenefactores = ({ onClose }) => { // <--- Recibe la función onClose
   const [benefactores, setBenefactores] = useState([]);
