@@ -14,7 +14,7 @@ const ListaBenefactores = ({ onClose }) => { // <--- Recibe la función onClose
   const fetchBenefactores = async () => {
     try {
         // Ajusta la URL si no usas apiConfig
-        const response = await fetch('https://alerta-backend-57zs.onrender.com/api/benefactores/todos'); 
+        const response = await fetch(`${API_BASE_URL}/benefactores/todos`); 
         const data = await response.json();
         setBenefactores(data);
         setLoading(false);
@@ -35,7 +35,7 @@ const ListaBenefactores = ({ onClose }) => { // <--- Recibe la función onClose
         
         {/* Cabecera con botón de cerrar */}
         <div className="modal-header">
-          <h2>📋 Base de Datos Completa</h2>
+          <h2>📋 Infomación Completa</h2>
           <button className="btn-close-modal" onClick={onClose}>&times;</button>
         </div>
 

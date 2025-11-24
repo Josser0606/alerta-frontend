@@ -28,20 +28,38 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
   const [haBuscado, setHaBuscado] = useState(false); 
 
   // Función de búsqueda de voluntarios
+  // Función de búsqueda inteligente
   const handleSearch = async (query) => {
     setHaBuscado(true); 
     setBuscando(true); 
+    
     if (!query) {
       setResultados([]);
       setBuscando(false);
       setHaBuscado(false);
       return;
     }
+
     try {
-      const response = await fetch(`${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`);
+      let endpoint = '';
+
+      // LÓGICA: Decidir dónde buscar según el rol
+      if (usuario.rol === 'voluntarios') {
+          endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
+      } else if (usuario.rol === 'benefactores') {
+          endpoint = `${API_BASE_URL}/benefactores/buscar?nombre=${encodeURIComponent(query)}`;
+      } else {
+          // Si es ADMIN, por defecto buscamos voluntarios (o podrías hacer algo más complejo después)
+          // Por ahora, dejémoslo que busque voluntarios para el admin, o benefactores si prefieres.
+          // Digamos que el admin busca voluntarios por defecto:
+          endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
+      }
+
+      const response = await fetch(endpoint);
       if (!response.ok) throw new Error('Error en la búsqueda');
       const data = await response.json();
       setResultados(data);
+
     } catch (error) {
       console.error("Error al buscar:", error);
       setResultados([]); 

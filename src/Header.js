@@ -40,7 +40,7 @@ function Header({
 
       {/* --- 2. ÁREA DE BÚSQUEDA CONDICIONAL --- */}
       {/* Solo se muestra si el rol es 'admin' o 'voluntarios' */}
-      { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') ? (
+      { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores') ? (
         <div className="search-area" ref={searchAreaRef}>
           <div className="search-widget-container">
             {children} {/* <SearchBar /> */}
@@ -61,7 +61,7 @@ function Header({
       <div className="notification-area">
         
         {/* Campana condicional (solo 'admin' o 'voluntarios') */}
-        { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
+        { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores') && (
           <span 
             className="notification-icon" 
             onClick={onNotificationClick} 
