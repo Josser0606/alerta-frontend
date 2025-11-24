@@ -5,7 +5,8 @@ import LoginPage from './LoginPage';
 import DashboardPage from './DashboardPage';
 import BenefactorForm from './BenefactorForm';
 import ListaBenefactores from './ListaBenefactores';
-import VehiculoForm from './VehiculoForm'; // <--- IMPORTANTE: Importamos el nuevo componente
+import VehiculoForm from './VehiculoForm';
+import ListaVehiculos from './ListaVehiculos'; // Asegúrate de importar esto
 import './App.css';
 
 function getUserData() {
@@ -20,15 +21,47 @@ function getUserData() {
 function App() {
   const usuario = getUserData();
   
-  // --- ESTADOS PARA LOS MODALES ---
-  const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [mostrarLista, setMostrarLista] = useState(false);
-  const [mostrarVehiculo, setMostrarVehiculo] = useState(false); // <--- NUEVO ESTADO
+  // --- 1. ESTADOS DE VISIBILIDAD (MODALES) ---
+  const [mostrarFormBenefactor, setMostrarFormBenefactor] = useState(false);
+  const [mostrarListaBenefactores, setMostrarListaBenefactores] = useState(false);
+  
+  const [mostrarFormVehiculo, setMostrarFormVehiculo] = useState(false);
+  const [mostrarListaVehiculos, setMostrarListaVehiculos] = useState(false);
+
+  // --- 2. ESTADOS DE EDICIÓN (DATOS) ---
+  const [benefactorAEditar, setBenefactorAEditar] = useState(null);
+  const [vehiculoAEditar, setVehiculoAEditar] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     window.location.href = '/login';
+  };
+
+  // --- 3. FUNCIONES MANEJADORAS (HANDLERS) ---
+
+  // Benefactores
+  const abrirCrearBenefactor = () => {
+      setBenefactorAEditar(null); // Limpiamos para que sea uno nuevo
+      setMostrarFormBenefactor(true);
+  };
+
+  const abrirEditarBenefactor = (benefactor) => {
+    setBenefactorAEditar(benefactor); // Guardamos el que vamos a editar
+    setMostrarListaBenefactores(false); // Cerramos la lista
+    setMostrarFormBenefactor(true);     // Abrimos el formulario
+  };
+
+  // Vehículos
+  const abrirCrearVehiculo = () => {
+      setVehiculoAEditar(null);
+      setMostrarFormVehiculo(true);
+  };
+
+  const abrirEditarVehiculo = (vehiculo) => {
+    setVehiculoAEditar(vehiculo);
+    setMostrarListaVehiculos(false);
+    setMostrarFormVehiculo(true);
   };
 
   return (
@@ -44,26 +77,48 @@ function App() {
                   usuario={usuario} 
                   onLogout={handleLogout} 
                   // Pasamos las funciones para ABRIR los modales
-                  onAbrirFormulario={() => setMostrarFormulario(true)} 
-                  onAbrirLista={() => setMostrarLista(true)}
-                  onAbrirVehiculo={() => setMostrarVehiculo(true)} // <--- NUEVA FUNCIÓN
+                  onAbrirFormulario={abrirCrearBenefactor} 
+                  onAbrirLista={() => setMostrarListaBenefactores(true)}
+                  onAbrirVehiculo={abrirCrearVehiculo}
+                  onAbrirListaVehiculos={() => setMostrarListaVehiculos(true)}
                 />
                 
                 {/* --- MODALES FLOTANTES --- */}
 
-                {/* 1. Modal Formulario Agregar Benefactor */}
-                {mostrarFormulario && (
-                  <BenefactorForm onClose={() => setMostrarFormulario(false)} />
+                {/* 1. BENEFACTORES: Formulario (Crear o Editar) */}
+                {mostrarFormBenefactor && (
+                  <BenefactorForm 
+                    onClose={() => setMostrarFormBenefactor(false)} 
+                    benefactorToEdit={benefactorAEditar}
+                    onSuccess={() => {
+                        // Opcional: Podrías reabrir la lista aquí si quisieras
+                        // setMostrarListaBenefactores(true);
+                    }}
+                  />
+                )}
+                
+                {/* 2. BENEFACTORES: Lista Completa */}
+                {mostrarListaBenefactores && (
+                  <ListaBenefactores 
+                    onClose={() => setMostrarListaBenefactores(false)} 
+                    onEditar={abrirEditarBenefactor} // <--- ¡ESTA LÍNEA FALTABA!
+                  />
                 )}
 
-                {/* 2. Modal Lista Completa Benefactores */}
-                {mostrarLista && (
-                  <ListaBenefactores onClose={() => setMostrarLista(false)} />
+                {/* 3. VEHÍCULOS: Formulario */}
+                {mostrarFormVehiculo && (
+                  <VehiculoForm 
+                    onClose={() => setMostrarFormVehiculo(false)} 
+                    vehiculoToEdit={vehiculoAEditar}
+                  />
                 )}
 
-                {/* 3. Modal Agregar Vehículo (NUEVO) */}
-                {mostrarVehiculo && (
-                  <VehiculoForm onClose={() => setMostrarVehiculo(false)} />
+                {/* 4. VEHÍCULOS: Lista Completa */}
+                {mostrarListaVehiculos && (
+                  <ListaVehiculos 
+                    onClose={() => setMostrarListaVehiculos(false)}
+                    onEditar={abrirEditarVehiculo}
+                  />
                 )}
 
               </>
@@ -71,7 +126,6 @@ function App() {
               <Navigate to="/login" />
             )
           } />
-          
           <Route path="*" element={<Navigate to={usuario ? "/" : "/login"} />} />
         </Routes>
       </div>
