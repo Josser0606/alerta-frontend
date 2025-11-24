@@ -1,7 +1,7 @@
 // frontend/src/ListaBenefactores.js
 import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from './apiConfig';
-import './App.css'; // Asegúrate de que los estilos estén importados
+import './App.css'; 
 
 const ListaBenefactores = ({ onClose }) => {
   const [benefactores, setBenefactores] = useState([]);
@@ -12,17 +12,45 @@ const ListaBenefactores = ({ onClose }) => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [busqueda, setBusqueda] = useState('');
 
-  // Función para cargar datos
+  // --- FUNCIÓN PARA MANEJAR TELÉFONOS (CORRECCIÓN ERROR JSON) ---
+  const obtenerTelefono = (datoRaw) => {
+    if (!datoRaw) return '-'; // Si es null o vacío retorna guion
+
+    try {
+      // 1. Intentamos convertirlo de JSON string a Objeto
+      const parsed = JSON.parse(datoRaw);
+      
+      // 2. Si es un array (formato nuevo), devolvemos el primero
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed[0].numero; 
+      }
+      
+      // 3. Si es un objeto pero no array (caso raro), lo devolvemos string
+      return JSON.stringify(parsed);
+
+    } catch (error) {
+      // 4. SI FALLA EL PARSEO (porque es texto plano '300-123...'), 
+      // devolvemos el dato tal cual viene de la base de datos.
+      return datoRaw;
+    }
+  };
+
+  // --- FUNCIÓN PARA CARGAR DATOS (PAGINADOS) ---
   const fetchBenefactores = useCallback(async () => {
     setLoading(true);
     try {
-        // Enviamos página y búsqueda al backend
+        // Enviamos página, límite y búsqueda al backend
         const response = await fetch(
             `${API_BASE_URL}/benefactores/todos?page=${pagina}&limit=20&search=${encodeURIComponent(busqueda)}`
         ); 
+        
+        if (!response.ok) {
+            throw new Error('Error al obtener datos');
+        }
+
         const resultado = await response.json();
         
-        // El backend ahora nos devuelve { data: [...], pagination: {...} }
+        // El backend nos devuelve { data: [...], pagination: {...} }
         setBenefactores(resultado.data);
         setTotalPaginas(resultado.pagination.totalPages);
     } catch (error) {
@@ -32,7 +60,7 @@ const ListaBenefactores = ({ onClose }) => {
     }
   }, [pagina, busqueda]); // Se recrea si cambia la página o la búsqueda
 
-  // Efecto: Cargar cuando cambia la página
+  // Efecto: Cargar cuando cambia la página (o la búsqueda a través del callback)
   useEffect(() => {
     fetchBenefactores();
   }, [fetchBenefactores]);
@@ -40,19 +68,22 @@ const ListaBenefactores = ({ onClose }) => {
   // Manejar cambio en el input de búsqueda
   const handleSearchChange = (e) => {
       setBusqueda(e.target.value);
-      setPagina(1); // Al buscar, siempre volvemos a la primera página
+      setPagina(1); // Al buscar, siempre volvemos a la primera página para ver los resultados
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-container-large">
         
+        {/* Cabecera */}
         <div className="modal-header">
           <h2>📋 Información Completa</h2>
           <button className="btn-close-modal" onClick={onClose}>&times;</button>
         </div>
 
+        {/* Cuerpo */}
         <div className="modal-body">
+          
           {/* Barra de Búsqueda */}
           <input 
             type="text" 
@@ -89,7 +120,10 @@ const ListaBenefactores = ({ onClose }) => {
                             <td>{b.numero_documento || '-'}</td>
                             <td>{b.cod_1_tipo}</td>
                             <td>{b.nombre_contactado || '-'}</td>
-                            <td>{b.numero_contacto ? JSON.parse(b.numero_contacto)[0]?.numero : '-'}</td>
+                            
+                            {/* Usamos la función segura aquí */}
+                            <td>{obtenerTelefono(b.numero_contacto)}</td>
+                            
                             <td>
                             <span className={`badge ${b.estado === 'Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
                                 {b.estado || 'Desconocido'}
