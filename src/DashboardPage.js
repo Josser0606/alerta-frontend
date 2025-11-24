@@ -17,7 +17,7 @@ import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
 // Recibimos las funciones para abrir los modales desde App.js
-function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onAbrirVehiculo }) {
+function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onAbrirVehiculo, onAbrirListaVehiculos }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
@@ -88,22 +88,21 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
       <main className="main-content">
         
         <div className="titulo-y-acciones">
-            <h1>Tablero de Alertas</h1>
+            {/* Mostramos el rol para depurar si no salen los botones */}
+            <h1>Tablero de Alertas <small style={{fontSize:'0.5em', opacity:0.7}}>({usuario.rol})</small></h1>
             
-            {/* Botones de acción (Solo Admin o Benefactores) */}
+            {/* --- GRUPO 1: BOTONES BENEFACTORES --- */}
+            {/* Solo visible para ADMIN o BENEFACTORES */}
             { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
-                <div style={{ display: 'flex', gap: '10px' }}> 
-                    
-                    {/* BOTÓN 1: Abrir Lista Completa (Modal) */}
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}> 
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#2C3E50' }} // Azul oscuro para diferenciar
+                        style={{ backgroundColor: '#2C3E50' }} 
                         onClick={onAbrirLista} 
                     >
-                        📋 Ver Lista Completa
+                        📋 Ver Lista Benefactores
                     </button>
 
-                    {/* BOTÓN 2: Abrir Formulario de Agregar (Modal) */}
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirFormulario} 
@@ -113,15 +112,27 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
                 </div>
             )}
 
-            {/* Botones de acción (Solo Admin o Transporte) - NUEVO BLOQUE */}
+            {/* --- GRUPO 2: BOTONES TRANSPORTE --- */}
+            {/* Solo visible para ADMIN o TRANSPORTE */}
             { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
-                <button 
-                    className="btn-agregar-benefactor" 
-                    style={{ backgroundColor: '#5bc0de', marginLeft: '10px' }} 
-                    onClick={onAbrirVehiculo} 
-                >
-                    + Agregar Vehículo
-                </button>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                    {/* ESTE ES EL BOTÓN QUE TE FALTABA */}
+                    <button 
+                        className="btn-agregar-benefactor" 
+                        style={{ backgroundColor: '#4682B4' }} // Azul diferente
+                        onClick={onAbrirListaVehiculos} 
+                    >
+                        🚌 Ver Flota
+                    </button>
+
+                    <button 
+                        className="btn-agregar-benefactor" 
+                        style={{ backgroundColor: '#5bc0de' }} 
+                        onClick={onAbrirVehiculo} 
+                    >
+                        + Nuevo Vehículo
+                    </button>
+                </div>
             )}
         </div>
 
