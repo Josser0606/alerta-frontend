@@ -394,17 +394,17 @@ h1 {
 .logo-login {
   width: 150px;
   height: auto;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4rem;
 }
 
 .login-form h2 {
   margin-top: 0;
   margin-bottom: 2rem;
-  color: #333;
+  color: #46a022;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: left;
 }
 

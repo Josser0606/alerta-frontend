@@ -48,7 +48,7 @@ function LoginPage() {
         <div className="login-container">
             <form className="login-form" onSubmit={handleLogin}>
                 <img src="/logo_saciar.png" alt="Logo Saciar" className="logo-login" />
-                <h2>Iniciar Sesión</h2>
+            
                 
                 <div className="form-group">
                     <label htmlFor="email">Correo Electrónico</label>
