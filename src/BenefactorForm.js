@@ -1,11 +1,11 @@
-// frontend/src/BenefactorForm.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import API_BASE_URL from './apiConfig';
 import './App.css';
 
-function BenefactorForm({ onClose }) {
+function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
   
-  const [formData, setFormData] = useState({
+  // Definimos el estado inicial para reutilizarlo
+  const initialState = {
     cod_1_tipo: '',
     naturaleza: '',
     tipo_documento: '',
@@ -13,7 +13,7 @@ function BenefactorForm({ onClose }) {
     nombre_completo: '',
     tipo_donacion: '',
     procedencia: '',
-    procedencia_2: '', // Opcional
+    procedencia_2: '',
     detalles_donacion: '',
     fecha_donacion: '',
     observaciones: '',
@@ -22,8 +22,8 @@ function BenefactorForm({ onClose }) {
     correos: [{ email: '' }],
     fecha_fundacion_o_cumpleanos: '',
     direccion: '',
-    departamento: '', // Asegúrate de que este campo exista en tu BD
-    ciudad: '',       // Asegúrate de que este campo exista en tu BD
+    departamento: '',
+    ciudad: '',
     empresa: '',
     cargo: '',
     estado_civil: '',
@@ -38,98 +38,122 @@ function BenefactorForm({ onClose }) {
     fecha_actualizacion_clinton: '',
     antecedentes_judiciales: 'No',
     encuesta_satisfaccion: ''
-  });
+  };
 
+  const [formData, setFormData] = useState(initialState);
   const [cargando, setCargando] = useState(false);
-  const [mensaje, setMensaje] = useState(''); // El setter es setMensaje
+  const [mensaje, setMensaje] = useState('');
 
-  // --- NUEVAS FUNCIONES PARA TELÉFONOS ---
+  // --- EFECTO: CARGAR DATOS SI ESTAMOS EDITANDO ---
+  useEffect(() => {
+    if (benefactorToEdit) {
+      const b = benefactorToEdit;
+      // Helper para formatear fechas a YYYY-MM-DD (lo que espera el input type="date")
+      const formatDate = (dateStr) => dateStr ? dateStr.split('T')[0] : '';
+      
+      // Parseo seguro de los campos JSON (telefonos y correos)
+      let tels = [{ tipo: 'Celular', numero: '' }];
+      let mails = [{ email: '' }];
+      
+      try {
+          // Si vienen como string JSON, los convertimos a array
+          if (b.numero_contacto) {
+             const parsedTels = JSON.parse(b.numero_contacto);
+             if (Array.isArray(parsedTels)) tels = parsedTels;
+          }
+          if (b.correo) {
+             const parsedMails = JSON.parse(b.correo);
+             if (Array.isArray(parsedMails)) mails = parsedMails;
+          }
+      } catch(e) { 
+          console.error("Error parseando datos de contacto, se usarán valores por defecto", e); 
+          // Si falla, se queda con el valor por defecto (array vacío) para no romper el form
+      }
 
+      // Rellenamos el formulario mapeando los campos de la DB a los del Form
+      setFormData({
+        ...initialState, // Mantiene valores por defecto si alguno falta
+        ...b, // Sobreescribe con los datos de la DB
+        // Mapeos manuales importantes (nombres de campo diferentes en DB vs Form)
+        nombre_completo: b.nombre_benefactor || b.nombre_completo || '', 
+        telefonos: tels,
+        correos: mails,
+        // Formateo de fechas
+        fecha_fundacion_o_cumpleanos: formatDate(b.fecha_fundacion_o_cumpleanos),
+        fecha_donacion: formatDate(b.fecha_donacion),
+        fecha_rut_actualizado: b.fecha_rut_actualizado || '', 
+        fecha_actualizacion_clinton: formatDate(b.fecha_actualizacion_clinton),
+        // Aseguramos que los campos opcionales no sean null
+        procedencia_2: b.procedencia_2 || '',
+        certificado_donacion_detalle: b.certificado_donacion_detalle || '',
+        conyuge: b.conyuge || '',
+        encuesta_satisfaccion: b.encuesta_satisfaccion || ''
+      });
+    }
+  }, [benefactorToEdit]);
+
+  // --- FUNCIONES PARA TELÉFONOS ---
   const handleTelefonoChange = (index, event) => {
     const { name, value } = event.target;
     const list = [...formData.telefonos];
     list[index][name] = value;
     setFormData({ ...formData, telefonos: list });
   };
+  const handleAddTelefono = () => { if (formData.telefonos.length < 3) setFormData({ ...formData, telefonos: [...formData.telefonos, { tipo: 'Celular', numero: '' }] }); };
+  const handleRemoveTelefono = (index) => { const list = [...formData.telefonos]; list.splice(index, 1); setFormData({ ...formData, telefonos: list }); };
 
-  const handleAddTelefono = () => {
-    if (formData.telefonos.length < 3) {
-      setFormData({
-        ...formData,
-        telefonos: [...formData.telefonos, { tipo: 'Celular', numero: '' }]
-      });
-    }
-  };
-
-  const handleRemoveTelefono = (index) => {
-    const list = [...formData.telefonos];
-    list.splice(index, 1);
-    setFormData({ ...formData, telefonos: list });
-  };
-
-  // --- NUEVAS FUNCIONES PARA CORREOS ---
-
+  // --- FUNCIONES PARA CORREOS ---
   const handleCorreoChange = (index, event) => {
     const { value } = event.target;
     const list = [...formData.correos];
     list[index] = { email: value }; 
     setFormData({ ...formData, correos: list });
   };
+  const handleAddCorreo = () => { if (formData.correos.length < 3) setFormData({ ...formData, correos: [...formData.correos, { email: '' }] }); };
+  const handleRemoveCorreo = (index) => { const list = [...formData.correos]; list.splice(index, 1); setFormData({ ...formData, correos: list }); };
 
-  const handleAddCorreo = () => {
-    if (formData.correos.length < 3) {
-      setFormData({
-        ...formData,
-        correos: [...formData.correos, { email: '' }]
-      });
-    }
-  };
-
-  const handleRemoveCorreo = (index) => {
-    const list = [...formData.correos];
-    list.splice(index, 1);
-    setFormData({ ...formData, correos: list });
-  };
-
-  // --- FIN NUEVAS FUNCIONES ---
-
+  // --- MANEJO GENERAL DE INPUTS ---
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // --- ENVIAR FORMULARIO ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setCargando(true);
     setMensaje('');
 
+    // Preparamos los datos limpiando arrays vacíos
     const dataToSend = {
       ...formData,
-      telefonos: formData.telefonos.filter(t => t.numero.trim() !== ''),
-      // Mapeamos el array de objetos a un array de strings, que es lo que espera el backend
-      correos: formData.correos.map(c => c.email).filter(email => email.trim() !== ''),
+      telefonos: formData.telefonos.filter(t => t.numero && t.numero.toString().trim() !== ''),
+      correos: formData.correos.map(c => c.email).filter(email => email && email.trim() !== ''),
     };
 
-    // Validación: al menos un teléfono y un correo
+    // Validaciones básicas
     if (dataToSend.telefonos.length === 0) {
-        setMensaje('Debe agregar al menos un número de teléfono.'); // <-- CORRECCIÓN AQUÍ
+        setMensaje('Debe agregar al menos un número de teléfono.');
         setCargando(false);
         return;
     }
-    if (dataToSend.correos.length === 0 || dataToSend.correos[0] === '') {
-        setMensaje('Debe agregar al menos un correo electrónico.'); // <-- CORRECCIÓN AQUÍ
+    if (dataToSend.correos.length === 0) {
+        setMensaje('Debe agregar al menos un correo electrónico.');
         setCargando(false);
         return;
     }
-
 
     try {
-      // Usamos la URL de producción
-      const response = await fetch('https://alerta-backend-57zs.onrender.com/api/benefactores/nuevo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+      // Lógica Dinámica: Si hay ID, es EDITAR (PUT), si no, es NUEVO (POST)
+      const url = benefactorToEdit 
+        ? `${API_BASE_URL}/benefactores/editar/${benefactorToEdit.id}`
+        : `${API_BASE_URL}/benefactores/nuevo`;
+      
+      const method = benefactorToEdit ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSend)
       });
 
@@ -139,9 +163,16 @@ function BenefactorForm({ onClose }) {
         throw new Error(data.mensaje || 'Error al guardar');
       }
 
-      alert('Benefactor guardado con éxito');
-      onClose(); // Cerrar el modal
-      window.location.reload(); // Recargar para ver los cambios
+      alert(benefactorToEdit ? 'Datos actualizados con éxito' : 'Benefactor guardado con éxito');
+      
+      // Si nos pasaron una función para actualizar la lista, la usamos. Si no, recargamos.
+      if (onSuccess) {
+          onSuccess();
+      } else {
+          window.location.reload(); 
+      }
+      
+      onClose();
 
     } catch (error) {
       setMensaje(error.message);
@@ -154,7 +185,7 @@ function BenefactorForm({ onClose }) {
       <div className="modal-overlay">
           <div className="modal-content">
               <div className="modal-header">
-                  <h2>Agregar Nuevo Benefactor</h2>
+                  <h2>{benefactorToEdit ? 'Editar Benefactor' : 'Agregar Nuevo Benefactor'}</h2>
                   <button className="close-button" onClick={onClose}>×</button>
               </div>
               
@@ -276,7 +307,7 @@ function BenefactorForm({ onClose }) {
                       <input type="text" name="nombre_contactado" value={formData.nombre_contactado} onChange={handleChange} required />
                   </div>
                   
-                  {/* Divisor para mantener el layout */}
+                  {/* Divisor */}
                   <div className="form-group"></div>
 
                   {/* 12. Contacto (Dinámico) */}
@@ -294,7 +325,7 @@ function BenefactorForm({ onClose }) {
                           placeholder="Número"
                           value={tel.numero}
                           onChange={(e) => handleTelefonoChange(index, e)}
-                          required={index === 0} /* El primero es requerido */
+                          required={index === 0} 
                           />
                           {formData.telefonos.length > 1 && (
                           <button type="button" className="remove-btn" onClick={() => handleRemoveTelefono(index)}>–</button>
@@ -302,7 +333,7 @@ function BenefactorForm({ onClose }) {
                       </div>
                       ))}
                       {formData.telefonos.length < 3 && (
-                      <button typef="button" className="add-btn" onClick={handleAddTelefono}>+ Agregar Teléfono</button>
+                      <button type="button" className="add-btn" onClick={handleAddTelefono}>+ Agregar Teléfono</button>
                       )}
                   </div>
 
@@ -317,7 +348,7 @@ function BenefactorForm({ onClose }) {
                           placeholder="ejemplo@correo.com"
                           value={correo.email}
                           onChange={(e) => handleCorreoChange(index, e)}
-                          required={index === 0} /* El primero es requerido */
+                          required={index === 0} 
                           />
                           {formData.correos.length > 1 && (
                           <button type="button" className="remove-btn" onClick={() => handleRemoveCorreo(index)}>–</button>
@@ -370,7 +401,6 @@ function BenefactorForm({ onClose }) {
                       <option value="">Seleccione...</option>
                       <option value="Casado/a">Casado/a</option>
                       <option value="Soltero/a">Soltero/a</option>
-Other
                       <option value="Viudo/a">Viudo/a</option>
                       </select>
                   </div>
@@ -457,7 +487,7 @@ Other
                   <div className="form-actions full-width">
                       {mensaje && <p className="error-mensaje">{mensaje}</p>}
                       <button type="submit" className="save-button" disabled={cargando}>
-                          {cargando ? 'Guardando...' : 'Guardar Benefactor'}
+                          {cargando ? 'Guardando...' : (benefactorToEdit ? 'Actualizar Benefactor' : 'Guardar Benefactor')}
                       </button>
                   </div>
                   

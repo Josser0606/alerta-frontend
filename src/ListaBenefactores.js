@@ -1,9 +1,8 @@
-// frontend/src/ListaBenefactores.js
 import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from './apiConfig';
 import './App.css'; 
 
-const ListaBenefactores = ({ onClose }) => {
+const ListaBenefactores = ({ onClose, onEditar }) => {
   const [benefactores, setBenefactores] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -12,7 +11,7 @@ const ListaBenefactores = ({ onClose }) => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [busqueda, setBusqueda] = useState('');
 
-  // --- FUNCIÓN PARA MANEJAR TELÉFONOS (CORRECCIÓN ERROR JSON) ---
+  // --- FUNCIÓN SEGURA PARA MANEJAR TELÉFONOS ---
   const obtenerTelefono = (datoRaw) => {
     if (!datoRaw) return '-'; // Si es null o vacío retorna guion
 
@@ -109,6 +108,7 @@ const ListaBenefactores = ({ onClose }) => {
                       <th>Contacto</th>
                       <th>Teléfono</th>
                       <th>Estado</th>
+                      <th>Acciones</th> {/* Columna Nueva */}
                     </tr>
                   </thead>
                   <tbody>
@@ -125,15 +125,26 @@ const ListaBenefactores = ({ onClose }) => {
                             <td>{obtenerTelefono(b.numero_contacto)}</td>
                             
                             <td>
-                            <span className={`badge ${b.estado === 'Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
-                                {b.estado || 'Desconocido'}
-                            </span>
+                                <span className={`badge ${b.estado === 'Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
+                                    {b.estado || 'Desconocido'}
+                                </span>
+                            </td>
+                            
+                            {/* Botón de Editar */}
+                            <td>
+                                <button 
+                                    className="btn-volver" 
+                                    style={{fontSize: '0.8em', padding: '5px 10px', background: '#f0ad4e', border: 'none'}}
+                                    onClick={() => onEditar(b)}
+                                >
+                                    ✏️ Editar
+                                </button>
                             </td>
                         </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>
+                            <td colSpan="8" style={{textAlign: 'center', padding: '20px'}}>
                                 No se encontraron resultados.
                             </td>
                         </tr>
