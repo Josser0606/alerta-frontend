@@ -28,7 +28,7 @@ const ListaVehiculos = ({ onClose, onEditar }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-container-large">
-        <div className="modal-header" style={{backgroundColor: '#5bc0de'}}>
+        <div className="modal-header" style={{backgroundColor: '#46a022'}}>
           <h2>🚗 Gestión de Flota</h2>
           <button className="btn-close-modal" onClick={onClose}>&times;</button>
         </div>

@@ -498,10 +498,10 @@ h1 {
 
 /* Tarjeta de Transporte */
 .alerta-card.transporte {
-  border-left: 6px solid #5bc0de; /* Azul Info */
+  border-left: 6px solid #46a022; /* Azul Info */
 }
 .alerta-card.transporte h3 {
-  color: #5bc0de;
+  color: #46a022;
 }
 
 /* Lista de vehículos */

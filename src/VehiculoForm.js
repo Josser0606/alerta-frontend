@@ -79,7 +79,7 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
   return (
       <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '500px' }}>
-              <div className="modal-header" style={{ backgroundColor: '#5bc0de' }}> 
+              <div className="modal-header" style={{ backgroundColor: '#46a022' }}> 
                   <h2>{vehiculoToEdit ? 'Editar Vehículo' : 'Nuevo Vehículo'}</h2>
                   <button className="close-button" onClick={onClose}>×</button>
               </div>
@@ -117,7 +117,7 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
                   </div>
                   <div className="form-actions full-width">
                       {mensaje && <p className="error-mensaje">{mensaje}</p>}
-                      <button type="submit" className="save-button" disabled={cargando} style={{ background: '#5bc0de' }}>
+                      <button type="submit" className="save-button" disabled={cargando} style={{ background: '#46a022' }}>
                           {cargando ? 'Guardando...' : 'Guardar Vehículo'}
                       </button>
                   </div>

@@ -97,7 +97,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
                 <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}> 
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#2C3E50' }} 
+                        style={{ backgroundColor: '#46a022' }} 
                         onClick={onAbrirLista} 
                     >
                         📋 Ver Lista Benefactores
@@ -119,7 +119,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
                     {/* ESTE ES EL BOTÓN QUE TE FALTABA */}
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#4682B4' }} // Azul diferente
+                        style={{ backgroundColor: '#46a022' }} // Azul diferente
                         onClick={onAbrirListaVehiculos} 
                     >
                         🚌 Ver Flota
@@ -127,7 +127,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
 
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#5bc0de' }} 
+                        style={{ backgroundColor: '#46a022' }} 
                         onClick={onAbrirVehiculo} 
                     >
                         + Nuevo Vehículo
