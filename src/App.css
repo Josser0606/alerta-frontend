@@ -932,7 +932,7 @@ input[type=number] {
 }
 
 .tabla-benefactores th {
-    background-color: #2C3E50; /* Color oscuro elegante */
+    background-color: #46a022; /* Color oscuro elegante */
     color: white;
     position: sticky;
     top: 0;
@@ -998,7 +998,7 @@ input[type=number] {
 
 /* Cabecera del Modal */
 .modal-header {
-  background-color: #2C3E50; /* Azul oscuro corporativo */
+  background-color: #46a022; /* Azul oscuro corporativo */
   color: white;
   padding: 20px;
   display: flex;
@@ -1058,7 +1058,7 @@ input[type=number] {
 }
 
 .tabla-benefactores th {
-  background-color: #34495e;
+  background-color: #46a022;
   color: white;
   padding: 15px;
   text-align: left;
