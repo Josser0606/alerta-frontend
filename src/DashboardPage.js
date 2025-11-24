@@ -17,7 +17,7 @@ import './App.css';
 import API_BASE_URL from './apiConfig'; 
 
 // Recibimos las funciones para abrir los modales desde App.js
-function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
+function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onAbrirVehiculo }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
@@ -27,7 +27,6 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
 
-  // Función de búsqueda de voluntarios
   // Función de búsqueda inteligente
   const handleSearch = async (query) => {
     setHaBuscado(true); 
@@ -49,9 +48,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
       } else if (usuario.rol === 'benefactores') {
           endpoint = `${API_BASE_URL}/benefactores/buscar?nombre=${encodeURIComponent(query)}`;
       } else {
-          // Si es ADMIN, por defecto buscamos voluntarios (o podrías hacer algo más complejo después)
-          // Por ahora, dejémoslo que busque voluntarios para el admin, o benefactores si prefieres.
-          // Digamos que el admin busca voluntarios por defecto:
+          // Si es ADMIN, por defecto buscamos voluntarios
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
       }
 
@@ -114,6 +111,17 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista }) {
                         + Agregar Benefactor
                     </button>
                 </div>
+            )}
+
+            {/* Botones de acción (Solo Admin o Transporte) - NUEVO BLOQUE */}
+            { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
+                <button 
+                    className="btn-agregar-benefactor" 
+                    style={{ backgroundColor: '#5bc0de', marginLeft: '10px' }} 
+                    onClick={onAbrirVehiculo} 
+                >
+                    + Agregar Vehículo
+                </button>
             )}
         </div>
 
