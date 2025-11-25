@@ -51,10 +51,11 @@ function LoginPage() {
             
                 
                 <div className="form-group">
-                    <label htmlFor="email">Correo Electrónico</label>
+                    <label htmlFor="email">Correo Electronico*</label>
                     <input 
                         type="email" 
                         id="email"
+                        placeholder="Correo Electronico"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required 
@@ -62,10 +63,11 @@ function LoginPage() {
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="password">Contraseña</label>
+                    <label htmlFor="password">Contraseña*</label>
                     <input 
                         type="password" 
                         id="password"
+                        placeholder="Contraseña"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required 

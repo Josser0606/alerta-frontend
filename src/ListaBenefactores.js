@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from './apiConfig';
 import './App.css'; 
+import { FaRegEdit } from "react-icons/fa";
+import { IoSearchOutline } from "react-icons/io5";
 
 const ListaBenefactores = ({ onClose, onEditar }) => {
   const [benefactores, setBenefactores] = useState([]);
@@ -76,7 +78,7 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
         
         {/* Cabecera */}
         <div className="modal-header">
-          <h2>📋 Información Completa</h2>
+          <h2> Información Completa</h2>
           <button className="btn-close-modal" onClick={onClose}>&times;</button>
         </div>
 
@@ -86,7 +88,7 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
           {/* Barra de Búsqueda */}
           <input 
             type="text" 
-            placeholder="🔍 Buscar por nombre o documento..." 
+            placeholder="Buscar por nombre o documento..." 
             className="barra-busqueda"
             value={busqueda}
             onChange={handleSearchChange}
@@ -134,10 +136,10 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
                             <td>
                                 <button 
                                     className="btn-volver" 
-                                    style={{fontSize: '0.8em', padding: '5px 10px', background: '#f0ad4e', border: 'none'}}
+                                    style={{fontSize: '0.9em', padding: '10px 15px', background: '#46a022', border: 'none'}}
                                     onClick={() => onEditar(b)}
                                 >
-                                    ✏️ Editar
+                                    <FaRegEdit />
                                 </button>
                             </td>
                         </tr>
