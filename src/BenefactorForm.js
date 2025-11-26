@@ -19,45 +19,63 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
-  // --- EFECTO MODIFICADO: CARGAR DATOS COMPLETOS DESDE EL SERVIDOR ---
+ // --- EFECTO MODIFICADO: CARGAR DATOS Y LIMPIAR ERRORES ---
   useEffect(() => {
     const cargarDatosCompletos = async () => {
       if (benefactorToEdit) {
-        setCargando(true); // Mostramos "Guardando/Cargando..." mientras trae datos
+        setCargando(true);
         try {
-            // 1. Pedimos los datos completos al nuevo endpoint
             const response = await fetch(`${API_BASE_URL}/benefactores/detalle/${benefactorToEdit.id}`);
+            if (!response.ok) throw new Error("Error al cargar detalles");
             
-            if (!response.ok) throw new Error("Error al cargar detalles completos");
-            
-            const b = await response.json(); // 'b' ahora tiene datos de benefactores Y donaciones
+            const b = await response.json();
 
-            // 2. Procesamos los datos igual que antes
-            const formatDate = (dateStr) => dateStr ? dateStr.split('T')[0] : '';
+            // 1. HELPER SEGURO PARA FECHAS
+            // Si la fecha es "Junio" o inválida, devuelve '' para que el input no falle.
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const d = new Date(dateStr);
+                // Verificamos si es una fecha válida
+                if (isNaN(d.getTime())) return ''; 
+                // Convertimos a YYYY-MM-DD
+                return d.toISOString().split('T')[0];
+            };
             
-            let tels = [{ tipo: 'Celular', numero: '' }];
-            let mails = [{ email: '' }];
-            
-            try {
-                if (b.numero_contacto) {
-                   const parsedTels = JSON.parse(b.numero_contacto);
-                   if (Array.isArray(parsedTels)) tels = parsedTels;
+            // 2. HELPER SEGURO PARA JSON (Teléfonos/Correos)
+            // Si falla el parseo, convertimos el texto plano en la estructura correcta.
+            const safeParse = (rawData, defaultStructure) => {
+                if (!rawData) return defaultStructure;
+                try {
+                    const parsed = JSON.parse(rawData);
+                    // Si es array y tiene datos, lo usamos
+                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+                    return defaultStructure;
+                } catch (e) {
+                    // SI FALLA EL PARSEO (ej: es un número plano "3001234567"), lo recuperamos
+                    // Asumimos que es un solo dato y lo metemos en la estructura
+                    console.warn("Dato recuperado de formato antiguo:", rawData);
+                    if (defaultStructure[0].hasOwnProperty('numero')) {
+                        return [{ tipo: 'Celular', numero: rawData }];
+                    } else {
+                        return [{ email: rawData }];
+                    }
                 }
-                if (b.correo) {
-                   const parsedMails = JSON.parse(b.correo);
-                   if (Array.isArray(parsedMails)) mails = parsedMails;
-                }
-            } catch(e) { console.error("Error parseo contacto", e); }
+            };
 
-            // 3. Llenamos el formulario
+            // 3. Procesamos los contactos usando el Helper Seguro
+            const tels = safeParse(b.numero_contacto, [{ tipo: 'Celular', numero: '' }]);
+            const mails = safeParse(b.correo, [{ email: '' }]);
+
+            // 4. Llenamos el formulario
             setFormData({
               ...initialState,
-              ...b, // Esto ahora incluye campos como 'tipo_donacion', 'observaciones', etc.
+              ...b,
               nombre_completo: b.nombre_benefactor || b.nombre_completo || '', 
               telefonos: tels,
               correos: mails,
+              // Usamos el formatDate seguro
               fecha_fundacion_o_cumpleanos: formatDate(b.fecha_fundacion_o_cumpleanos),
-              fecha_donacion: formatDate(b.fecha_donacion), // ¡Ahora sí llegará!
+              fecha_donacion: formatDate(b.fecha_donacion),
               fecha_rut_actualizado: b.fecha_rut_actualizado || '', 
               fecha_actualizacion_clinton: formatDate(b.fecha_actualizacion_clinton),
               procedencia_2: b.procedencia_2 || '',
@@ -68,7 +86,7 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
 
         } catch (error) {
             console.error(error);
-            setMensaje("Error cargando la información completa del benefactor.");
+            setMensaje("Error cargando la información del benefactor.");
         } finally {
             setCargando(false);
         }
