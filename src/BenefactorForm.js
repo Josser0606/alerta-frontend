@@ -19,7 +19,7 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
- // --- EFECTO MODIFICADO: CARGAR DATOS Y LIMPIAR ERRORES ---
+ // --- EFECTO MODIFICADO: CARGAR DATOS + LIMPIEZA INTELIGENTE ---
   useEffect(() => {
     const cargarDatosCompletos = async () => {
       if (benefactorToEdit) {
@@ -30,39 +30,61 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
             
             const b = await response.json();
 
-            // 1. HELPER SEGURO PARA FECHAS
-            // Si la fecha es "Junio" o inválida, devuelve '' para que el input no falle.
+            // 1. HELPER PARA FECHAS (Evita el error "Junio")
             const formatDate = (dateStr) => {
                 if (!dateStr) return '';
                 const d = new Date(dateStr);
-                // Verificamos si es una fecha válida
                 if (isNaN(d.getTime())) return ''; 
-                // Convertimos a YYYY-MM-DD
                 return d.toISOString().split('T')[0];
             };
             
-            // 2. HELPER SEGURO PARA JSON (Teléfonos/Correos)
-            // Si falla el parseo, convertimos el texto plano en la estructura correcta.
+            // 2. HELPER "SÚPER SEGURO" PARA JSON (Corrige Correos y Teléfonos)
             const safeParse = (rawData, defaultStructure) => {
                 if (!rawData) return defaultStructure;
+                
+                const esTelefono = defaultStructure[0].hasOwnProperty('numero');
+
                 try {
+                    // INTENTO 1: Parsear JSON normal
                     const parsed = JSON.parse(rawData);
-                    // Si es array y tiene datos, lo usamos
-                    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-                    return defaultStructure;
-                } catch (e) {
-                    // SI FALLA EL PARSEO (ej: es un número plano "3001234567"), lo recuperamos
-                    // Asumimos que es un solo dato y lo metemos en la estructura
-                    console.warn("Dato recuperado de formato antiguo:", rawData);
-                    if (defaultStructure[0].hasOwnProperty('numero')) {
-                        return [{ tipo: 'Celular', numero: rawData }];
-                    } else {
-                        return [{ email: rawData }];
+                    
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        // DETECCIÓN DEL ERROR ACTUAL:
+                        // Si es un array de textos ["a@a.com"], lo convertimos a objetos [{email: "a@a.com"}]
+                        if (typeof parsed[0] === 'string') {
+                            return parsed.map(item => {
+                                if (esTelefono) return { tipo: 'Celular', numero: item };
+                                return { email: item };
+                            });
+                        }
+                        // Si ya son objetos, retornamos tal cual
+                        return parsed;
                     }
+                    return defaultStructure;
+
+                } catch (e) {
+                    // INTENTO 2: Limpiar datos sucios antiguos (separados por " - ")
+                    console.warn("Recuperando dato antiguo:", rawData);
+                    
+                    // Convertimos a string y separamos por " - "
+                    const partes = rawData.toString().split(' - ');
+
+                    const recuperados = partes.map(parte => {
+                        let valorLimpio = parte.trim();
+                        if (esTelefono) {
+                            // Si es teléfono, quitamos guiones internos (ej: 314-123 -> 314123)
+                            valorLimpio = valorLimpio.replace(/\D/g, ''); 
+                            return { tipo: 'Celular', numero: valorLimpio };
+                        } else {
+                            return { email: valorLimpio };
+                        }
+                    });
+
+                    return recuperados.length > 0 ? recuperados : defaultStructure;
                 }
             };
 
-            // 3. Procesamos los contactos usando el Helper Seguro
+            // 3. Procesamos usando el Helper Súper Seguro
             const tels = safeParse(b.numero_contacto, [{ tipo: 'Celular', numero: '' }]);
             const mails = safeParse(b.correo, [{ email: '' }]);
 
@@ -73,7 +95,6 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
               nombre_completo: b.nombre_benefactor || b.nombre_completo || '', 
               telefonos: tels,
               correos: mails,
-              // Usamos el formatDate seguro
               fecha_fundacion_o_cumpleanos: formatDate(b.fecha_fundacion_o_cumpleanos),
               fecha_donacion: formatDate(b.fecha_donacion),
               fecha_rut_actualizado: b.fecha_rut_actualizado || '', 
@@ -96,7 +117,7 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
     cargarDatosCompletos();
   }, [benefactorToEdit]);
 
-  // ... (El resto de funciones handleTelefonoChange, handleCorreoChange, handleChange siguen IGUAL) ...
+  // ... HANDLERS (Sin cambios) ...
   const handleTelefonoChange = (index, event) => {
     const { name, value } = event.target;
     const list = [...formData.telefonos];
@@ -120,12 +141,14 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // --- ENVIAR FORMULARIO (Sigue Igual) ---
+  // --- ENVIAR FORMULARIO ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setCargando(true);
     setMensaje('');
 
+    // IMPORTANTE: Al guardar, seguimos guardando arrays de strings si quieres, 
+    // pero nuestro lector "safeParse" ahora sabrá leerlos correctamente.
     const dataToSend = {
       ...formData,
       telefonos: formData.telefonos.filter(t => t.numero && t.numero.toString().trim() !== ''),
@@ -172,11 +195,7 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
                   <button className="close-button" onClick={onClose}>×</button>
               </div>
               
-              {/* Solo cambiamos un poco aquí para bloquear si está cargando datos iniciales */}
               <form onSubmit={handleSubmit} className="benefactor-form-grid" style={{ opacity: cargando && benefactorToEdit ? 0.5 : 1 }}>
-                  
-                  {/* ... (TODO EL RESTO DE TU JSX SE MANTIENE EXACTAMENTE IGUAL) ... */}
-                  {/* Copia aquí todo el contenido de los inputs que ya tenías */}
                   
                   <div className="form-group">
                       <label>1. Tipo de Registro *</label>
