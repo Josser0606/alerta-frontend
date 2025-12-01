@@ -183,6 +183,7 @@
 
 /* Acciones (Botones en tabla) */
 .btn-volver {
+  background-color: #4ea526;
   border: none;
   border-radius: 8px;
   color: white;
