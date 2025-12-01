@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 // Importamos los componentes de tarjetas (Widgets)
 import TransporteAlertas from '../features/transporte/TransporteAlertas';
 import BenefactoresCumpleanos from '../features/benefactores/BenefactoresCumpleanos';
 import BenefactoresPagos from '../features/benefactores/BenefactoresPagos';
-import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos';
-import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos';
+import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos'; // Voluntarios Hoy
+import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos'; // Voluntarios Próximos
 
 // Importamos componentes de estructura
 import Header from '../components/layout/Header';
@@ -16,26 +16,35 @@ import NotificationPanel from '../components/layout/NotificationPanel';
 import '../assets/styles/Dashboard.css';
 import API_BASE_URL from '../api/apiConfig'; 
 
-// Recibimos las funciones para abrir los modales desde App.js
-function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onAbrirVehiculo, onAbrirListaVehiculos }) {
+function DashboardPage({ 
+    usuario, 
+    onLogout, 
+    // Props Benefactores
+    onAbrirFormulario, 
+    onAbrirLista, 
+    // Props Transporte
+    onAbrirVehiculo, 
+    onAbrirListaVehiculos,
+    // Props Voluntarios (NUEVOS)
+    onAbrirVoluntario,
+    onAbrirListaVoluntarios 
+}) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
   const togglePanel = () => setPanelAbierto(!panelAbierto);
   
-  // Estados para la barra de búsqueda
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false); 
 
-  // Función de búsqueda inteligente
-  const handleSearch = async (query) => {
+  // Función de búsqueda inteligente con useCallback
+  const handleSearch = useCallback(async (query) => {
     setHaBuscado(true); 
     setBuscando(true); 
     
     if (!query) {
       setResultados([]);
       setBuscando(false);
-      setHaBuscado(false);
       return;
     }
 
@@ -48,7 +57,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
       } else if (usuario.rol === 'benefactores') {
           endpoint = `${API_BASE_URL}/benefactores/buscar?nombre=${encodeURIComponent(query)}`;
       } else {
-          // Si es ADMIN, por defecto buscamos voluntarios
+          // Si es ADMIN, por defecto buscamos voluntarios (o lo que prefieras)
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
       }
 
@@ -63,7 +72,7 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
     } finally {
       setBuscando(false); 
     }
-  };
+  }, [usuario.rol]);
 
   const closeSearchPopover = () => { setHaBuscado(false); };
 
@@ -88,16 +97,33 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
       <main className="main-content">
         
         <div className="titulo-y-acciones">
-            {/* Mostramos el rol para depurar si no salen los botones */}
-            <h1>Tablero de Alertas <small style={{fontSize:'0.5em', opacity:0.7}}>({usuario.rol})</small></h1>
+            {/* Título del Dashboard */}
+            <h1>Tablero de Alertas <small>({usuario.rol})</small></h1>
             
-            {/* --- GRUPO 1: BOTONES BENEFACTORES --- */}
-            {/* Solo visible para ADMIN o BENEFACTORES */}
-            { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}> 
+            {/* --- GRUPO 1: BOTONES VOLUNTARIOS (NUEVO) --- */}
+            { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}> 
+                    <button 
+                        className="btn-agregar-benefactor btn-secundario" 
+                        onClick={onAbrirListaVoluntarios} 
+                    >
+                        👥 Ver Lista Voluntarios
+                    </button>
+
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#46a022' }} 
+                        onClick={onAbrirVoluntario} 
+                    >
+                        + Nuevo Voluntario
+                    </button>
+                </div>
+            )}
+
+            {/* --- GRUPO 2: BOTONES BENEFACTORES --- */}
+            { (usuario.rol === 'admin' || usuario.rol === 'benefactores') && (
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}> 
+                    <button 
+                        className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirLista} 
                     >
                         📋 Ver Lista Benefactores
@@ -112,14 +138,11 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
                 </div>
             )}
 
-            {/* --- GRUPO 2: BOTONES TRANSPORTE --- */}
-            {/* Solo visible para ADMIN o TRANSPORTE */}
+            {/* --- GRUPO 3: BOTONES TRANSPORTE --- */}
             { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                    {/* ESTE ES EL BOTÓN QUE TE FALTABA */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     <button 
-                        className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#46a022' }} // Azul diferente
+                        className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVehiculos} 
                     >
                         🚌 Ver Flota
@@ -127,7 +150,6 @@ function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onA
 
                     <button 
                         className="btn-agregar-benefactor" 
-                        style={{ backgroundColor: '#46a022' }} 
                         onClick={onAbrirVehiculo} 
                     >
                         + Nuevo Vehículo

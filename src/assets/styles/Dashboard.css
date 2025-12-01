@@ -1,109 +1,260 @@
+/* src/assets/styles/Dashboard.css */
+
+/* --- 1. LAYOUT PRINCIPAL --- */
 .main-content {
   min-height: calc(100vh - 61px); 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0;
-  background-color: #f0f2f5;
+  padding: 2rem; /* Más espacio alrededor */
+  background-color: #f8fafc; /* Gris azulado muy claro, más moderno que el gris plano */
 }
 
-.cards-container {
-  display: flex;
-  flex-direction: row; 
-  flex-wrap: wrap;       
-  justify-content: center; 
-  align-items: flex-start; 
-  gap: 20px;
-  width: 95%;
-  max-width: 1400px;
-  padding-bottom: 40px;
-}
-
-/* --- Estilos de Tarjetas (Alertas) --- */
-.alerta-card {
-  background: #ffffff;
-  border-radius: 8px; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 450px;
-  max-width: 90%;
-  margin: 0; 
-  padding: 24px;
-  text-align: left;
-  transition: all 0.2s ease-in-out;
-  box-sizing: border-box;
-}
-.alerta-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-.alerta-card h2, .alerta-card h3 {
-  margin-top: 0;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-}
-
-/* Variantes de Tarjetas */
-.alerta-card.hoy { border-left: 6px solid #3e8e1e; }
-.alerta-card.hoy h2 { color: #3e8e1e; }
-
-.alerta-card.proximos { border-left: 6px solid #3e8e1e; }
-.alerta-card.proximos h3 { color: #3e8e1e; }
-
-.alerta-card.benefactores { border-left: 6px solid #4ea526; }
-.alerta-card.benefactores h2 { color: #4ea526; }
-
-.alerta-card.pagos { border-left: 6px solid #f0ad4e; }
-.alerta-card.pagos h3 { color: #f0ad4e; }
-
-.alerta-card.transporte { border-left: 6px solid #46a022; }
-.alerta-card.transporte h3 { color: #46a022; }
-
-.alerta-card.empty, .alerta-card.cargando {
-  text-align: center;
-  font-style: italic;
-  color: #777;
-  border-left: 6px solid #ccc;
-}
-
-/* Listas dentro de tarjetas */
-.alerta-card ul { list-style: none; padding: 0; margin-top: 15px; }
-.alerta-card li { padding: 12px 5px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
-.alerta-card li:last-child { border-bottom: none; }
-.alerta-card .nombre { font-weight: 500; color: #333; }
-.alerta-card .fecha { font-size: 0.9em; color: #555; background-color: #f5f5f5; padding: 3px 6px; border-radius: 4px; }
-
-/* Estados (Pagos/Fechas) */
-.alerta-card.pagos .fecha { font-weight: bold; }
-.estado-pendiente { background-color: #fdf8e2; color: #8a6d3b; }
-.estado-vencido { background-color: #fdf2f2; color: #d9534f; font-weight: bold; }
-.estado-proximo { background-color: #f0ad4e; color: #ffffff; font-weight: bold; }
-.estado-na { background-color: #f5f5f5; color: #777; }
-
-/* Botones de acción en el Dashboard */
+/* --- 2. TÍTULO Y BARRA SUPERIOR --- */
 .titulo-y-acciones {
   width: 100%;
   max-width: 1400px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
+  gap: 20px;
 }
+
+h1 {
+  /* Quitamos el bloque verde sólido del fondo para un look más limpio */
+  background-color: transparent; 
+  color: #1e293b; /* Gris oscuro */
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  width: auto;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  border-left: 5px solid #4ea526; /* Detalle verde elegante a la izquierda */
+  padding-left: 15px;
+}
+
+h1 small {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* --- 3. BOTONES DE ACCIÓN (TOP) --- */
 .btn-agregar-benefactor {
-  background-color: #4ea526;
+  background: linear-gradient(135deg, #4ea526 0%, #3e8e1e 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-left: 30px;
+  padding: 12px 24px;
+  border-radius: 12px; /* Bordes redondeados modernos */
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px -1px rgba(78, 165, 38, 0.2), 0 2px 4px -1px rgba(78, 165, 38, 0.1);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Espacio para icono si lo hubiera */
+  text-decoration: none;
 }
-.btn-agregar-benefactor:hover { background-color: #3e8e1e; }
 
+.btn-agregar-benefactor:hover {
+  transform: translateY(-2px); /* Se eleva al pasar el mouse */
+  box-shadow: 0 10px 15px -3px rgba(78, 165, 38, 0.3);
+  filter: brightness(110%);
+}
+
+.btn-agregar-benefactor:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Botón secundario (Ver Lista) - Puedes usarlo si quieres diferenciar */
+.btn-secundario {
+  background: white;
+  color: #4ea526;
+  border: 2px solid #4ea526;
+}
+.btn-secundario:hover {
+  background: #f0fdf4;
+}
+
+/* --- 4. CONTENEDOR DE TARJETAS (GRID) --- */
+.cards-container {
+  display: grid;
+  /* Grid automático responsivo: crea columnas de mín 380px */
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 25px;
+  width: 100%;
+  max-width: 1400px;
+  padding-bottom: 40px;
+}
+
+/* --- 5. ESTILO BASE DE TARJETAS --- */
+.alerta-card {
+  background: #ffffff;
+  border-radius: 16px; 
+  /* Sombra suave y difusa "estilo Apple" */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  padding: 1.5rem;
+  text-align: left;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden; /* Para contener la linea de color */
+  height: 100%; /* Para que todas tengan la misma altura */
+}
+
+.alerta-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+/* Títulos de las tarjetas */
+.alerta-card h2, .alerta-card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding-bottom: 12px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- 6. VARIANTES DE TARJETAS (Colores) --- */
+
+/* A. Benefactores Cumpleaños (Verde) */
+.alerta-card.benefactores {
+  border-top: 5px solid #4ea526; /* Línea superior de color */
+}
+.alerta-card.benefactores h2 {
+  color: #15803d; /* Verde oscuro texto */
+}
+/* Icono decorativo sutil (opcional) */
+.alerta-card.benefactores::after {
+  content: "🎂";
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+}
+
+/* B. Benefactores Pagos (Amarillo/Naranja) */
+.alerta-card.pagos {
+  border-top: 5px solid #f59e0b;
+}
+.alerta-card.pagos h3 {
+  color: #b45309; /* Naranja oscuro texto */
+}
+.alerta-card.pagos::after {
+  content: "⚠️";
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+}
+
+/* C. Transporte (Azul - Usando tu verde corporativo como base o un azul complementario) */
+.alerta-card.transporte {
+  border-top: 5px solid #0ea5e9;
+}
+.alerta-card.transporte h3 {
+  color: #0369a1;
+}
+
+/* D. Estados de carga/vacío */
+.alerta-card.empty, .alerta-card.cargando {
+  border-top: 5px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* --- 7. LISTAS DENTRO DE LAS TARJETAS --- */
+.alerta-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.alerta-card li {
+  padding: 10px 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.alerta-card li:hover {
+  background-color: #f1f5f9;
+}
+
+/* Estilos de Texto en listas */
+.alerta-card .nombre {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+.alerta-card .fecha {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* Estados específicos de Pagos */
+.alerta-card.pagos .estado-pendiente {
+  background-color: #fef3c7; /* Amarillo suave */
+  color: #d97706;
+  border-color: #fcd34d;
+}
+.alerta-card.pagos .estado-vencido {
+  background-color: #fee2e2; /* Rojo suave */
+  color: #dc2626;
+  border-color: #fca5a5;
+}
+
+/* Botón secundario (Ver Lista) */
+.btn-secundario {
+  background: white;
+  color: #4ea526;
+  border: 2px solid #4ea526; /* Borde verde */
+  box-shadow: none; /* Sin sombra inicial */
+}
+.btn-secundario:hover {
+  background: #f0fdf4; /* Fondo verde muy claro al pasar mouse */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .alerta-card { width: 100%; }
+  .main-content { padding: 1rem; }
+  .titulo-y-acciones { flex-direction: column; align-items: flex-start; }
+  .cards-container { grid-template-columns: 1fr; } /* Una sola columna en móvil */
+  h1 { font-size: 1.5rem; }
 }

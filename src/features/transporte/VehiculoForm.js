@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/BenefactorForm.css';
+// Reutilizamos el CSS del formulario de benefactores para mantener consistencia visual
+import '../../assets/styles/BenefactorForm.css'; 
 
-// Recibimos 'vehiculoToEdit' (puede ser null) y 'onSuccess' para recargar la lista sin F5
 function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
   
   const [formData, setFormData] = useState({
@@ -20,8 +20,12 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
   // EFECTO: Si viene un vehículo para editar, llenamos el formulario
   useEffect(() => {
     if (vehiculoToEdit) {
-      // Formateamos las fechas para que el input type="date" las lea (YYYY-MM-DD)
-      const formatDate = (dateStr) => dateStr ? dateStr.split('T')[0] : '';
+      // Helper para evitar errores con fechas nulas
+      const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
+      };
       
       setFormData({
         placa: vehiculoToEdit.placa,
@@ -36,6 +40,7 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // La placa siempre en mayúsculas
     const valorFinal = name === 'placa' ? value.toUpperCase() : value;
     setFormData(prev => ({ ...prev, [name]: valorFinal }));
   };
@@ -64,8 +69,8 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
 
       alert(vehiculoToEdit ? 'Vehículo actualizado' : 'Vehículo registrado');
       
-      if (onSuccess) onSuccess(); // Recargar lista si existe la función
-      else window.location.reload(); // Fallback clásico
+      if (onSuccess) onSuccess(); 
+      else window.location.reload();
       
       onClose();
 
@@ -78,49 +83,91 @@ function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {
 
   return (
       <div className="modal-overlay">
+          {/* Usamos modal-content, pero limitamos un poco el ancho ya que este form es pequeño */}
           <div className="modal-content" style={{ maxWidth: '500px' }}>
-              <div className="modal-header" style={{ backgroundColor: '#46a022' }}> 
+              
+              <div className="modal-header"> 
                   <h2>{vehiculoToEdit ? 'Editar Vehículo' : 'Nuevo Vehículo'}</h2>
                   <button className="close-button" onClick={onClose}>×</button>
               </div>
               
-              <form onSubmit={handleSubmit} className="benefactor-form-grid" style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Reutilizamos la clase benefactor-form-grid pero forzamos 1 columna por ser pocos datos */}
+              <form onSubmit={handleSubmit} className="benefactor-form-grid" style={{ gridTemplateColumns: '1fr' }}>
+                  
                   <div className="form-group">
                       <label>Placa *</label>
                       <input 
-                        type="text" name="placa" value={formData.placa} onChange={handleChange} 
-                        required maxLength="6" placeholder="AAA123"
-                        // Si estamos editando, quizás no queramos dejar cambiar la placa fácilmente, pero lo dejaré abierto
+                        type="text" 
+                        name="placa" 
+                        value={formData.placa} 
+                        onChange={handleChange} 
+                        required 
+                        maxLength="6" 
+                        placeholder="AAA123"
+                        disabled={!!vehiculoToEdit} // Bloqueamos placa si es edición (opcional, por seguridad)
                       />
                   </div>
+
                   <div className="form-group">
                       <label>Descripción / Modelo</label>
-                      <input type="text" name="descripcion" value={formData.descripcion} onChange={handleChange} />
+                      <input 
+                        type="text" 
+                        name="descripcion" 
+                        value={formData.descripcion} 
+                        onChange={handleChange} 
+                      />
                   </div>
+
                   <div className="form-group">
                       <label>Conductor Asignado</label>
-                      <input type="text" name="conductor_asignado" value={formData.conductor_asignado} onChange={handleChange} />
+                      <input 
+                        type="text" 
+                        name="conductor_asignado" 
+                        value={formData.conductor_asignado} 
+                        onChange={handleChange} 
+                      />
                   </div>
+
                   <hr className="full-width-hr" />
-                  <p style={{fontWeight: 'bold', color: '#555', margin: '0'}}>Fechas de Vencimiento:</p>
+                  <p style={{fontWeight: '600', color: '#4ea526', margin: '0'}}>Vencimientos de Documentos</p>
+
                   <div className="form-group">
-                      <label>Vencimiento SOAT</label>
-                      <input type="date" name="fecha_vencimiento_soat" value={formData.fecha_vencimiento_soat} onChange={handleChange} />
+                      <label>SOAT</label>
+                      <input 
+                        type="date" 
+                        name="fecha_vencimiento_soat" 
+                        value={formData.fecha_vencimiento_soat} 
+                        onChange={handleChange} 
+                      />
                   </div>
+
                   <div className="form-group">
-                      <label>Vencimiento Tecnomecánica</label>
-                      <input type="date" name="fecha_vencimiento_tecnomecanica" value={formData.fecha_vencimiento_tecnomecanica} onChange={handleChange} />
+                      <label>Tecnomecánica</label>
+                      <input 
+                        type="date" 
+                        name="fecha_vencimiento_tecnomecanica" 
+                        value={formData.fecha_vencimiento_tecnomecanica} 
+                        onChange={handleChange} 
+                      />
                   </div>
+
                   <div className="form-group">
-                      <label>Vencimiento Licencia</label>
-                      <input type="date" name="fecha_vencimiento_licencia" value={formData.fecha_vencimiento_licencia} onChange={handleChange} />
+                      <label>Licencia de Conducción</label>
+                      <input 
+                        type="date" 
+                        name="fecha_vencimiento_licencia" 
+                        value={formData.fecha_vencimiento_licencia} 
+                        onChange={handleChange} 
+                      />
                   </div>
+
                   <div className="form-actions full-width">
                       {mensaje && <p className="error-mensaje">{mensaje}</p>}
-                      <button type="submit" className="save-button" disabled={cargando} style={{ background: '#46a022' }}>
+                      <button type="submit" className="save-button" disabled={cargando}>
                           {cargando ? 'Guardando...' : 'Guardar Vehículo'}
                       </button>
                   </div>
+
               </form>
           </div>
       </div>

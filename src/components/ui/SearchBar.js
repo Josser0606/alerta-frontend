@@ -1,30 +1,50 @@
-// frontend/src/SearchBar.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import '../../assets/styles/SearchBar.css';
 
-// Recibe la función 'onSearch' que viene de App.js
 function SearchBar({ onSearch }) {
   const [query, setQuery] = useState('');
 
-  // Manejador del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Evita que la página se recargue
-    onSearch(query); // Llama a la función de App.js con el texto actual
+  // --- LÓGICA DE BÚSQUEDA EN VIVO (DEBOUNCE) ---
+  useEffect(() => {
+    // Espera 500ms después de que dejas de escribir para buscar
+    const delayDebounceFn = setTimeout(() => {
+      onSearch(query); 
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [query, onSearch]);
+
+  // Función para limpiar
+  const handleClear = () => {
+    setQuery('');
+    onSearch('');
   };
 
   return (
-    <form className="search-bar" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Buscar por nombre..."
-        className="search-input"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button type="submit" className="search-button">
-        Buscar
-      </button>
-    </form>
+    <div className="search-widget-container">
+      <div className="search-bar-wrapper">
+        {/* Icono de Lupa a la izquierda */}
+        <IoSearchOutline className="search-icon-left" />
+        
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          className="search-input-modern"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+
+        {/* Botón de borrar (X) que solo aparece si escribes algo */}
+        {query && (
+          <IoCloseCircle 
+            className="search-clear-btn" 
+            onClick={handleClear}
+            title="Limpiar búsqueda"
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
