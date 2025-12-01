@@ -39,12 +39,11 @@ function DashboardPage({
 
   // Función de búsqueda inteligente con useCallback
   const handleSearch = useCallback(async (query) => {
-    setHaBuscado(true); 
-    setBuscando(true); 
-    
-    if (!query) {
+    // 1. Si NO hay texto (o está vacío), limpiamos y CERRAMOS el panel.
+    if (!query || query.trim() === '') {
       setResultados([]);
       setBuscando(false);
+      setHaBuscado(false); // <--- CLAVE: Forzamos el cierre si está vacío
       return;
     }
 
