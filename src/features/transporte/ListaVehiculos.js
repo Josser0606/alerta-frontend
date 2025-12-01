@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
-
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/Listas.css';
 const ListaVehiculos = ({ onClose, onEditar }) => {
   const [vehiculos, setVehiculos] = useState([]);
   const [loading, setLoading] = useState(true);

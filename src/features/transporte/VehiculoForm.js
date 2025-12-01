@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/BenefactorForm.css';
 
 // Recibimos 'vehiculoToEdit' (puede ser null) y 'onSuccess' para recargar la lista sin F5
 function VehiculoForm({ onClose, vehiculoToEdit, onSuccess }) {

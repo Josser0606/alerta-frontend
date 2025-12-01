@@ -1,0 +1,79 @@
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-area {
+  flex: 1; 
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.header-logo {
+  height: 60px;
+  width: auto;
+}
+.header-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+}
+
+.search-area {
+  flex: 2; 
+  display: flex;
+  justify-content: center;
+}
+
+.search-area-spacer {
+  flex: 2; 
+} 
+
+.notification-area {
+  flex: 1; 
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.notification-icon {
+  color: #3e8e1e;
+  font-size: 1.6em;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease;
+}
+.notification-icon:hover {
+  transform: scale(1.1);
+}
+
+.logout-button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 9px 15px;
+  border-radius: 15px;
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 20px;
+  transition: background-color 0.2s ease;
+}
+.logout-button:hover {
+  background-color: #c9302c;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .main-header { flex-wrap: wrap; padding: 10px 15px; }
+  .logo-area { flex-grow: 1; }
+  .notification-area { flex-grow: 0; }
+  .search-area { order: 3; flex-basis: 100%; margin-top: 10px; }
+}

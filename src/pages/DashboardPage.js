@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 
 // Importamos los componentes de tarjetas (Widgets)
-import TransporteAlertas from './TransporteAlertas';
-import BenefactoresCumpleanos from './BenefactoresCumpleanos';
-import BenefactoresPagos from './BenefactoresPagos';
-import AlertasCumpleanos from './AlertasCumpleanos';
-import ProximosCumpleanos from './ProximosCumpleanos';
+import TransporteAlertas from '../features/transporte/TransporteAlertas';
+import BenefactoresCumpleanos from '../features/benefactores/BenefactoresCumpleanos';
+import BenefactoresPagos from '../features/benefactores/BenefactoresPagos';
+import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos';
+import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos';
 
 // Importamos componentes de estructura
-import Header from './Header';
-import SearchBar from './SearchBar';
-import NotificationPanel from './NotificationPanel';
+import Header from '../components/layout/Header';
+import SearchBar from '../components/ui/SearchBar';
+import NotificationPanel from '../components/layout/NotificationPanel';
 
 // Estilos y Configuración
-import './App.css';
-import API_BASE_URL from './apiConfig'; 
+import '../assets/styles/Dashboard.css';
+import API_BASE_URL from '../api/apiConfig'; 
 
 // Recibimos las funciones para abrir los modales desde App.js
 function DashboardPage({ usuario, onLogout, onAbrirFormulario, onAbrirLista, onAbrirVehiculo, onAbrirListaVehiculos }) {

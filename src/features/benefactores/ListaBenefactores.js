@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css'; 
-import { FaRegEdit } from "react-icons/fa";
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/Listas.css';
+import { FaRegEdit, FaTrashAlt } from "react-icons/fa"; // <--- Importamos el ícono de eliminar
 import { IoSearchOutline } from "react-icons/io5";
 
 const ListaBenefactores = ({ onClose, onEditar }) => {
@@ -15,32 +15,23 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
 
   // --- FUNCIÓN SEGURA PARA MANEJAR TELÉFONOS ---
   const obtenerTelefono = (datoRaw) => {
-    if (!datoRaw) return '-'; // Si es null o vacío retorna guion
+    if (!datoRaw) return '-'; 
 
     try {
-      // 1. Intentamos convertirlo de JSON string a Objeto
       const parsed = JSON.parse(datoRaw);
-      
-      // 2. Si es un array (formato nuevo), devolvemos el primero
       if (Array.isArray(parsed) && parsed.length > 0) {
         return parsed[0].numero; 
       }
-      
-      // 3. Si es un objeto pero no array (caso raro), lo devolvemos string
       return JSON.stringify(parsed);
-
     } catch (error) {
-      // 4. SI FALLA EL PARSEO (porque es texto plano '300-123...'), 
-      // devolvemos el dato tal cual viene de la base de datos.
       return datoRaw;
     }
   };
 
-  // --- FUNCIÓN PARA CARGAR DATOS (PAGINADOS) ---
+  // --- FUNCIÓN PARA CARGAR DATOS ---
   const fetchBenefactores = useCallback(async () => {
     setLoading(true);
     try {
-        // Enviamos página, límite y búsqueda al backend
         const response = await fetch(
             `${API_BASE_URL}/benefactores/todos?page=${pagina}&limit=20&search=${encodeURIComponent(busqueda)}`
         ); 
@@ -50,8 +41,6 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
         }
 
         const resultado = await response.json();
-        
-        // El backend nos devuelve { data: [...], pagination: {...} }
         setBenefactores(resultado.data);
         setTotalPaginas(resultado.pagination.totalPages);
     } catch (error) {
@@ -59,33 +48,56 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
     } finally {
         setLoading(false);
     }
-  }, [pagina, busqueda]); // Se recrea si cambia la página o la búsqueda
+  }, [pagina, busqueda]); 
 
-  // Efecto: Cargar cuando cambia la página (o la búsqueda a través del callback)
   useEffect(() => {
     fetchBenefactores();
   }, [fetchBenefactores]);
 
-  // Manejar cambio en el input de búsqueda
+  // --- NUEVA FUNCIÓN: ELIMINAR ---
+  const handleDelete = async (id, nombre) => {
+      // 1. Confirmación del usuario
+      const confirmar = window.confirm(`¿Estás seguro de que deseas eliminar al benefactor "${nombre}"?\nEsta acción no se puede deshacer.`);
+      
+      if (!confirmar) return;
+
+      try {
+          // 2. Petición a la API
+          const response = await fetch(`${API_BASE_URL}/benefactores/eliminar/${id}`, {
+              method: 'DELETE',
+          });
+
+          if (!response.ok) {
+              const data = await response.json();
+              throw new Error(data.mensaje || "Error al eliminar");
+          }
+
+          // 3. Actualizar la lista localmente (sin recargar)
+          setBenefactores(prev => prev.filter(b => b.id !== id));
+          alert("Benefactor eliminado correctamente.");
+
+      } catch (error) {
+          console.error("Error:", error);
+          alert("Hubo un error al intentar eliminar.");
+      }
+  };
+
   const handleSearchChange = (e) => {
       setBusqueda(e.target.value);
-      setPagina(1); // Al buscar, siempre volvemos a la primera página para ver los resultados
+      setPagina(1); 
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-container-large">
         
-        {/* Cabecera */}
         <div className="modal-header">
-          <h2> Información Completa</h2>
+          <h2>Información Completa</h2>
           <button className="btn-close-modal" onClick={onClose}>&times;</button>
         </div>
 
-        {/* Cuerpo */}
         <div className="modal-body">
           
-          {/* Barra de Búsqueda */}
           <input 
             type="text" 
             placeholder="Buscar por nombre o documento..." 
@@ -110,7 +122,7 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
                       <th>Contacto</th>
                       <th>Teléfono</th>
                       <th>Estado</th>
-                      <th>Acciones</th> {/* Columna Nueva */}
+                      <th style={{textAlign: 'center'}}>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -123,7 +135,6 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
                             <td>{b.cod_1_tipo}</td>
                             <td>{b.nombre_contactado || '-'}</td>
                             
-                            {/* Usamos la función segura aquí */}
                             <td>{obtenerTelefono(b.numero_contacto)}</td>
                             
                             <td>
@@ -132,14 +143,26 @@ const ListaBenefactores = ({ onClose, onEditar }) => {
                                 </span>
                             </td>
                             
-                            {/* Botón de Editar */}
-                            <td>
+                            {/* Columna de Acciones */}
+                            <td style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                                {/* Botón Editar */}
                                 <button 
-                                    className="btn-volver" 
-                                    style={{fontSize: '0.9em', padding: '10px 15px', background: '#46a022', border: 'none'}}
+                                    className="btn-volver"
+                                    style={{ background: '#46a022', padding: '8px 12px', fontSize: '0.9em' }}
+                                    title="Editar"
                                     onClick={() => onEditar(b)}
                                 >
                                     <FaRegEdit />
+                                </button>
+
+                                {/* Botón Eliminar - NUEVO */}
+                                <button 
+                                    className="btn-volver"
+                                    style={{ background: '#d9534f', padding: '8px 12px', fontSize: '0.9em' }}
+                                    title="Eliminar"
+                                    onClick={() => handleDelete(b.id, b.nombre_benefactor)}
+                                >
+                                    <FaTrashAlt />
                                 </button>
                             </td>
                         </tr>

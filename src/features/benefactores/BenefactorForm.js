@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/BenefactorForm.css'; // <--- NUEVA IMPORTACIÓN
 
 function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
   
@@ -117,7 +117,7 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
     cargarDatosCompletos();
   }, [benefactorToEdit]);
 
-  // ... HANDLERS (Sin cambios) ...
+  // ... HANDLERS ...
   const handleTelefonoChange = (index, event) => {
     const { name, value } = event.target;
     const list = [...formData.telefonos];
@@ -147,8 +147,6 @@ function BenefactorForm({ onClose, benefactorToEdit, onSuccess }) {
     setCargando(true);
     setMensaje('');
 
-    // IMPORTANTE: Al guardar, seguimos guardando arrays de strings si quieres, 
-    // pero nuestro lector "safeParse" ahora sabrá leerlos correctamente.
     const dataToSend = {
       ...formData,
       telefonos: formData.telefonos.filter(t => t.numero && t.numero.toString().trim() !== ''),

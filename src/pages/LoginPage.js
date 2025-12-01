@@ -1,7 +1,7 @@
 // frontend/src/LoginPage.js
 import React, { useState } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css'; // Reutilizaremos algunos estilos
+import API_BASE_URL from '../api/apiConfig';
+import '../assets/styles/Login.css';
 
 function LoginPage() {
     const [email, setEmail] = useState('');

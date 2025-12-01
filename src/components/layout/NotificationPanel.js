@@ -1,7 +1,7 @@
 // frontend/src/NotificationPanel.js
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import API_BASE_URL from './apiConfig';
+import '../../assets/styles/NotificationPanel.css';
+import API_BASE_URL from '../../api/apiConfig';
 // NO importamos apiConfig.js
 
 function NotificationPanel() {

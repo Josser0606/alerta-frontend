@@ -1,6 +1,6 @@
 // frontend/src/AlertasCumpleanos.js
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
+import API_BASE_URL from '../../api/apiConfig';
 // NO importamos apiConfig.js
 
 function AlertasCumpleanos() {

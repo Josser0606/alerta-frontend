@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import LoginPage from './LoginPage';
-import DashboardPage from './DashboardPage';
-import BenefactorForm from './BenefactorForm';
-import ListaBenefactores from './ListaBenefactores';
-import VehiculoForm from './VehiculoForm';
-import ListaVehiculos from './ListaVehiculos'; // Asegúrate de importar esto
-import './App.css';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import BenefactorForm from './features/benefactores/BenefactorForm';
+import ListaBenefactores from './features/benefactores/ListaBenefactores';
+import VehiculoForm from './features/transporte/VehiculoForm';
+import ListaVehiculos from './features/transporte/ListaVehiculos'; // Asegúrate de importar esto
+import './assets/styles/App.css';
 
 function getUserData() {
   const token = localStorage.getItem('token');

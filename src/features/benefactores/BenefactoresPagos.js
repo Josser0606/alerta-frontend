@@ -1,7 +1,7 @@
 // frontend/src/BenefactoresPagos.js
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/App.css';
 
 // Función para formatear la fecha
 const formatearFecha = (fechaISO) => {

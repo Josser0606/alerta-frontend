@@ -1,0 +1,89 @@
+.lista-container {
+  padding: 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+.lista-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-volver {
+  background-color: #75808a;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.barra-busqueda {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* Tablas dentro del modal "grande" */
+.modal-container-large {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 1200px; 
+  height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto; 
+  flex-grow: 1;
+  background-color: #f8f9fa;
+}
+
+.tabla-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tabla-benefactores {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  min-width: 900px;
+}
+
+.tabla-benefactores th {
+  background-color: #46a022;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tabla-benefactores td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.tabla-benefactores tr:hover { background-color: #f1f5f9; }
+
+/* Badges */
+.badge { padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; }
+.badge-activo { background-color: #e8f5e9; color: #2e7d32; }
+.badge-inactivo { background-color: #ffebee; color: #c62828; }

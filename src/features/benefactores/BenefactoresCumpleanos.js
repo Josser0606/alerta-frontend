@@ -1,7 +1,7 @@
 // frontend/src/BenefactoresCumpleanos.js
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/App.css';
 
 function BenefactoresCumpleanos() {
     const [cumpleaneros, setCumpleaneros] = useState([]);

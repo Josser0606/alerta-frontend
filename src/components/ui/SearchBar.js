@@ -1,6 +1,6 @@
 // frontend/src/SearchBar.js
 import React, { useState } from 'react';
-import './App.css';
+import '../../assets/styles/SearchBar.css';
 
 // Recibe la función 'onSearch' que viene de App.js
 function SearchBar({ onSearch }) {

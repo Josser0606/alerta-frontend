@@ -1,0 +1,109 @@
+.main-content {
+  min-height: calc(100vh - 61px); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  background-color: #f0f2f5;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: row; 
+  flex-wrap: wrap;       
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 20px;
+  width: 95%;
+  max-width: 1400px;
+  padding-bottom: 40px;
+}
+
+/* --- Estilos de Tarjetas (Alertas) --- */
+.alerta-card {
+  background: #ffffff;
+  border-radius: 8px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 450px;
+  max-width: 90%;
+  margin: 0; 
+  padding: 24px;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+.alerta-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+.alerta-card h2, .alerta-card h3 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* Variantes de Tarjetas */
+.alerta-card.hoy { border-left: 6px solid #3e8e1e; }
+.alerta-card.hoy h2 { color: #3e8e1e; }
+
+.alerta-card.proximos { border-left: 6px solid #3e8e1e; }
+.alerta-card.proximos h3 { color: #3e8e1e; }
+
+.alerta-card.benefactores { border-left: 6px solid #4ea526; }
+.alerta-card.benefactores h2 { color: #4ea526; }
+
+.alerta-card.pagos { border-left: 6px solid #f0ad4e; }
+.alerta-card.pagos h3 { color: #f0ad4e; }
+
+.alerta-card.transporte { border-left: 6px solid #46a022; }
+.alerta-card.transporte h3 { color: #46a022; }
+
+.alerta-card.empty, .alerta-card.cargando {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+  border-left: 6px solid #ccc;
+}
+
+/* Listas dentro de tarjetas */
+.alerta-card ul { list-style: none; padding: 0; margin-top: 15px; }
+.alerta-card li { padding: 12px 5px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+.alerta-card li:last-child { border-bottom: none; }
+.alerta-card .nombre { font-weight: 500; color: #333; }
+.alerta-card .fecha { font-size: 0.9em; color: #555; background-color: #f5f5f5; padding: 3px 6px; border-radius: 4px; }
+
+/* Estados (Pagos/Fechas) */
+.alerta-card.pagos .fecha { font-weight: bold; }
+.estado-pendiente { background-color: #fdf8e2; color: #8a6d3b; }
+.estado-vencido { background-color: #fdf2f2; color: #d9534f; font-weight: bold; }
+.estado-proximo { background-color: #f0ad4e; color: #ffffff; font-weight: bold; }
+.estado-na { background-color: #f5f5f5; color: #777; }
+
+/* Botones de acción en el Dashboard */
+.titulo-y-acciones {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.btn-agregar-benefactor {
+  background-color: #4ea526;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-left: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.btn-agregar-benefactor:hover { background-color: #3e8e1e; }
+
+@media (max-width: 768px) {
+  .alerta-card { width: 100%; }
+}

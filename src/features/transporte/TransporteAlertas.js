@@ -1,7 +1,7 @@
 // frontend/src/TransporteAlertas.js
 import React, { useState, useEffect } from 'react';
-import API_BASE_URL from './apiConfig';
-import './App.css';
+import API_BASE_URL from '../../api/apiConfig';
+import '../../assets/styles/Transporte.css';
 
 // --- Funciones auxiliares para este componente ---
 

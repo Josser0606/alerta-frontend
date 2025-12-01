@@ -1,8 +1,8 @@
 // frontend/src/Header.js
 import React, { useRef, useEffect } from 'react';
-import SearchResults from './SearchResults';
+import SearchResults from '../ui/SearchResults';
 import { IoNotificationsOutline } from "react-icons/io5";
-import './App.css';
+import '../../assets/styles/Header.css';
 
 // --- 1. RECIBIMOS LOS NUEVOS PROPS ---
 function Header({ 
