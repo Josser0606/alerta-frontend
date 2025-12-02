@@ -29,6 +29,7 @@ function Header({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [searchHasBeenRun, onCloseSearch]);
+  console.log("5. Header renderizando. Resultados:", searchResults.length, "| ¿Buscó?:", searchHasBeenRun);
 
 
   return (

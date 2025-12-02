@@ -9,6 +9,7 @@ function SearchBar({ onSearch }) {
   useEffect(() => {
     // Espera 500ms después de que dejas de escribir para buscar
     const delayDebounceFn = setTimeout(() => {
+      console.log("1. SearchBar enviando:", query);
       onSearch(query); 
     }, 500);
 

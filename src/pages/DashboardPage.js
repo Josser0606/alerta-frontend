@@ -40,7 +40,9 @@ function DashboardPage({
   // Función de búsqueda inteligente con useCallback
   const handleSearch = useCallback(async (query) => {
     // 1. Si NO hay texto (o está vacío), limpiamos y CERRAMOS el panel.
+    console.log("2. Dashboard recibió:", query); // <--- AGREGA ESTO
     if (!query || query.trim() === '') {
+      console.log("   -> Búsqueda vacía, limpiando."); // <--- AGREGA ESTO
       setResultados([]);
       setBuscando(false);
       setHaBuscado(false); // <--- CLAVE: Forzamos el cierre si está vacío
