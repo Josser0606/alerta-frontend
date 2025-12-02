@@ -129,16 +129,15 @@ h1 small {
   gap: 10px;
 }
 
-/* --- 6. VARIANTES DE TARJETAS (Colores) --- */
+/* --- 6. VARIANTES DE TARJETAS (Colores e Iconos) --- */
 
-/* A. Benefactores Cumpleaños (Verde) */
+/* A. Benefactores (Cumpleaños) - YA LO TIENES */
 .alerta-card.benefactores {
-  border-top: 5px solid #4ea526; /* Línea superior de color */
+  border-top: 5px solid #4ea526;
 }
 .alerta-card.benefactores h2 {
-  color: #15803d; /* Verde oscuro texto */
+  color: #15803d;
 }
-/* Icono decorativo sutil (opcional) */
 .alerta-card.benefactores::after {
   content: "🎂";
   position: absolute;
@@ -146,14 +145,15 @@ h1 small {
   right: 15px;
   font-size: 2rem;
   opacity: 0.1;
+  pointer-events: none; /* Para que no estorbe al hacer clic */
 }
 
-/* B. Benefactores Pagos (Amarillo/Naranja) */
+/* B. Benefactores (Pagos) - YA LO TIENES */
 .alerta-card.pagos {
   border-top: 5px solid #f59e0b;
 }
 .alerta-card.pagos h3 {
-  color: #b45309; /* Naranja oscuro texto */
+  color: #b45309;
 }
 .alerta-card.pagos::after {
   content: "⚠️";
@@ -162,26 +162,60 @@ h1 small {
   right: 15px;
   font-size: 2rem;
   opacity: 0.1;
+  pointer-events: none;
 }
 
-/* C. Transporte (Azul - Usando tu verde corporativo como base o un azul complementario) */
+/* --- NUEVO: VOLUNTARIOS --- */
+
+/* C. Voluntarios (Cumpleaños HOY) */
+.alerta-card.hoy {
+  border-top: 5px solid #3e8e1e; /* Verde fuerte */
+}
+.alerta-card.hoy h2 {
+  color: #3e8e1e;
+}
+.alerta-card.hoy::after {
+  content: "🎉"; /* Icono de Fiesta */
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* D. Voluntarios (Próximos) */
+.alerta-card.proximos {
+  border-top: 5px solid #3e8e1e;
+}
+.alerta-card.proximos h3 {
+  color: #3e8e1e;
+}
+.alerta-card.proximos::after {
+  content: "📅"; /* Icono de Calendario */
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* E. Transporte */
 .alerta-card.transporte {
   border-top: 5px solid #0ea5e9;
 }
 .alerta-card.transporte h3 {
   color: #0369a1;
 }
-
-/* D. Estados de carga/vacío */
-.alerta-card.empty, .alerta-card.cargando {
-  border-top: 5px solid #cbd5e1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  color: #64748b;
-  font-style: italic;
+.alerta-card.transporte::after {
+  content: "🚌"; /* Icono de Bus */
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+  pointer-events: none;
 }
 
 /* --- 7. LISTAS DENTRO DE LAS TARJETAS --- */
