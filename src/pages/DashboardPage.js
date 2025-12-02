@@ -1,4 +1,7 @@
 import React, { useState, useCallback } from 'react';
+import { MdOutlineVolunteerActivism } from "react-icons/md";
+import { LuFileSpreadsheet } from "react-icons/lu";
+import { BsTruck } from "react-icons/bs";
 
 // Importamos los componentes de tarjetas (Widgets)
 import TransporteAlertas from '../features/transporte/TransporteAlertas';
@@ -108,7 +111,7 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVoluntarios} 
                     >
-                        👥 Ver Lista Voluntarios
+                        <MdOutlineVolunteerActivism /> Ver Lista Voluntarios
                     </button>
 
                     <button 
@@ -127,7 +130,7 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirLista} 
                     >
-                        📋 Ver Lista Benefactores
+                        <LuFileSpreadsheet /> Ver Lista Benefactores
                     </button>
 
                     <button 
@@ -146,7 +149,7 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVehiculos} 
                     >
-                        🚌 Ver Flota
+                        <BsTruck /> Ver lista de carros
                     </button>
 
                     <button 

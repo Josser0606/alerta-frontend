@@ -1,6 +1,6 @@
 // frontend/src/SearchResults.js
 import React from 'react';
-import '../../assets/styles/App.css';
+import '../../assets/styles/SearchBar.css';
 
 // Función simple para formatear la fecha
 const formatearFecha = (fechaISO) => {

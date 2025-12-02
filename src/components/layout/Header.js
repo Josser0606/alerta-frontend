@@ -1,10 +1,9 @@
-// frontend/src/Header.js
 import React, { useRef, useEffect } from 'react';
 import SearchResults from '../ui/SearchResults';
 import { IoNotificationsOutline } from "react-icons/io5";
 import '../../assets/styles/Header.css';
+import logoImage from '../../assets/images/logo_saciar.png'; 
 
-// --- 1. RECIBIMOS LOS NUEVOS PROPS ---
 function Header({ 
   onNotificationClick, 
   children, 
@@ -12,69 +11,85 @@ function Header({
   searchLoading, 
   searchHasBeenRun,
   onCloseSearch,
-  usuario,         // <-- Prop de Usuario (para saber el rol)
-  onLogoutClick    // <-- Prop de Función de Logout
+  usuario,
+  onLogoutClick
 }) {
   
-  // (La lógica para cerrar el popover al clicar fuera se queda igual)
+  // Referencia al contenedor de la búsqueda
   const searchAreaRef = useRef(null);
+
+  // Manejador de clics fuera
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchHasBeenRun && searchAreaRef.current && !searchAreaRef.current.contains(event.target)) {
-         onCloseSearch();
+    const handleClickOutside = (event) => {
+      // Si no hay referencia, salimos
+      if (!searchAreaRef.current) return;
+
+      // VERIFICACIÓN: ¿El clic fue DENTRO del área de búsqueda?
+      const isInside = searchAreaRef.current.contains(event.target);
+
+      if (isInside) {
+          // Si fue dentro, NO HACEMOS NADA.
+          return; 
       }
-    }
+
+      // Si fue AFUERA, intentamos cerrar
+      if (searchHasBeenRun) {
+          // console.log("Cerrando por clic afuera..."); // Descomenta para ver en consola si esto ocurre
+          onCloseSearch();
+      }
+    };
+
+    // Usamos 'mousedown' porque es más rápido que 'click' y evita conflictos de foco
     document.addEventListener("mousedown", handleClickOutside);
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [searchHasBeenRun, onCloseSearch]);
-  console.log("5. Header renderizando. Resultados:", searchResults.length, "| ¿Buscó?:", searchHasBeenRun);
 
+  // LÓGICA DE VISUALIZACIÓN MEJORADA
+  // Mostramos la lista SI:
+  // 1. Se ha ejecutado una búsqueda (searchHasBeenRun es true)
+  // 2. O SI hay resultados cargados (searchResults > 0), aunque la bandera diga false (para corregir el bug visual)
+  const mostrarResultados = searchHasBeenRun || (searchResults && searchResults.length > 0);
 
   return (
     <header className="main-header">
       
       <div className="logo-area">
-        <img src="/logo_saciar.png" alt="Logo Saciar" className="header-logo" />
+        <img src={logoImage} alt="Logo Saciar" className="header-logo" />
+        <span className="header-title"></span>
       </div>
 
-      {/* --- 2. ÁREA DE BÚSQUEDA CONDICIONAL --- */}
-      {/* Solo se muestra si el rol es 'admin' o 'voluntarios' */}
+      {/* Área de Búsqueda */}
       { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores') ? (
-        <div className="search-area" ref={searchAreaRef}>
+        // El REF debe estar en este div contenedor
+        <div className="search-area" ref={searchAreaRef}> 
           <div className="search-widget-container">
-            {children} {/* <SearchBar /> */}
-            {searchHasBeenRun && (
+            
+            {children} {/* Aquí se renderiza el SearchBar */}
+            
+            {/* Panel Flotante de Resultados */}
+            {mostrarResultados && (
               <SearchResults 
                 resultados={searchResults} 
                 cargando={searchLoading} 
               />
             )}
+
           </div>
         </div>
       ) : (
-        // Si no, dejamos un espacio vacío para centrar
         <div className="search-area-spacer"></div>
       )}
 
-      {/* --- 3. ÁREA DE NOTIFICACIÓN (MODIFICADA) --- */}
       <div className="notification-area">
-        
-        {/* Campana condicional (solo 'admin' o 'voluntarios') */}
         { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores') && (
-          <span 
-            className="notification-icon" 
-            onClick={onNotificationClick} 
-            role="button" 
-            tabIndex="0"
-            aria-label="Ver notificaciones"
-          >
+          <span className="notification-icon" onClick={onNotificationClick}>
             <IoNotificationsOutline />
           </span>
         )}
         
-        {/* --- 4. NUEVO BOTÓN DE CERRAR SESIÓN --- */}
         <button onClick={onLogoutClick} className="logout-button">
           Cerrar Sesión
         </button>
