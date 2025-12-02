@@ -1,7 +1,8 @@
-// frontend/src/LoginPage.js
 import React, { useState } from 'react';
 import API_BASE_URL from '../api/apiConfig';
 import '../assets/styles/Login.css';
+import logoImage from '../assets/images/logo_saciar.png';
+import { BiError } from "react-icons/bi";
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -9,8 +10,27 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
 
+    // FUNCIÓN DE VALIDACIÓN MANUAL
+    const validarFormulario = () => {
+        if (!email.trim()) {
+            setError("Por favor, ingresa tu correo electrónico.");
+            return false;
+        }
+        if (!password.trim()) {
+            setError("Por favor, ingresa tu contraseña.");
+            return false;
+        }
+        return true;
+    };
+
     const handleLogin = async (e) => {
-        e.preventDefault(); // Evita que la página se recargue
+        e.preventDefault();
+        
+        // 1. Primero validamos localmente
+        if (!validarFormulario()) {
+            return; 
+        }
+
         setError('');
         setCargando(true);
 
@@ -29,12 +49,9 @@ function LoginPage() {
                 throw new Error(data.mensaje || 'Error al iniciar sesión');
             }
             
-            // ¡ÉXITO!
-            // Guardamos el "token" y los datos del usuario en el navegador
             localStorage.setItem('token', data.token);
             localStorage.setItem('usuario', JSON.stringify(data.usuario));
             
-            // Recargamos la página. El App.js nos redirigirá al Dashboard
             window.location.reload(); 
 
         } catch (err) {
@@ -44,37 +61,55 @@ function LoginPage() {
         }
     };
 
+    // Limpiar error al escribir
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+        if (error) setError('');
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        if (error) setError('');
+    };
+
     return (
         <div className="login-container">
-            <form className="login-form" onSubmit={handleLogin}>
-                <img src="/logo_saciar.png" alt="Logo Saciar" className="logo-login" />
-            
+            {/* Agregamos noValidate para apagar los mensajes del navegador */}
+            <form className="login-form" onSubmit={handleLogin} noValidate>
                 
+                <img 
+                    src={logoImage} 
+                    alt="Logo Saciar" 
+                    className="logo-login" 
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                />
+            
                 <div className="form-group">
-                    <label htmlFor="email">Correo Electronico*</label>
+                    <label htmlFor="email">Correo Electrónico *</label>
                     <input 
                         type="email" 
                         id="email"
-                        placeholder="Correo Electronico"
+                        placeholder="Correo Electrónico"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
+                        onChange={handleEmailChange}
+                        // Quitamos el 'required' nativo
                     />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="password">Contraseña*</label>
+                    <label htmlFor="password">Contraseña *</label>
                     <input 
                         type="password" 
                         id="password"
                         placeholder="Contraseña"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required 
+                        onChange={handlePasswordChange}
+                        // Quitamos el 'required' nativo
                     />
                 </div>
 
-                {error && <p className="error-mensaje">{error}</p>}
+                {/* Aquí aparecerá TU alerta personalizada roja */}
+                {error && <div className="error-mensaje"><BiError /> {error}</div>}
                 
                 <button type="submit" className="login-button" disabled={cargando}>
                     {cargando ? 'Ingresando...' : 'Ingresar'}

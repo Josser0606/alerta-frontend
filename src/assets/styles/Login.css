@@ -30,6 +30,22 @@
   color: #46a022;
 }
 
+/* ESTILOS PARA LA ALERTA DE ERROR */
+.error-mensaje {
+  background-color: #fee2e2; /* Rojo muy suave de fondo */
+  color: #b91c1c; /* Rojo oscuro para el texto */
+  border: 1px solid #fecaca; /* Borde rojo suave */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 12px 16px;
+  margin-bottom: 1.5rem; /* Espacio antes del botón */
+  display: flex; /* Para alinear ícono y texto */
+  align-items: center;
+  gap: 10px; /* Espacio entre ícono y texto */
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-out;
+}
+
 .form-group {
   margin-bottom: 2.1rem;
   text-align: left;
@@ -56,3 +72,9 @@
 }
 .login-button:hover { background-color: #3e8e1e; }
 .login-button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+/* Ajuste para el icono dentro de la alerta */
+.error-mensaje svg {
+  font-size: 1.2rem; /* Tamaño del ícono */
+  flex-shrink: 0; /* Evita que el ícono se aplaste si hay mucho texto */
+}
