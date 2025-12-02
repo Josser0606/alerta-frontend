@@ -138,15 +138,6 @@ h1 small {
 .alerta-card.benefactores h2 {
   color: #15803d;
 }
-.alerta-card.benefactores::after {
-  content: "🎂";
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none; /* Para que no estorbe al hacer clic */
-}
 
 /* B. Benefactores (Pagos) - YA LO TIENES */
 .alerta-card.pagos {
@@ -154,15 +145,6 @@ h1 small {
 }
 .alerta-card.pagos h3 {
   color: #b45309;
-}
-.alerta-card.pagos::after {
-  content: "⚠️";
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none;
 }
 
 /* --- NUEVO: VOLUNTARIOS --- */
@@ -173,15 +155,6 @@ h1 small {
 }
 .alerta-card.hoy h2 {
   color: #3e8e1e;
-}
-.alerta-card.hoy::after {
-  content: "🎉"; /* Icono de Fiesta */
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none;
 }
 
 /* D. Voluntarios (Próximos) */
@@ -208,15 +181,7 @@ h1 small {
 .alerta-card.transporte h3 {
   color: #0369a1;
 }
-.alerta-card.transporte::after {
-  content: "🚌"; /* Icono de Bus */
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none;
-}
+
 
 /* --- 7. LISTAS DENTRO DE LAS TARJETAS --- */
 .alerta-card ul {
