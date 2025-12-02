@@ -89,7 +89,7 @@ function Header({
             <IoNotificationsOutline />
           </span>
         )}
-        
+      
         <button onClick={onLogoutClick} className="logout-button">
           Cerrar Sesión
         </button>
