@@ -164,15 +164,6 @@ h1 small {
 .alerta-card.proximos h3 {
   color: #3e8e1e;
 }
-.alerta-card.proximos::after {
-  content: "📅"; /* Icono de Calendario */
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.1;
-  pointer-events: none;
-}
 
 /* E. Transporte */
 .alerta-card.transporte {
@@ -248,6 +239,55 @@ h1 small {
   background: #f0fdf4; /* Fondo verde muy claro al pasar mouse */
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* --- ESTILOS PARA ESTADO VACÍO (OPACO) --- */
+
+/* 1. Benefactores (Verde Opaco) */
+.alerta-card.benefactores.empty {
+  border-top-color: rgba(78, 165, 38, 0.3); /* Verde al 30% de opacidad */
+}
+.alerta-card.benefactores.empty h2 {
+  color: #94a3b8; /* Gris en lugar de verde fuerte */
+}
+.alerta-card.benefactores.empty::after {
+  opacity: 0.02; /* El icono casi invisible */
+}
+
+/* 2. Pagos (Naranja Opaco) */
+.alerta-card.pagos.empty {
+  border-top-color: rgba(245, 158, 11, 0.3); /* Naranja al 30% */
+}
+.alerta-card.pagos.empty h3 {
+  color: #94a3b8;
+}
+.alerta-card.pagos.empty::after {
+  opacity: 0.02;
+}
+
+/* 3. Transporte (Azul Opaco) */
+.alerta-card.transporte.empty {
+  border-top-color: rgba(14, 165, 233, 0.3); /* Azul al 30% */
+}
+.alerta-card.transporte.empty h3 {
+  color: #94a3b8;
+}
+.alerta-card.transporte.empty::after {
+  opacity: 0.02;
+}
+
+/* 4. Voluntarios (Verde Oscuro Opaco) */
+.alerta-card.hoy.empty, 
+.alerta-card.proximos.empty {
+  border-top-color: rgba(62, 142, 30, 0.3);
+}
+.alerta-card.hoy.empty h2,
+.alerta-card.proximos.empty h3 {
+  color: #94a3b8;
+}
+.alerta-card.hoy.empty::after,
+.alerta-card.proximos.empty::after {
+  opacity: 0.02;
 }
 
 /* Responsive */

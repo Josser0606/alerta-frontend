@@ -1,7 +1,7 @@
-// frontend/src/BenefactoresCumpleanos.js
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/App.css';
+// No es necesario importar CSS específico si ya se carga en DashboardPage, 
+// pero lo dejamos por si tienes estilos globales extra.
 
 function BenefactoresCumpleanos() {
     const [cumpleaneros, setCumpleaneros] = useState([]);
@@ -10,7 +10,6 @@ function BenefactoresCumpleanos() {
     useEffect(() => {
         const fetchCumpleaneros = async () => {
             try {
-                // --- 1. LLAMAMOS A LA NUEVA RUTA ---
                 const respuesta = await fetch(`${API_BASE_URL}/benefactores/hoy`);
                 
                 if (!respuesta.ok) {
@@ -31,12 +30,14 @@ function BenefactoresCumpleanos() {
         return <div className="alerta-card cargando">Cargando cumpleaños...</div>;
     }
 
-    // Usaremos un color verde para esta tarjeta
+    // Detectamos si está vacío para aplicar el estilo "apagado"
+    const estaVacio = cumpleaneros.length === 0;
+
     return (
-        <div className="alerta-card benefactores">
+        <div className={`alerta-card benefactores ${estaVacio ? 'empty' : ''}`}>
             <h2>¡Cumpleaños de Benefactores!</h2>
             
-            {cumpleaneros.length === 0 ? (
+            {estaVacio ? (
                 <p>No hay benefactores que cumplan años hoy.</p>
             ) : (
                 <>

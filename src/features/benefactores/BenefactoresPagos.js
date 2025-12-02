@@ -1,7 +1,5 @@
-// frontend/src/BenefactoresPagos.js
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/App.css';
 
 // Función para formatear la fecha
 const formatearFecha = (fechaISO) => {
@@ -16,7 +14,6 @@ function BenefactoresPagos() {
     useEffect(() => {
         const fetchPagos = async () => {
             try {
-                // --- 1. LLAMAMOS A LA NUEVA RUTA DE PAGOS ---
                 const respuesta = await fetch(`${API_BASE_URL}/benefactores/pagos`);
                 
                 if (!respuesta.ok) {
@@ -37,12 +34,14 @@ function BenefactoresPagos() {
         return <div className="alerta-card cargando">Cargando pagos...</div>;
     }
 
-    // Usaremos un color amarillo (warning) para esta tarjeta
+    // Detectamos si está vacío
+    const estaVacio = pagos.length === 0;
+
     return (
-        <div className="alerta-card pagos">
+        <div className={`alerta-card pagos ${estaVacio ? 'empty' : ''}`}>
             <h3>Alertas de Pago (Próximos 7 Días)</h3>
             
-            {pagos.length === 0 ? (
+            {estaVacio ? (
                 <p>No hay pagos pendientes o vencidos en los próximos 7 días.</p>
             ) : (
                 <ul>

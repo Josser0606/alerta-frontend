@@ -1,7 +1,6 @@
-// src/features/transporte/TransporteAlertas.js
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/Transporte.css'; // <--- Importamos sus estilos específicos
+import '../../assets/styles/Transporte.css'; // Importamos sus estilos específicos de lista
 
 // --- Funciones auxiliares ---
 const formatearFecha = (fechaISO) => {
@@ -57,24 +56,25 @@ function TransporteAlertas() {
         return <div className="alerta-card cargando">Cargando vencimientos...</div>;
     }
 
+    // Detectamos si está vacío
+    const estaVacio = vencimientos.length === 0;
+
     return (
-        <div className="alerta-card transporte">
+        <div className={`alerta-card transporte ${estaVacio ? 'empty' : ''}`}>
             <h3>Vencimientos Próximos (Transporte)</h3>
             
-            {vencimientos.length === 0 ? (
+            {estaVacio ? (
                 <p>No hay vencimientos de SOAT, Tecnomecánica o Licencia en los próximos 30 días.</p>
             ) : (
                 <ul className="vencimiento-lista">
                     {vencimientos.map((vehiculo) => (
                         <li key={vehiculo.placa} className="vencimiento-item">
                             
-                            {/* Encabezado (Placa y Descripción) */}
                             <div className="vencimiento-header">
                                 <span className="nombre">{vehiculo.placa}</span>
                                 <span className="descripcion-vehiculo">{vehiculo.descripcion}</span>
                             </div>
                             
-                            {/* Detalles de fechas */}
                             <div className="vencimiento-detalles">
                                 <div className="detalle-fecha">
                                     <strong>SOAT:</strong>

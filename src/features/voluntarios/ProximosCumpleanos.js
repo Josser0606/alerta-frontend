@@ -1,7 +1,5 @@
-// frontend/src/ProximosCumpleanos.js
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-// NO importamos apiConfig.js
 
 function ProximosCumpleanos() {
     
@@ -11,7 +9,6 @@ function ProximosCumpleanos() {
     useEffect(() => {
         const fetchProximos = async () => {
             try {
-                // --- APUNTAMOS DIRECTO A RENDER ---
                 const respuesta = await fetch(`${API_BASE_URL}/voluntarios/proximos`);
                 
                 if (!respuesta.ok) {
@@ -32,13 +29,7 @@ function ProximosCumpleanos() {
         return <div className="alerta-card cargando">Cargando próximos cumpleaños...</div>;
     }
 
-    if (proximos.length === 0) {
-        return (
-            <div className="alerta-card empty">
-                <p>No hay cumpleaños en la próxima semana.</p>
-            </div>
-        );
-    }
+    const estaVacio = proximos.length === 0;
 
     const formatearFecha = (fechaISO) => {
         const fecha = new Date(fechaISO);
@@ -46,18 +37,23 @@ function ProximosCumpleanos() {
     }
 
     return (
-        <div className="alerta-card proximos">
+        <div className={`alerta-card proximos ${estaVacio ? 'empty' : ''}`}>
             <h3>Próximos Cumpleaños (7 días):</h3>
-            <ul>
-                {proximos.map((persona) => (
-                    <li key={persona.id || persona.nombre_completo}>
-                        <span className="nombre">{persona.nombre_completo}</span>
-                        <span className="fecha">
-                            ({formatearFecha(persona.fecha_nacimiento)})
-                        </span>
-                    </li>
-                ))}
-            </ul>
+            
+            {estaVacio ? (
+                 <p>No hay cumpleaños en la próxima semana.</p>
+            ) : (
+                <ul>
+                    {proximos.map((persona) => (
+                        <li key={persona.id || persona.nombre_completo}>
+                            <span className="nombre">{persona.nombre_completo}</span>
+                            <span className="fecha">
+                                ({formatearFecha(persona.fecha_nacimiento)})
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
