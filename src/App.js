@@ -16,9 +16,13 @@ import ListaBenefactores from './features/benefactores/ListaBenefactores';
 import VehiculoForm from './features/transporte/VehiculoForm';
 import ListaVehiculos from './features/transporte/ListaVehiculos';
 
-// Módulo Voluntarios (¡NUEVO!)
+// Módulo Voluntarios
 import VoluntarioForm from './features/voluntarios/VoluntarioForm';
 import ListaVoluntarios from './features/voluntarios/ListaVoluntarios';
+
+// Módulo Inventario (¡NUEVO!)
+import InventarioForm from './features/inventario/InventarioForm';
+import ListaInventario from './features/inventario/ListaInventario';
 
 // Helper para obtener usuario
 function getUserData() {
@@ -45,10 +49,15 @@ function App() {
   const [mostrarListaVehiculos, setMostrarListaVehiculos] = useState(false);
   const [vehiculoAEditar, setVehiculoAEditar] = useState(null);
 
-  // Voluntarios (¡NUEVO!)
+  // Voluntarios
   const [mostrarFormVoluntario, setMostrarFormVoluntario] = useState(false);
   const [mostrarListaVoluntarios, setMostrarListaVoluntarios] = useState(false);
   const [voluntarioAEditar, setVoluntarioAEditar] = useState(null);
+
+  // Inventario (¡NUEVO!)
+  const [mostrarFormInventario, setMostrarFormInventario] = useState(false);
+  const [mostrarListaInventario, setMostrarListaInventario] = useState(false);
+  const [itemAEditar, setItemAEditar] = useState(null);
 
   // --- B. FUNCIONES DEL SISTEMA ---
 
@@ -84,7 +93,7 @@ function App() {
     setMostrarFormVehiculo(true);
   };
 
-  // 3. Voluntarios (¡NUEVO!)
+  // 3. Voluntarios
   const abrirCrearVoluntario = () => {
       setVoluntarioAEditar(null);
       setMostrarFormVoluntario(true);
@@ -92,8 +101,20 @@ function App() {
 
   const abrirEditarVoluntario = (voluntario) => {
       setVoluntarioAEditar(voluntario);
-      setMostrarListaVoluntarios(false); // Cerramos lista
-      setMostrarFormVoluntario(true);    // Abrimos formulario
+      setMostrarListaVoluntarios(false); 
+      setMostrarFormVoluntario(true);    
+  };
+
+  // 4. Inventario (¡NUEVO!)
+  const abrirCrearInventario = () => {
+      setItemAEditar(null);
+      setMostrarFormInventario(true);
+  };
+
+  const abrirEditarInventario = (item) => {
+      setItemAEditar(item);
+      setMostrarListaInventario(false);
+      setMostrarFormInventario(true);
   };
 
   return (
@@ -117,9 +138,13 @@ function App() {
                   onAbrirVehiculo={abrirCrearVehiculo}
                   onAbrirListaVehiculos={() => setMostrarListaVehiculos(true)}
 
-                  // Conexión Voluntarios (¡NUEVO!)
+                  // Conexión Voluntarios
                   onAbrirVoluntario={abrirCrearVoluntario}
                   onAbrirListaVoluntarios={() => setMostrarListaVoluntarios(true)}
+
+                  // Conexión Inventario (¡NUEVO!)
+                  onAbrirInventario={abrirCrearInventario}
+                  onAbrirListaInventario={() => setMostrarListaInventario(true)}
                 />
                 
                 {/* --- MODALES FLOTANTES --- */}
@@ -129,7 +154,7 @@ function App() {
                   <BenefactorForm 
                     onClose={() => setMostrarFormBenefactor(false)} 
                     benefactorToEdit={benefactorAEditar}
-                    onSuccess={() => { /* Opcional: Recargar algo si se requiere */ }}
+                    onSuccess={() => { /* Opcional */ }}
                   />
                 )}
                 {mostrarListaBenefactores && (
@@ -153,7 +178,7 @@ function App() {
                   />
                 )}
 
-                {/* 3. VOLUNTARIOS (¡NUEVO!) */}
+                {/* 3. VOLUNTARIOS */}
                 {mostrarFormVoluntario && (
                   <VoluntarioForm 
                     onClose={() => setMostrarFormVoluntario(false)}
@@ -164,6 +189,24 @@ function App() {
                   <ListaVoluntarios 
                     onClose={() => setMostrarListaVoluntarios(false)}
                     onEditar={abrirEditarVoluntario}
+                  />
+                )}
+
+                {/* 4. INVENTARIO (¡NUEVO!) */}
+                {mostrarFormInventario && (
+                  <InventarioForm 
+                    onClose={() => setMostrarFormInventario(false)}
+                    itemToEdit={itemAEditar}
+                    onSuccess={() => {
+                       // Si quieres reabrir la lista tras guardar, descomenta:
+                       // setMostrarListaInventario(true);
+                    }}
+                  />
+                )}
+                {mostrarListaInventario && (
+                  <ListaInventario 
+                    onClose={() => setMostrarListaInventario(false)}
+                    onEditar={abrirEditarInventario}
                   />
                 )}
 

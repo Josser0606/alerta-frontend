@@ -90,7 +90,7 @@ function LoginPage() {
                         type="email" 
                         id="email"
                         placeholder="Correo Electrónico"
-                        value={email}
+                        value={email} 
                         onChange={handleEmailChange}
                         // Quitamos el 'required' nativo
                     />

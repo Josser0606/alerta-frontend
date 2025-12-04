@@ -1,14 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { MdOutlineVolunteerActivism } from "react-icons/md";
-import { LuFileSpreadsheet } from "react-icons/lu";
-import { BsTruck } from "react-icons/bs";
 
 // Importamos los componentes de tarjetas (Widgets)
 import TransporteAlertas from '../features/transporte/TransporteAlertas';
 import BenefactoresCumpleanos from '../features/benefactores/BenefactoresCumpleanos';
 import BenefactoresPagos from '../features/benefactores/BenefactoresPagos';
-import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos'; // Voluntarios Hoy
-import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos'; // Voluntarios Próximos
+import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos';
+import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos';
 
 // Importamos componentes de estructura
 import Header from '../components/layout/Header';
@@ -22,15 +19,22 @@ import API_BASE_URL from '../api/apiConfig';
 function DashboardPage({ 
     usuario, 
     onLogout, 
+    
     // Props Benefactores
     onAbrirFormulario, 
     onAbrirLista, 
+    
     // Props Transporte
     onAbrirVehiculo, 
     onAbrirListaVehiculos,
-    // Props Voluntarios (NUEVOS)
+
+    // Props Voluntarios
     onAbrirVoluntario,
-    onAbrirListaVoluntarios 
+    onAbrirListaVoluntarios,
+
+    // Props Inventario (¡NUEVO!)
+    onAbrirInventario,
+    onAbrirListaInventario
 }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
@@ -42,13 +46,12 @@ function DashboardPage({
 
   // Función de búsqueda inteligente con useCallback
   const handleSearch = useCallback(async (query) => {
-    // 1. Si NO hay texto (o está vacío), limpiamos y CERRAMOS el panel.
-    console.log("2. Dashboard recibió:", query); // <--- AGREGA ESTO
-    if (!query || query.trim() === '') {
-      console.log("   -> Búsqueda vacía, limpiando."); // <--- AGREGA ESTO
+    setHaBuscado(true); 
+    setBuscando(true); 
+    
+    if (!query) {
       setResultados([]);
       setBuscando(false);
-      setHaBuscado(false); // <--- CLAVE: Forzamos el cierre si está vacío
       return;
     }
 
@@ -60,6 +63,13 @@ function DashboardPage({
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
       } else if (usuario.rol === 'benefactores') {
           endpoint = `${API_BASE_URL}/benefactores/buscar?nombre=${encodeURIComponent(query)}`;
+      } else if (usuario.rol === 'inventario') { // Nuevo rol
+          // Asumiendo que creaste la ruta de búsqueda en inventarioRoutes.js
+          // Si no, el admin busca voluntarios por defecto
+           endpoint = `${API_BASE_URL}/inventario/todos?search=${encodeURIComponent(query)}`; 
+           // Nota: La ruta /todos ya filtra, pero para el buscador rápido del header 
+           // idealmente deberías tener un endpoint /inventario/buscar ligero.
+           // Si no existe, esto podría devolver muchos datos.
       } else {
           // Si es ADMIN, por defecto buscamos voluntarios (o lo que prefieras)
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
@@ -68,7 +78,13 @@ function DashboardPage({
       const response = await fetch(endpoint);
       if (!response.ok) throw new Error('Error en la búsqueda');
       const data = await response.json();
-      setResultados(data);
+      
+      // Ajuste si el endpoint de inventario devuelve array directo
+      if (usuario.rol === 'inventario' && Array.isArray(data)) {
+          setResultados(data); 
+      } else {
+          setResultados(data);
+      }
 
     } catch (error) {
       console.error("Error al buscar:", error);
@@ -104,14 +120,14 @@ function DashboardPage({
             {/* Título del Dashboard */}
             <h1>Tablero de Alertas <small>({usuario.rol})</small></h1>
             
-            {/* --- GRUPO 1: BOTONES VOLUNTARIOS (NUEVO) --- */}
+            {/* --- GRUPO 1: BOTONES VOLUNTARIOS --- */}
             { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}> 
                     <button 
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVoluntarios} 
                     >
-                        <MdOutlineVolunteerActivism /> Ver Lista Voluntarios
+                        👥 Ver Lista Voluntarios
                     </button>
 
                     <button 
@@ -130,7 +146,7 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirLista} 
                     >
-                        <LuFileSpreadsheet /> Ver Lista Benefactores
+                        📋 Ver Lista Benefactores
                     </button>
 
                     <button 
@@ -149,7 +165,7 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVehiculos} 
                     >
-                        <BsTruck /> Ver lista de carros
+                        🚌 Ver Flota
                     </button>
 
                     <button 
@@ -157,6 +173,26 @@ function DashboardPage({
                         onClick={onAbrirVehiculo} 
                     >
                         + Nuevo Vehículo
+                    </button>
+                </div>
+            )}
+
+            {/* --- GRUPO 4: BOTONES INVENTARIO (¡NUEVO!) --- */}
+            {/* Ajusta 'inventario' si tu rol se llama diferente en la BD */}
+            { (usuario.rol === 'admin' || usuario.rol === 'inventario') && (
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <button 
+                        className="btn-agregar-benefactor btn-secundario" 
+                        onClick={onAbrirListaInventario} 
+                    >
+                        📦 Ver Inventario
+                    </button>
+
+                    <button 
+                        className="btn-agregar-benefactor" 
+                        onClick={onAbrirInventario} 
+                    >
+                        + Nuevo Item
                     </button>
                 </div>
             )}
@@ -184,6 +220,9 @@ function DashboardPage({
           { (usuario.rol === 'admin' || usuario.rol === 'transporte') && (
             <TransporteAlertas />
           )}
+
+          {/* Módulo Inventario (Opcional: Si quieres mostrar widgets de inventario) */}
+          {/* Por ahora no tienes widgets de alertas para inventario, así que no mostramos nada aquí */}
           
         </div>
       </main>

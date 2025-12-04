@@ -1,38 +1,45 @@
+/* ... (Estilos anteriores del panel) ... */
+
 .notification-panel {
   position: absolute;
-  top: 61px;
-  right: 20px;
+  top: 50px; /* Ajustado para que salga debajo del icono */
+  right: 0;  /* Alineado a la derecha del contenedor relativo */
   width: 300px;
   background-color: white;
   border: 1px solid #ddd;
-  border-top: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 8px 8px;
-  z-index: 999;
+  /* border-top: none; <-- Ya no es necesario si flota separado */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px; /* Bordes redondeados completos */
+  z-index: 1000; /* Asegura que esté encima */
   padding: 16px;
   box-sizing: border-box;
+  animation: slideDown 0.2s ease-out;
 }
-.notification-panel h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+
+/* El resto de estilos de lista h4, ul, li se mantienen igual... */
+/* ... */
+
+/* NUEVO: Badge de notificación (Puntito rojo) */
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444; /* Rojo alerta */
+  border-radius: 50%;
+  border: 2px solid white; /* Borde blanco para separar del icono */
 }
-.notification-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+/* Contenedor relativo para el icono (esto va en el componente padre, pero por seguridad) */
+.notification-area {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.notification-list li {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 0.95em;
+  cursor: pointer;
 }
-.notification-list li strong {
-  font-size: 1.2em;
-  color: #4ea526;
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
