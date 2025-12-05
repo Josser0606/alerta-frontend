@@ -146,7 +146,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       <input 
                         type="text" 
                         name="codigo_serie" 
-                        // Si edita, muestra el código real. Si es nuevo, muestra el prefijo + XXXX
+                        // Muestra el código real si editamos, o el prefijo + XXXX si es nuevo
                         value={itemToEdit ? formData.codigo_serie : (formData.categoria ? `${formData.categoria}XXXX` : "Seleccione categoría...")} 
                         readOnly 
                         disabled
