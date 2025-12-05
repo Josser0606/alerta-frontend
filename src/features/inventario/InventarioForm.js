@@ -14,15 +14,14 @@ const CATEGORIAS = [
 ];
 
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
-const TIPOS_PRODUCTO = ["Computador Portátil", "Computador Escritorio", "Impresora", "Celular", "Tablet", "Periférico", "Mobiliario", "Otro"];
+const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
-    "Recepción", "Talento Humano", "Contabilidad", "Tesorería", "Compras", 
-    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Bodega", 
-    "Conductores", "Auxiliares", "Calidad", "Seguridad", "Aseo", 
-    "Mantenimiento", "Voluntariado", "Proyectos", "Gerencia", "Otro"
+    "Recepción", "Contabilidad", "Seguridad y salud ", "Tesorería", "Compras", 
+    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventsrio", "Clasificación", 
+    "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
 ];
-const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
+const CARGOS = ["Director", "Coordinador", "LIder", "Auxiliar", "Operario", "Practicante"];
 
 function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   
@@ -31,7 +30,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     codigo_serie: '', 
     centro_operacion: '',
     area_principal: '', 
-    tipo_producto: '',
+    tipo_producto: [], // CAMBIO: Ahora es un array para múltiple selección
     descripcion: '',
     area_asignada: '',
     sub_area_asignada: '',
@@ -39,46 +38,26 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   });
 
   const [cargando, setCargando] = useState(false);
-  const [calculandoCodigo, setCalculandoCodigo] = useState(false); // Estado para mostrar "Cargando..." en el input
   const [mensaje, setMensaje] = useState('');
 
   // Cargar datos si estamos editando
   useEffect(() => {
     if (itemToEdit) {
-      setFormData(itemToEdit);
+      // Si viene de la DB, tipo_producto será un string "A, B". Lo convertimos a array.
+      let tiposArray = [];
+      if (itemToEdit.tipo_producto) {
+          // Si ya es array (raro), lo usamos. Si es string, lo partimos por coma.
+          tiposArray = Array.isArray(itemToEdit.tipo_producto) 
+              ? itemToEdit.tipo_producto 
+              : itemToEdit.tipo_producto.split(', ');
+      }
+
+      setFormData({
+          ...itemToEdit,
+          tipo_producto: tiposArray
+      });
     }
   }, [itemToEdit]);
-
-  // --- NUEVO EFECTO: CONSULTAR SIGUIENTE CÓDIGO ---
-  useEffect(() => {
-    // Solo buscamos si: 1. Es nuevo registro, 2. Hay categoría seleccionada
-    if (!itemToEdit && formData.categoria) {
-        const obtenerSiguienteCodigo = async () => {
-            setCalculandoCodigo(true);
-            try {
-                // Llamamos a la ruta del backend que calcula el consecutivo
-                const response = await fetch(`${API_BASE_URL}/inventario/siguiente-codigo/${formData.categoria}`);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    // Actualizamos el campo con el valor real (Ej: TE0005)
-                    setFormData(prev => ({ ...prev, codigo_serie: data.siguienteCodigo }));
-                } else {
-                    setFormData(prev => ({ ...prev, codigo_serie: "Error al calcular" }));
-                }
-            } catch (error) {
-                console.error("Error obteniendo código:", error);
-                setFormData(prev => ({ ...prev, codigo_serie: "Error de conexión" }));
-            } finally {
-                setCalculandoCodigo(false);
-            }
-        };
-        obtenerSiguienteCodigo();
-    } else if (!itemToEdit && !formData.categoria) {
-        // Si borra la categoría, limpiamos el código
-        setFormData(prev => ({ ...prev, codigo_serie: '' }));
-    }
-  }, [formData.categoria, itemToEdit]);
 
 
   const handleChange = (e) => {
@@ -87,17 +66,32 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     if (mensaje) setMensaje('');
   };
 
+  // NUEVO HANDLER PARA CHECKBOXES DE TIPO PRODUCTO
+  const handleTipoProductoChange = (tipo) => {
+      setFormData(prev => {
+          const currentTypes = [...prev.tipo_producto];
+          if (currentTypes.includes(tipo)) {
+              // Si ya estaba, lo quitamos
+              return { ...prev, tipo_producto: currentTypes.filter(t => t !== tipo) };
+          } else {
+              // Si no estaba, lo agregamos
+              return { ...prev, tipo_producto: [...currentTypes, tipo] };
+          }
+      });
+      if (mensaje) setMensaje('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación diferente según si es nuevo o edición
     if (!itemToEdit && !formData.categoria) {
         setMensaje("Debe seleccionar una categoría para generar el código.");
         return;
     }
     
-    if (!formData.tipo_producto) {
-        setMensaje("El tipo de producto es obligatorio.");
+    // Validación: Array debe tener al menos un elemento
+    if (formData.tipo_producto.length === 0) {
+        setMensaje("Debe seleccionar al menos un tipo de producto.");
         return;
     }
 
@@ -111,22 +105,27 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       
       const method = itemToEdit ? 'PUT' : 'POST';
 
+      // Convertimos el array a string para enviarlo al backend
+      // Ej: ["PC", "Mouse"] -> "PC, Mouse"
+      const dataToSend = {
+          ...formData,
+          tipo_producto: formData.tipo_producto.join(', ') 
+      };
+
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(dataToSend)
       });
 
       const data = await response.json();
 
       if (!response.ok) throw new Error(data.mensaje || 'Error al guardar');
 
-      // Extraemos el código final del mensaje del servidor para mostrarlo en la alerta
       const codigoFinal = data.mensaje.split('Código: ')[1] || formData.codigo_serie;
-      
       const msgExito = itemToEdit 
           ? 'Item actualizado correctamente' 
-          : `Item creado con éxito. Código asignado: ${codigoFinal}`;
+          : `Item creado con éxito. Código: ${codigoFinal}`;
 
       alert(msgExito);
       
@@ -151,7 +150,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
               
               <form onSubmit={handleSubmit} className="benefactor-form-grid" noValidate>
                   
-                  {/* 1. CATEGORÍA (Vital para el código automático) */}
+                  {/* 1. CATEGORÍA */}
                   <div className="form-group">
                       <label>Categoría (Define el Código) *</label>
                       <select 
@@ -170,29 +169,18 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 2. CÓDIGO DE SERIE (Ahora muestra el valor real calculado) */}
+                  {/* 2. CÓDIGO DE SERIE */}
                   <div className="form-group">
                       <label>Código de Serie</label>
                       <input 
                         type="text" 
                         name="codigo_serie" 
-                        // Muestra "Calculando..." mientras viaja al servidor, o el valor final
-                        value={
-                            calculandoCodigo ? "Calculando..." : 
-                            (formData.codigo_serie || "Seleccione categoría...")
-                        } 
+                        value={itemToEdit ? formData.codigo_serie : (formData.categoria ? `${formData.categoria}XXXX` : "Seleccione categoría...")} 
                         readOnly 
                         disabled
-                        style={{ 
-                            backgroundColor: '#e9ecef', 
-                            fontWeight: 'bold', 
-                            color: calculandoCodigo ? '#999' : '#333',
-                            border: formData.codigo_serie && !calculandoCodigo ? '1px solid #4ea526' : '1px solid #ccc'
-                        }}
+                        style={{ backgroundColor: '#e9ecef', fontWeight: 'bold', color: '#555' }}
+                        placeholder="Generación Automática"
                       />
-                      {!itemToEdit && formData.codigo_serie && !calculandoCodigo && (
-                          <small style={{color: '#4ea526'}}>* Este código está disponible.</small>
-                      )}
                   </div>
 
                   {/* 3. CENTRO DE OPERACIÓN */}
@@ -204,7 +192,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 4. ÁREA PRINCIPAL (CONDICIONAL) */}
+                  {/* 4. ÁREA PRINCIPAL */}
                   {formData.centro_operacion === 'Templos comedores' ? (
                       <div className="form-group">
                           <label>Nombre del Templo Comedor</label>
@@ -225,13 +213,21 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   )}
 
-                  {/* 5. TIPO PRODUCTO */}
-                  <div className="form-group">
-                      <label>Tipo de Producto *</label>
-                      <select name="tipo_producto" value={formData.tipo_producto} onChange={handleChange}>
-                          <option value="">Seleccione...</option>
-                          {TIPOS_PRODUCTO.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                      </select>
+                  {/* 5. TIPO PRODUCTO (CHECKBOXES) */}
+                  <div className="form-group full-width">
+                      <label>Tipo de Producto (Seleccione uno o varios) *</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px', marginTop: '5px' }}>
+                          {TIPOS_PRODUCTO.map(tipo => (
+                              <label key={tipo} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9em' }}>
+                                  <input 
+                                    type="checkbox" 
+                                    checked={formData.tipo_producto.includes(tipo)}
+                                    onChange={() => handleTipoProductoChange(tipo)}
+                                  />
+                                  {tipo}
+                              </label>
+                          ))}
+                      </div>
                   </div>
 
                   {/* 6. DESCRIPCIÓN */}
@@ -280,8 +276,8 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                               <span>{mensaje}</span>
                           </div>
                       )}
-                      <button type="submit" className="save-button" disabled={cargando || calculandoCodigo}>
-                          {cargando ? 'Guardando...' : (itemToEdit ? 'Actualizar Item' : 'Guardar Item')}
+                      <button type="submit" className="save-button" disabled={cargando}>
+                          {cargando ? 'Guardando...' : (itemToEdit ? 'Actualizar Item' : 'Generar Item')}
                       </button>
                   </div>
 
