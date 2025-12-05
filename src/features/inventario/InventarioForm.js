@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/BenefactorForm.css'; // Reutilizamos estilos del modal
+import '../../assets/styles/BenefactorForm.css'; 
 import { BiError } from "react-icons/bi";
 
 // --- LISTAS DE OPCIONES ---
-
-// CATEGORÍAS PARA CÓDIGO DE SERIE (Define el prefijo)
 const CATEGORIAS = [
     { codigo: 'TE', nombre: 'Terrenos' },
     { codigo: 'COE', nombre: 'Construcciones y Edificios' },
@@ -15,9 +13,7 @@ const CATEGORIAS = [
     { codigo: 'FLT', nombre: 'Flota y Equipo de Transporte' }
 ];
 
-// CENTROS DE OPERACIÓN
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
-
 const TIPOS_PRODUCTO = ["Computador Portátil", "Computador Escritorio", "Impresora", "Celular", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
@@ -31,8 +27,8 @@ const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "
 function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   
   const [formData, setFormData] = useState({
-    categoria: '', // Nuevo campo para el prefijo (ej: FLT)
-    codigo_serie: '', // Se llena solo al editar, o es automático al crear
+    categoria: '', 
+    codigo_serie: '', 
     centro_operacion: '',
     area_principal: '', 
     tipo_producto: '',
@@ -43,6 +39,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   });
 
   const [cargando, setCargando] = useState(false);
+  const [calculandoCodigo, setCalculandoCodigo] = useState(false); // Estado para mostrar "Cargando..." en el input
   const [mensaje, setMensaje] = useState('');
 
   // Cargar datos si estamos editando
@@ -51,6 +48,38 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       setFormData(itemToEdit);
     }
   }, [itemToEdit]);
+
+  // --- NUEVO EFECTO: CONSULTAR SIGUIENTE CÓDIGO ---
+  useEffect(() => {
+    // Solo buscamos si: 1. Es nuevo registro, 2. Hay categoría seleccionada
+    if (!itemToEdit && formData.categoria) {
+        const obtenerSiguienteCodigo = async () => {
+            setCalculandoCodigo(true);
+            try {
+                // Llamamos a la ruta del backend que calcula el consecutivo
+                const response = await fetch(`${API_BASE_URL}/inventario/siguiente-codigo/${formData.categoria}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    // Actualizamos el campo con el valor real (Ej: TE0005)
+                    setFormData(prev => ({ ...prev, codigo_serie: data.siguienteCodigo }));
+                } else {
+                    setFormData(prev => ({ ...prev, codigo_serie: "Error al calcular" }));
+                }
+            } catch (error) {
+                console.error("Error obteniendo código:", error);
+                setFormData(prev => ({ ...prev, codigo_serie: "Error de conexión" }));
+            } finally {
+                setCalculandoCodigo(false);
+            }
+        };
+        obtenerSiguienteCodigo();
+    } else if (!itemToEdit && !formData.categoria) {
+        // Si borra la categoría, limpiamos el código
+        setFormData(prev => ({ ...prev, codigo_serie: '' }));
+    }
+  }, [formData.categoria, itemToEdit]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,11 +121,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
 
       if (!response.ok) throw new Error(data.mensaje || 'Error al guardar');
 
-      // Mensaje personalizado según si creó o editó
-      // Si el backend devuelve "Item registrado con éxito. Código: FLT0001", lo mostramos
+      // Extraemos el código final del mensaje del servidor para mostrarlo en la alerta
+      const codigoFinal = data.mensaje.split('Código: ')[1] || formData.codigo_serie;
+      
       const msgExito = itemToEdit 
           ? 'Item actualizado correctamente' 
-          : (data.mensaje || 'Item creado con éxito');
+          : `Item creado con éxito. Código asignado: ${codigoFinal}`;
 
       alert(msgExito);
       
@@ -128,7 +158,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                         name="categoria" 
                         value={formData.categoria} 
                         onChange={handleChange}
-                        disabled={!!itemToEdit} // Bloqueado al editar para no cambiar el código
+                        disabled={!!itemToEdit} 
                         style={{ backgroundColor: itemToEdit ? '#e9ecef' : 'white' }}
                       >
                           <option value="">Seleccione Categoría...</option>
@@ -140,20 +170,29 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 2. CÓDIGO DE SERIE (Automático o Lectura) */}
+                  {/* 2. CÓDIGO DE SERIE (Ahora muestra el valor real calculado) */}
                   <div className="form-group">
                       <label>Código de Serie</label>
                       <input 
                         type="text" 
                         name="codigo_serie" 
-                        // Muestra el código real si editamos, o el prefijo + XXXX si es nuevo
-                        value={itemToEdit ? formData.codigo_serie : (formData.categoria ? `${formData.categoria}XXXX` : "Seleccione categoría...")} 
+                        // Muestra "Calculando..." mientras viaja al servidor, o el valor final
+                        value={
+                            calculandoCodigo ? "Calculando..." : 
+                            (formData.codigo_serie || "Seleccione categoría...")
+                        } 
                         readOnly 
                         disabled
-                        style={{ backgroundColor: '#e9ecef', fontWeight: 'bold', color: '#555' }}
-                        placeholder="Generación Automática"
+                        style={{ 
+                            backgroundColor: '#e9ecef', 
+                            fontWeight: 'bold', 
+                            color: calculandoCodigo ? '#999' : '#333',
+                            border: formData.codigo_serie && !calculandoCodigo ? '1px solid #4ea526' : '1px solid #ccc'
+                        }}
                       />
-                      {!itemToEdit && <small style={{color: '#4ea526'}}>* Se generará automáticamente (Ej: FLT0001)</small>}
+                      {!itemToEdit && formData.codigo_serie && !calculandoCodigo && (
+                          <small style={{color: '#4ea526'}}>* Este código está disponible.</small>
+                      )}
                   </div>
 
                   {/* 3. CENTRO DE OPERACIÓN */}
@@ -166,8 +205,6 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                   </div>
 
                   {/* 4. ÁREA PRINCIPAL (CONDICIONAL) */}
-                  {/* Lógica: Si selecciona 'Templos comedores', mostramos el input especial */}
-                  
                   {formData.centro_operacion === 'Templos comedores' ? (
                       <div className="form-group">
                           <label>Nombre del Templo Comedor</label>
@@ -243,8 +280,8 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                               <span>{mensaje}</span>
                           </div>
                       )}
-                      <button type="submit" className="save-button" disabled={cargando}>
-                          {cargando ? 'Guardando...' : (itemToEdit ? 'Actualizar Item' : 'Generar Item')}
+                      <button type="submit" className="save-button" disabled={cargando || calculandoCodigo}>
+                          {cargando ? 'Guardando...' : (itemToEdit ? 'Actualizar Item' : 'Guardar Item')}
                       </button>
                   </div>
 
