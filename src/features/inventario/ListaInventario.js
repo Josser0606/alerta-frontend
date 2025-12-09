@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
-import '../../assets/styles/Listas.css'; // Reutilizamos estilos globales
-import { FaRegEdit, FaTrashAlt, FaBoxOpen } from "react-icons/fa"; // Icono de caja para inventario
+import '../../assets/styles/Listas.css'; 
+import { FaRegEdit, FaTrashAlt, FaBoxOpen } from "react-icons/fa";
 
 const ListaInventario = ({ onClose, onEditar }) => {
   const [inventario, setInventario] = useState([]);
@@ -21,13 +21,8 @@ const ListaInventario = ({ onClose, onEditar }) => {
         
         if (!response.ok) throw new Error('Error al obtener datos');
         
-        // Nota: Si tu backend de inventario aún no tiene paginación implementada en la respuesta JSON, 
-        // asegúrate de que devuelva { data: [...], pagination: {...} } o ajusta esto.
-        // Por ahora asumimos que el backend devuelve un array directo si no hay paginación, 
-        // o la estructura paginada. Ajustaremos según tu respuesta del backend.
         const resultado = await response.json();
         
-        // Verificación flexible por si el backend devuelve array directo (sin paginación aún)
         if (Array.isArray(resultado)) {
              setInventario(resultado);
              setTotalPaginas(1);
@@ -64,6 +59,16 @@ const ListaInventario = ({ onClose, onEditar }) => {
       }
   };
 
+  // Helper para asignar color según el estado nuevo
+  const getBadgeStyle = (estado) => {
+      if (estado === 'Con Prioridad') {
+          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo suave
+      } else {
+          // 'Sin Prioridad' o cualquier otro
+          return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; // Verde suave
+      }
+  };
+
   return (
     <div className="modal-overlay">
       <div className="modal-container-large">
@@ -90,14 +95,13 @@ const ListaInventario = ({ onClose, onEditar }) => {
           ) : (
             <>
               <div className="tabla-container">
-                <table className="tabla-benefactores"> {/* Reutilizamos clase de tabla */}
+                <table className="tabla-benefactores">
                   <thead>
                     <tr>
                       <th>Código</th>
-                      <th>Producto</th>
+                      <th>Producto / Descripción</th>
                       <th>Centro</th>
-                      <th>Área</th>
-                      <th>Cargo</th>
+                      <th>Ubicación / Cargo</th>
                       <th>Estado</th>
                       <th style={{textAlign: 'center'}}>Acciones</th>
                     </tr>
@@ -106,24 +110,39 @@ const ListaInventario = ({ onClose, onEditar }) => {
                     {inventario.length > 0 ? (
                         inventario.map((item) => (
                         <tr key={item.id}>
+                            {/* CÓDIGO */}
                             <td><strong>{item.codigo_serie}</strong></td>
+                            
+                            {/* PRODUCTO */}
                             <td>
-                                {item.tipo_producto}
+                                <span style={{fontWeight:'600'}}>{item.tipo_producto}</span>
                                 <br/>
-                                <small style={{color: '#666'}}>{item.descripcion ? item.descripcion.substring(0, 30) + '...' : ''}</small>
+                                <small style={{color: '#666', fontSize: '0.85em'}}>
+                                    {item.descripcion ? (item.descripcion.length > 40 ? item.descripcion.substring(0, 40) + '...' : item.descripcion) : ''}
+                                </small>
                             </td>
+                            
+                            {/* CENTRO */}
                             <td>{item.centro_operacion}</td>
+                            
+                            {/* UBICACIÓN */}
                             <td>
                                 {item.area_principal}
-                                {item.sub_area_asignada && <small style={{display:'block', color:'#888'}}>{item.sub_area_asignada}</small>}
+                                {item.cargo_asignado && (
+                                    <small style={{display:'block', color:'#4ea526', fontWeight:'500'}}>
+                                        👤 {item.cargo_asignado}
+                                    </small>
+                                )}
                             </td>
-                            <td>{item.cargo_asignado || '-'}</td>
+                            
+                            {/* ESTADO (Actualizado para Prioridad) */}
                             <td>
-                                <span className={`badge ${item.estado === 'Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
-                                    {item.estado || 'Activo'}
+                                <span className="badge" style={getBadgeStyle(item.estado)}>
+                                    {item.estado || 'Sin Prioridad'}
                                 </span>
                             </td>
                             
+                            {/* ACCIONES */}
                             <td style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                                 <button 
                                     className="btn-volver"
@@ -146,7 +165,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
                         </tr>
                         ))
                     ) : (
-                        <tr><td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>No hay items registrados.</td></tr>
+                        <tr><td colSpan="7" style={{textAlign: 'center', padding: '30px', color: '#666'}}>No se encontraron items.</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -155,7 +174,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
               {/* Paginación */}
               <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '20px' }}>
                   <button className="btn-volver" disabled={pagina === 1} onClick={() => setPagina(p => p - 1)}>Anterior</button>
-                  <span style={{ fontWeight: 'bold' }}>Página {pagina} de {totalPaginas || 1}</span>
+                  <span style={{ fontWeight: 'bold', alignSelf: 'center' }}>Página {pagina} de {totalPaginas || 1}</span>
                   <button className="btn-volver" disabled={pagina >= totalPaginas} onClick={() => setPagina(p => p + 1)}>Siguiente</button>
               </div>
             </>
