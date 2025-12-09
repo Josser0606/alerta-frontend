@@ -15,7 +15,7 @@ const CATEGORIAS = [
 ];
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
 const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
-const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
+const AREAS = ["Mercadeo Social", "Gestión Humana", "Programas y Proyectos", "Financiero y Contable", "Relaciones Institucionales", "Logistica y Transporte", "Aseguramiento de la Calidad"];
 const SUB_AREAS = [
     "Recepción", "Contabilidad", "Seguridad y salud ", "Tesorería", "Compras", 
     "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventario", "Clasificación", 
@@ -248,11 +248,11 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   ) : (
                       <div className="form-group">
-                          <label>Nombre de la persona (Ej: Manuela)</label>
+                          <label>Nombre de la persona (Ej: Nombre, apellido)</label>
                           <input 
                             type="text" name="area_principal" 
                             value={formData.area_principal} onChange={handleChange} 
-                            placeholder="Ej: Tesorería"
+                            placeholder="Ej: Nombre, apellido"
                           />
                       </div>
                   )}
