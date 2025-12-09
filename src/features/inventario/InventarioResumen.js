@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable'; // Importamos el objeto, no solo el efecto secundario
 import { FaFilePdf } from "react-icons/fa"; // Icono de PDF
 
 // Diccionario para mostrar nombres bonitos en lugar de códigos
@@ -69,8 +69,8 @@ function InventarioResumen() {
                 tableRows.push(itemData);
             });
 
-            // 4. Generamos la tabla automática
-            doc.autoTable({
+            // 4. Generamos la tabla automática (Usando la función importada explícitamente)
+            autoTable(doc, {
                 head: [tableColumn],
                 body: tableRows,
                 startY: 40,
@@ -84,7 +84,7 @@ function InventarioResumen() {
 
         } catch (error) {
             console.error("Error al generar PDF:", error);
-            alert("Hubo un error al generar el reporte PDF.");
+            alert("Hubo un error al generar el reporte PDF. Revisa la consola.");
         } finally {
             setGenerandoPDF(false);
         }
