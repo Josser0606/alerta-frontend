@@ -45,7 +45,8 @@ function InventarioResumen() {
             const items = await response.json();
 
             // 2. Creamos el documento PDF
-            const doc = new jsPDF();
+            const doc = new jsPDF(); // Orientación vertical por defecto (portrait)
+            // Si la descripción es muy larga, podrías considerar 'landscape': new jsPDF('l');
 
             // Título
             doc.setFontSize(18);
@@ -54,7 +55,8 @@ function InventarioResumen() {
             doc.text(`Fecha de generación: ${new Date().toLocaleDateString()}`, 14, 30);
 
             // 3. Preparamos las columnas y filas para la tabla
-            const tableColumn = ["Código", "Categoría", "Producto", "Centro", "Ubicación", "Estado"];
+            // AGREGAMOS "Descripción" AQUÍ
+            const tableColumn = ["Código", "Categoría", "Producto", "Descripción", "Centro", "Ubicación", "Estado"];
             const tableRows = [];
 
             items.forEach(item => {
@@ -62,6 +64,7 @@ function InventarioResumen() {
                     item.codigo_serie,
                     item.categoria || '-',
                     item.tipo_producto,
+                    item.descripcion || '', // AGREGAMOS el dato de la descripción
                     item.centro_operacion,
                     item.area_principal, // O area_asignada si prefieres
                     item.estado
@@ -75,8 +78,17 @@ function InventarioResumen() {
                 body: tableRows,
                 startY: 40,
                 theme: 'grid',
-                styles: { fontSize: 8 },
-                headStyles: { fillColor: [78, 165, 38] } // Color verde Saciar
+                styles: { fontSize: 7, cellPadding: 2 }, // Reduje un poco la fuente para que quepa la descripción
+                headStyles: { fillColor: [78, 165, 38] }, // Color verde Saciar
+                columnStyles: {
+                    0: { cellWidth: 20 }, // Código
+                    1: { cellWidth: 15 }, // Cat
+                    2: { cellWidth: 30 }, // Producto
+                    3: { cellWidth: 'auto' }, // Descripción (se expande)
+                    4: { cellWidth: 25 }, // Centro
+                    5: { cellWidth: 25 }, // Ubicación
+                    6: { cellWidth: 25 }  // Estado
+                }
             });
 
             // 5. Descargar
