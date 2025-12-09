@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
 import '../../assets/styles/Listas.css'; 
-import { FaRegEdit, FaTrashAlt, FaBoxOpen } from "react-icons/fa";
+import { FaRegEdit, FaTrashAlt, FaBoxOpen, FaEye } from "react-icons/fa"; 
+import InventarioDetalle from './InventarioDetalle'; // Importamos el modal de detalle
 
 const ListaInventario = ({ onClose, onEditar }) => {
   const [inventario, setInventario] = useState([]);
@@ -11,11 +12,13 @@ const ListaInventario = ({ onClose, onEditar }) => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [busqueda, setBusqueda] = useState('');
 
+  // Estado para el modal de detalle
+  const [itemSeleccionado, setItemSeleccionado] = useState(null);
+
   // --- CARGAR DATOS ---
   const fetchInventario = useCallback(async () => {
     setLoading(true);
     try {
-        // Asegúrate de que tu backend tenga configurado ORDER BY codigo_serie ASC
         const response = await fetch(
             `${API_BASE_URL}/inventario/todos?page=${pagina}&limit=20&search=${encodeURIComponent(busqueda)}`
         ); 
@@ -24,17 +27,27 @@ const ListaInventario = ({ onClose, onEditar }) => {
         
         const resultado = await response.json();
         
-        // Manejo flexible de la respuesta (por si el backend no pagina aún)
+        let datosParaMostrar = [];
+
+        // Manejo flexible de la respuesta
         if (Array.isArray(resultado)) {
-             // Si el backend devuelve un array directo, lo ordenamos aquí por si acaso
-             const ordenado = resultado.sort((a, b) => a.codigo_serie.localeCompare(b.codigo_serie));
-             setInventario(ordenado);
+             datosParaMostrar = resultado;
              setTotalPaginas(1);
         } else {
-             // Si viene paginado
-             setInventario(resultado.data || []);
+             datosParaMostrar = resultado.data || [];
              setTotalPaginas(resultado.pagination?.totalPages || 1);
         }
+
+        // --- CORRECCIÓN DE ORDENAMIENTO VISUAL ---
+        // Ordenamos explícitamente por código de serie para garantizar la secuencia (ECOM001, ECOM002...)
+        const datosOrdenados = datosParaMostrar.sort((a, b) => {
+            // Manejamos casos donde codigo_serie pudiera ser null
+            const codA = a.codigo_serie || '';
+            const codB = b.codigo_serie || '';
+            return codA.localeCompare(codB, undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        setInventario(datosOrdenados);
 
     } catch (error) {
         console.error("Error cargando inventario:", error);
@@ -69,7 +82,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
       if (estado === 'Con Prioridad') {
           return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo
       } 
-      // Cubre 'Sin Prioridad', 'Activo' y cualquier otro por defecto
+      // Cubre 'Sin Prioridad', 'Activo' y por defecto
       return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; // Verde
   };
 
@@ -85,6 +98,8 @@ const ListaInventario = ({ onClose, onEditar }) => {
         </div>
 
         <div className="modal-body">
+          
+          {/* Barra de búsqueda */}
           <input 
             type="text" 
             placeholder="🔍 Buscar por código, producto o descripción..." 
@@ -139,16 +154,27 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                 )}
                             </td>
                             
-                            {/* ESTADO (Con corrección visual) */}
+                            {/* ESTADO */}
                             <td>
                                 <span className="badge" style={getBadgeStyle(item.estado)}>
-                                    {/* Si dice 'Activo', mostramos 'Sin Prioridad' para ser consistentes */}
-                                    {item.estado === 'Activo' ? 'Sin Prioridad' : item.estado}
+                                    {/* Muestra 'Sin Prioridad' si viene como 'Activo' */}
+                                    {item.estado === 'Activo' ? 'Sin Prioridad' : (item.estado || 'Sin Prioridad')}
                                 </span>
                             </td>
                             
                             {/* ACCIONES */}
                             <td style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                                {/* Botón Ver Detalle */}
+                                <button 
+                                    className="btn-volver"
+                                    style={{ background: '#3b82f6', padding: '8px 12px', fontSize: '0.9em' }}
+                                    onClick={() => setItemSeleccionado(item)}
+                                    title="Ver Información Completa"
+                                >
+                                    <FaEye />
+                                </button>
+
+                                {/* Botón Editar */}
                                 <button 
                                     className="btn-volver"
                                     style={{ background: '#46a022', padding: '8px 12px', fontSize: '0.9em' }}
@@ -158,6 +184,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                     <FaRegEdit />
                                 </button>
 
+                                {/* Botón Eliminar */}
                                 <button 
                                     className="btn-volver"
                                     style={{ background: '#d9534f', padding: '8px 12px', fontSize: '0.9em' }}
@@ -186,6 +213,15 @@ const ListaInventario = ({ onClose, onEditar }) => {
           )}
         </div>
       </div>
+
+      {/* RENDERIZADO DEL MODAL DE DETALLE */}
+      {itemSeleccionado && (
+          <InventarioDetalle 
+              item={itemSeleccionado} 
+              onClose={() => setItemSeleccionado(null)} 
+          />
+      )}
+
     </div>
   );
 };
