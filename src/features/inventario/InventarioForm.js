@@ -18,10 +18,10 @@ const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Mon
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
     "Recepción", "Contabilidad", "Seguridad y salud ", "Tesorería", "Compras", 
-    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventsrio", "Clasificación", 
+    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventario", "Clasificación", 
     "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
 ];
-const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
+const CARGOS = ["Director", "Coordinador", "Lider", "Auxiliar", "Operario", "Practicante"];
 
 // --- AQUÍ AGREGAMOS "Inactivo" ---
 const ESTADOS = ["Sin Prioridad", "Con Prioridad", "Inactivo"];
