@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import SearchResults from '../ui/SearchResults';
 import AlertasBell from './AlertasBell'; // <--- Importamos el nuevo componente
 import '../../assets/styles/Header.css';
-import logoImage from '../../assets/images/icono (1).png'; 
+import logoImage from '../../assets/images/logo_saciar.png'; 
 
 function Header({ 
   children, // El SearchBar viene aquí
@@ -38,7 +38,6 @@ function Header({
       
       <div className="logo-area">
         <img src={logoImage} alt="Logo Saciar" className="header-logo" />
-        <span className="header-title">Fundación Saciar</span>
       </div>
 
       {/* Área de Búsqueda */}
