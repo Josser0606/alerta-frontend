@@ -15,6 +15,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
   const fetchInventario = useCallback(async () => {
     setLoading(true);
     try {
+        // Asegúrate de que tu backend tenga configurado ORDER BY codigo_serie ASC
         const response = await fetch(
             `${API_BASE_URL}/inventario/todos?page=${pagina}&limit=20&search=${encodeURIComponent(busqueda)}`
         ); 
@@ -23,10 +24,14 @@ const ListaInventario = ({ onClose, onEditar }) => {
         
         const resultado = await response.json();
         
+        // Manejo flexible de la respuesta (por si el backend no pagina aún)
         if (Array.isArray(resultado)) {
-             setInventario(resultado);
+             // Si el backend devuelve un array directo, lo ordenamos aquí por si acaso
+             const ordenado = resultado.sort((a, b) => a.codigo_serie.localeCompare(b.codigo_serie));
+             setInventario(ordenado);
              setTotalPaginas(1);
         } else {
+             // Si viene paginado
              setInventario(resultado.data || []);
              setTotalPaginas(resultado.pagination?.totalPages || 1);
         }
@@ -59,16 +64,13 @@ const ListaInventario = ({ onClose, onEditar }) => {
       }
   };
 
-  // Helper para asignar color según el estado
+  // Helper de estilos para el Badge
   const getBadgeStyle = (estado) => {
-      // Si es "Con Prioridad", rojo suave
       if (estado === 'Con Prioridad') {
-          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; 
+          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo
       } 
-      // Si es "Sin Prioridad" O "Activo" (para compatibilidad), verde suave
-      else {
-          return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; 
-      }
+      // Cubre 'Sin Prioridad', 'Activo' y cualquier otro por defecto
+      return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; // Verde
   };
 
   return (
@@ -137,10 +139,10 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                 )}
                             </td>
                             
-                            {/* ESTADO */}
+                            {/* ESTADO (Con corrección visual) */}
                             <td>
                                 <span className="badge" style={getBadgeStyle(item.estado)}>
-                                    {/* Si es 'Activo', podrías forzar que muestre 'Sin Prioridad' visualmente si prefieres: */}
+                                    {/* Si dice 'Activo', mostramos 'Sin Prioridad' para ser consistentes */}
                                     {item.estado === 'Activo' ? 'Sin Prioridad' : item.estado}
                                 </span>
                             </td>

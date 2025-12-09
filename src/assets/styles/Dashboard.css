@@ -297,3 +297,44 @@ h1 small {
   .cards-container { grid-template-columns: 1fr; } /* Una sola columna en móvil */
   h1 { font-size: 1.5rem; }
 }
+
+/* --- ESTILOS MÓDULO INVENTARIO --- */
+
+/* Tarjeta Inventario (Violeta) */
+.alerta-card.inventario {
+  border-top: 5px solid #8b5cf6; /* Violeta */
+}
+.alerta-card.inventario h3 {
+  color: #7c3aed;
+}
+/* Icono de fondo (Caja) */
+.alerta-card.inventario::after {
+  content: "📦";
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Estado Vacío (Opaco) */
+.alerta-card.inventario.empty {
+  border-top-color: rgba(139, 92, 246, 0.3);
+}
+.alerta-card.inventario.empty h3 {
+  color: #94a3b8;
+}
+.alerta-card.inventario.empty::after {
+  opacity: 0.02;
+}
+
+/* Badge de conteo específico para inventario */
+.alerta-card.inventario .badge-count {
+    background-color: #f3e8ff; /* Fondo violeta muy claro */
+    color: #6d28d9; /* Texto violeta oscuro */
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9em;
+}

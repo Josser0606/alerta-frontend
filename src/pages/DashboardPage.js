@@ -6,6 +6,8 @@ import BenefactoresCumpleanos from '../features/benefactores/BenefactoresCumplea
 import BenefactoresPagos from '../features/benefactores/BenefactoresPagos';
 import AlertasCumpleanos from '../features/voluntarios/AlertasCumpleanos';
 import ProximosCumpleanos from '../features/voluntarios/ProximosCumpleanos';
+// IMPORTACIÓN NUEVA:
+import InventarioResumen from '../features/inventario/InventarioResumen';
 
 // Importamos componentes de estructura
 import Header from '../components/layout/Header';
@@ -32,7 +34,7 @@ function DashboardPage({
     onAbrirVoluntario,
     onAbrirListaVoluntarios,
 
-    // Props Inventario (¡NUEVO!)
+    // Props Inventario
     onAbrirInventario,
     onAbrirListaInventario
 }) {
@@ -63,15 +65,11 @@ function DashboardPage({
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
       } else if (usuario.rol === 'benefactores') {
           endpoint = `${API_BASE_URL}/benefactores/buscar?nombre=${encodeURIComponent(query)}`;
-      } else if (usuario.rol === 'inventario') { // Nuevo rol
-          // Asumiendo que creaste la ruta de búsqueda en inventarioRoutes.js
-          // Si no, el admin busca voluntarios por defecto
+      } else if (usuario.rol === 'inventario') { 
+           // Usamos la ruta de listado con filtro para buscar en inventario
            endpoint = `${API_BASE_URL}/inventario/todos?search=${encodeURIComponent(query)}`; 
-           // Nota: La ruta /todos ya filtra, pero para el buscador rápido del header 
-           // idealmente deberías tener un endpoint /inventario/buscar ligero.
-           // Si no existe, esto podría devolver muchos datos.
       } else {
-          // Si es ADMIN, por defecto buscamos voluntarios (o lo que prefieras)
+          // Si es ADMIN, por defecto buscamos voluntarios
           endpoint = `${API_BASE_URL}/voluntarios/buscar?nombre=${encodeURIComponent(query)}`;
       }
 
@@ -79,12 +77,7 @@ function DashboardPage({
       if (!response.ok) throw new Error('Error en la búsqueda');
       const data = await response.json();
       
-      // Ajuste si el endpoint de inventario devuelve array directo
-      if (usuario.rol === 'inventario' && Array.isArray(data)) {
-          setResultados(data); 
-      } else {
-          setResultados(data);
-      }
+      setResultados(data);
 
     } catch (error) {
       console.error("Error al buscar:", error);
@@ -177,8 +170,7 @@ function DashboardPage({
                 </div>
             )}
 
-            {/* --- GRUPO 4: BOTONES INVENTARIO (¡NUEVO!) --- */}
-            {/* Ajusta 'inventario' si tu rol se llama diferente en la BD */}
+            {/* --- GRUPO 4: BOTONES INVENTARIO --- */}
             { (usuario.rol === 'admin' || usuario.rol === 'inventario') && (
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     <button 
@@ -221,8 +213,10 @@ function DashboardPage({
             <TransporteAlertas />
           )}
 
-          {/* Módulo Inventario (Opcional: Si quieres mostrar widgets de inventario) */}
-          {/* Por ahora no tienes widgets de alertas para inventario, así que no mostramos nada aquí */}
+          {/* Módulo Inventario (¡NUEVO!) */}
+          { (usuario.rol === 'admin' || usuario.rol === 'inventario') && (
+            <InventarioResumen />
+          )}
           
         </div>
       </main>
