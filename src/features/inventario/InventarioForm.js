@@ -14,13 +14,12 @@ const CATEGORIAS = [
 ];
 
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
-const TIPOS_PRODUCTO = ["Computador Portátil", "Computador Escritorio", "Impresora", "Celular", "Tablet", "Periférico", "Mobiliario", "Otro"];
+const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
-    "Recepción", "Talento Humano", "Contabilidad", "Tesorería", "Compras", 
-    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Bodega", 
-    "Conductores", "Auxiliares", "Calidad", "Seguridad", "Aseo", 
-    "Mantenimiento", "Voluntariado", "Proyectos", "Gerencia", "Otro"
+    "Recepción", "Contabilidad", "Seguridad y salud ", "Tesorería", "Compras", 
+    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventsrio", "Clasificación", 
+    "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
 ];
 const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
 const ESTADOS = ["Sin Prioridad", "Con Prioridad"];
