@@ -21,7 +21,10 @@ const SUB_AREAS = [
     "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventsrio", "Clasificación", 
     "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
 ];
-const CARGOS = ["Director", "Coordinador", "LIder", "Auxiliar", "Operario", "Practicante"];
+const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
+
+// NUEVA LISTA DE ESTADOS
+const ESTADOS = ["Sin Prioridad", "Con Prioridad"];
 
 function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   
@@ -30,11 +33,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     codigo_serie: '', 
     centro_operacion: '',
     area_principal: '', 
-    tipo_producto: [], // CAMBIO: Ahora es un array para múltiple selección
+    tipo_producto: [], 
     descripcion: '',
     area_asignada: '',
     sub_area_asignada: '',
-    cargo_asignado: ''
+    cargo_asignado: '',
+    estado: 'Sin Prioridad' // Valor por defecto
   });
 
   const [cargando, setCargando] = useState(false);
@@ -43,22 +47,20 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   // Cargar datos si estamos editando
   useEffect(() => {
     if (itemToEdit) {
-      // Si viene de la DB, tipo_producto será un string "A, B". Lo convertimos a array.
       let tiposArray = [];
       if (itemToEdit.tipo_producto) {
-          // Si ya es array (raro), lo usamos. Si es string, lo partimos por coma.
           tiposArray = Array.isArray(itemToEdit.tipo_producto) 
               ? itemToEdit.tipo_producto 
               : itemToEdit.tipo_producto.split(', ');
       }
-
+      
       setFormData({
           ...itemToEdit,
-          tipo_producto: tiposArray
+          tipo_producto: tiposArray,
+          estado: itemToEdit.estado || 'Sin Prioridad' // Cargar estado o default
       });
     }
   }, [itemToEdit]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,15 +68,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     if (mensaje) setMensaje('');
   };
 
-  // NUEVO HANDLER PARA CHECKBOXES DE TIPO PRODUCTO
   const handleTipoProductoChange = (tipo) => {
       setFormData(prev => {
           const currentTypes = [...prev.tipo_producto];
           if (currentTypes.includes(tipo)) {
-              // Si ya estaba, lo quitamos
               return { ...prev, tipo_producto: currentTypes.filter(t => t !== tipo) };
           } else {
-              // Si no estaba, lo agregamos
               return { ...prev, tipo_producto: [...currentTypes, tipo] };
           }
       });
@@ -89,7 +88,6 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
         return;
     }
     
-    // Validación: Array debe tener al menos un elemento
     if (formData.tipo_producto.length === 0) {
         setMensaje("Debe seleccionar al menos un tipo de producto.");
         return;
@@ -105,8 +103,6 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       
       const method = itemToEdit ? 'PUT' : 'POST';
 
-      // Convertimos el array a string para enviarlo al backend
-      // Ej: ["PC", "Mouse"] -> "PC, Mouse"
       const dataToSend = {
           ...formData,
           tipo_producto: formData.tipo_producto.join(', ') 
@@ -125,7 +121,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       const codigoFinal = data.mensaje.split('Código: ')[1] || formData.codigo_serie;
       const msgExito = itemToEdit 
           ? 'Item actualizado correctamente' 
-          : `Item creado con éxito. Código: ${codigoFinal}`;
+          : `Item creado con éxito. Código generado: ${codigoFinal}`;
 
       alert(msgExito);
       
@@ -213,16 +209,17 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   )}
 
-                  {/* 5. TIPO PRODUCTO (CHECKBOXES) */}
+                  {/* 5. TIPO PRODUCTO */}
                   <div className="form-group full-width">
                       <label>Tipo de Producto (Seleccione uno o varios) *</label>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px', marginTop: '5px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px', marginTop: '8px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
                           {TIPOS_PRODUCTO.map(tipo => (
                               <label key={tipo} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9em' }}>
                                   <input 
                                     type="checkbox" 
                                     checked={formData.tipo_producto.includes(tipo)}
                                     onChange={() => handleTipoProductoChange(tipo)}
+                                    style={{ width: '16px', height: '16px' }}
                                   />
                                   {tipo}
                               </label>
@@ -266,6 +263,19 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       <select name="cargo_asignado" value={formData.cargo_asignado} onChange={handleChange}>
                           <option value="">Seleccione...</option>
                           {CARGOS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                  </div>
+
+                  {/* 10. ESTADO (NUEVO CAMPO) */}
+                  <div className="form-group">
+                      <label>Estado / Prioridad</label>
+                      <select 
+                        name="estado" 
+                        value={formData.estado} 
+                        onChange={handleChange}
+                        style={{ fontWeight: '600', color: formData.estado === 'Con Prioridad' ? '#d9534f' : '#333' }}
+                      >
+                          {ESTADOS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                       </select>
                   </div>
 
