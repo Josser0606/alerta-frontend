@@ -4,6 +4,7 @@ import '../../assets/styles/BenefactorForm.css';
 import { BiError } from "react-icons/bi";
 
 // --- LISTAS DE OPCIONES ---
+
 const CATEGORIAS = [
     { codigo: 'TE', nombre: 'Terrenos' },
     { codigo: 'COE', nombre: 'Construcciones y Edificios' },
@@ -14,6 +15,8 @@ const CATEGORIAS = [
 ];
 
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
+
+const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
 const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
@@ -22,7 +25,9 @@ const SUB_AREAS = [
     "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
 ];
 const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
-const ESTADOS = ["Sin Prioridad", "Con Prioridad"];
+
+// --- AQUÍ AGREGAMOS "Inactivo" ---
+const ESTADOS = ["Sin Prioridad", "Con Prioridad", "Inactivo"];
 
 function InventarioForm({ onClose, itemToEdit, onSuccess }) {
   
@@ -36,7 +41,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     area_asignada: '',
     sub_area_asignada: '',
     cargo_asignado: '',
-    estado: 'Sin Prioridad' // Valor por defecto para nuevos items
+    estado: 'Sin Prioridad'
   });
 
   const [cargando, setCargando] = useState(false);
@@ -56,14 +61,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       setFormData({
           ...itemToEdit,
           tipo_producto: tiposArray,
-          // AQUÍ ESTÁ LA CORRECCIÓN:
-          // Cargamos el estado que viene de la BD. Si viene vacío o nulo, ponemos 'Sin Prioridad'
-          estado: itemToEdit.estado || 'Sin Prioridad' 
+          estado: itemToEdit.estado || 'Sin Prioridad'
       });
     }
   }, [itemToEdit]);
 
-  // 2. CALCULAR CÓDIGO AUTOMÁTICO (Solo para nuevos)
+  // 2. CALCULAR CÓDIGO AUTOMÁTICO
   useEffect(() => {
     if (!itemToEdit && formData.categoria) {
         const obtenerSiguienteCodigo = async () => {
@@ -165,6 +168,13 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     }
   };
 
+  // Color dinámico para el select de estado
+  const getColorEstado = (estado) => {
+      if (estado === 'Con Prioridad') return '#d9534f';
+      if (estado === 'Inactivo') return '#6c757d'; // Gris para inactivo
+      return '#333';
+  };
+
   return (
       <div className="modal-overlay">
           <div className="modal-content">
@@ -175,7 +185,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
               
               <form onSubmit={handleSubmit} className="benefactor-form-grid" noValidate>
                   
-                  {/* 1. CATEGORÍA */}
+                  {/* CATEGORÍA */}
                   <div className="form-group">
                       <label>Categoría (Define el Código) *</label>
                       <select 
@@ -194,7 +204,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 2. CÓDIGO DE SERIE */}
+                  {/* CÓDIGO DE SERIE */}
                   <div className="form-group">
                       <label>Código de Serie</label>
                       <input 
@@ -215,12 +225,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       />
                       {!itemToEdit && formData.codigo_serie && !calculandoCodigo && (
                           <small style={{color: '#4ea526', display:'block', marginTop:'4px'}}>
-                              ✓ Código disponible para asignar
+                              ✓ Código disponible
                           </small>
                       )}
                   </div>
 
-                  {/* 3. CENTRO DE OPERACIÓN */}
+                  {/* CENTRO DE OPERACIÓN */}
                   <div className="form-group">
                       <label>Centro de Operación</label>
                       <select name="centro_operacion" value={formData.centro_operacion} onChange={handleChange}>
@@ -229,7 +239,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 4. ÁREA PRINCIPAL */}
+                  {/* ÁREA PRINCIPAL */}
                   {formData.centro_operacion === 'Templos comedores' ? (
                       <div className="form-group">
                           <label>Nombre del Templo Comedor</label>
@@ -250,17 +260,16 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   )}
 
-                  {/* 5. TIPO PRODUCTO (CHECKBOXES) */}
+                  {/* TIPO PRODUCTO */}
                   <div className="form-group full-width">
                       <label>Tipo de Producto (Seleccione uno o varios) *</label>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px', marginTop: '8px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+                      <div className="checkbox-grid">
                           {TIPOS_PRODUCTO.map(tipo => (
-                              <label key={tipo} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.9em' }}>
+                              <label key={tipo} className="checkbox-label">
                                   <input 
                                     type="checkbox" 
                                     checked={formData.tipo_producto.includes(tipo)}
                                     onChange={() => handleTipoProductoChange(tipo)}
-                                    style={{ width: '16px', height: '16px' }}
                                   />
                                   {tipo}
                               </label>
@@ -268,7 +277,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   </div>
 
-                  {/* 6. DESCRIPCIÓN */}
+                  {/* DESCRIPCIÓN */}
                   <div className="form-group full-width">
                       <label>Descripción del Item</label>
                       <textarea 
@@ -280,7 +289,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
 
                   <div className="full-width-hr"></div>
 
-                  {/* 7. ÁREA ASIGNADA */}
+                  {/* ÁREA ASIGNADA */}
                   <div className="form-group">
                       <label>Área General</label>
                       <select name="area_asignada" value={formData.area_asignada} onChange={handleChange}>
@@ -289,7 +298,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 8. SUB-ÁREA ASIGNADA */}
+                  {/* SUB-ÁREA */}
                   <div className="form-group">
                       <label>Sub-Área</label>
                       <select name="sub_area_asignada" value={formData.sub_area_asignada} onChange={handleChange}>
@@ -298,7 +307,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 9. CARGO */}
+                  {/* CARGO */}
                   <div className="form-group">
                       <label>Cargo Responsable</label>
                       <select name="cargo_asignado" value={formData.cargo_asignado} onChange={handleChange}>
@@ -307,14 +316,14 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 10. ESTADO (CRUCIAL PARA ACTUALIZAR) */}
+                  {/* ESTADO */}
                   <div className="form-group">
                       <label>Estado / Prioridad</label>
                       <select 
                         name="estado" 
                         value={formData.estado} 
                         onChange={handleChange}
-                        style={{ fontWeight: '600', color: formData.estado === 'Con Prioridad' ? '#d9534f' : '#333' }}
+                        style={{ fontWeight: '600', color: getColorEstado(formData.estado) }}
                       >
                           {ESTADOS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                       </select>

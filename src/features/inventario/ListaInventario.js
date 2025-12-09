@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import API_BASE_URL from '../../api/apiConfig';
 import '../../assets/styles/Listas.css'; 
 import { FaRegEdit, FaTrashAlt, FaBoxOpen, FaEye } from "react-icons/fa"; 
-import InventarioDetalle from './InventarioDetalle'; // Importamos el modal de detalle
+import InventarioDetalle from './InventarioDetalle'; // Asegúrate de tener este componente creado
 
 const ListaInventario = ({ onClose, onEditar }) => {
   const [inventario, setInventario] = useState([]);
@@ -12,7 +12,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [busqueda, setBusqueda] = useState('');
 
-  // Estado para el modal de detalle
+  // Estado para el modal de detalle (Ojo)
   const [itemSeleccionado, setItemSeleccionado] = useState(null);
 
   // --- CARGAR DATOS ---
@@ -29,7 +29,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
         
         let datosParaMostrar = [];
 
-        // Manejo flexible de la respuesta
+        // Manejo flexible de la respuesta (array directo vs paginación)
         if (Array.isArray(resultado)) {
              datosParaMostrar = resultado;
              setTotalPaginas(1);
@@ -38,10 +38,9 @@ const ListaInventario = ({ onClose, onEditar }) => {
              setTotalPaginas(resultado.pagination?.totalPages || 1);
         }
 
-        // --- CORRECCIÓN DE ORDENAMIENTO VISUAL ---
-        // Ordenamos explícitamente por código de serie para garantizar la secuencia (ECOM001, ECOM002...)
+        // --- ORDENAMIENTO ALFANUMÉRICO ROBUSTO ---
+        // Garantiza que FLT0001 esté antes de FLT0002
         const datosOrdenados = datosParaMostrar.sort((a, b) => {
-            // Manejamos casos donde codigo_serie pudiera ser null
             const codA = a.codigo_serie || '';
             const codB = b.codigo_serie || '';
             return codA.localeCompare(codB, undefined, { numeric: true, sensitivity: 'base' });
@@ -77,13 +76,22 @@ const ListaInventario = ({ onClose, onEditar }) => {
       }
   };
 
-  // Helper de estilos para el Badge
+  // --- ESTILOS DE ESTADO (BADGES) ---
   const getBadgeStyle = (estado) => {
       if (estado === 'Con Prioridad') {
-          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo
+          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo suave
       } 
-      // Cubre 'Sin Prioridad', 'Activo' y por defecto
-      return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; // Verde
+      if (estado === 'Inactivo') {
+          return { backgroundColor: '#f3f4f6', color: '#6b7280', border: '1px solid #e5e7eb' }; // Gris neutro
+      }
+      // 'Sin Prioridad' o 'Activo' (Verde)
+      return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; 
+  };
+
+  // Normalizamos el texto a mostrar
+  const getTextoEstado = (estado) => {
+      if (estado === 'Activo') return 'Sin Prioridad'; // Mapeo de compatibilidad
+      return estado || 'Sin Prioridad';
   };
 
   return (
@@ -157,14 +165,13 @@ const ListaInventario = ({ onClose, onEditar }) => {
                             {/* ESTADO */}
                             <td>
                                 <span className="badge" style={getBadgeStyle(item.estado)}>
-                                    {/* Muestra 'Sin Prioridad' si viene como 'Activo' */}
-                                    {item.estado === 'Activo' ? 'Sin Prioridad' : (item.estado || 'Sin Prioridad')}
+                                    {getTextoEstado(item.estado)}
                                 </span>
                             </td>
                             
                             {/* ACCIONES */}
                             <td style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                                {/* Botón Ver Detalle */}
+                                {/* Botón Ver Detalle (Azul) */}
                                 <button 
                                     className="btn-volver"
                                     style={{ background: '#3b82f6', padding: '8px 12px', fontSize: '0.9em' }}
@@ -174,7 +181,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                     <FaEye />
                                 </button>
 
-                                {/* Botón Editar */}
+                                {/* Botón Editar (Verde) */}
                                 <button 
                                     className="btn-volver"
                                     style={{ background: '#46a022', padding: '8px 12px', fontSize: '0.9em' }}
@@ -184,7 +191,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                     <FaRegEdit />
                                 </button>
 
-                                {/* Botón Eliminar */}
+                                {/* Botón Eliminar (Rojo) */}
                                 <button 
                                     className="btn-volver"
                                     style={{ background: '#d9534f', padding: '8px 12px', fontSize: '0.9em' }}
@@ -214,7 +221,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
         </div>
       </div>
 
-      {/* RENDERIZADO DEL MODAL DE DETALLE */}
+      {/* MODAL DE DETALLE */}
       {itemSeleccionado && (
           <InventarioDetalle 
               item={itemSeleccionado} 
