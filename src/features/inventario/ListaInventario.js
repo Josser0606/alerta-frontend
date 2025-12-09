@@ -59,13 +59,15 @@ const ListaInventario = ({ onClose, onEditar }) => {
       }
   };
 
-  // Helper para asignar color según el estado nuevo
+  // Helper para asignar color según el estado
   const getBadgeStyle = (estado) => {
+      // Si es "Con Prioridad", rojo suave
       if (estado === 'Con Prioridad') {
-          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; // Rojo suave
-      } else {
-          // 'Sin Prioridad' o cualquier otro
-          return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; // Verde suave
+          return { backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }; 
+      } 
+      // Si es "Sin Prioridad" O "Activo" (para compatibilidad), verde suave
+      else {
+          return { backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }; 
       }
   };
 
@@ -135,10 +137,11 @@ const ListaInventario = ({ onClose, onEditar }) => {
                                 )}
                             </td>
                             
-                            {/* ESTADO (Actualizado para Prioridad) */}
+                            {/* ESTADO */}
                             <td>
                                 <span className="badge" style={getBadgeStyle(item.estado)}>
-                                    {item.estado || 'Sin Prioridad'}
+                                    {/* Si es 'Activo', podrías forzar que muestre 'Sin Prioridad' visualmente si prefieres: */}
+                                    {item.estado === 'Activo' ? 'Sin Prioridad' : item.estado}
                                 </span>
                             </td>
                             
