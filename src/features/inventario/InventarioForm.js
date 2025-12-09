@@ -248,7 +248,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </div>
                   ) : (
                       <div className="form-group">
-                          <label>Área Específica (Ej: Compras)</label>
+                          <label>Nombre de la persona (Ej: Manuela)</label>
                           <input 
                             type="text" name="area_principal" 
                             value={formData.area_principal} onChange={handleChange} 
