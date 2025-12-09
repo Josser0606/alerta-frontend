@@ -14,12 +14,13 @@ const CATEGORIAS = [
 ];
 
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
-const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
+const TIPOS_PRODUCTO = ["Computador Portátil", "Computador Escritorio", "Impresora", "Celular", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
 const SUB_AREAS = [
-    "Recepción", "Contabilidad", "Seguridad y salud ", "Tesorería", "Compras", 
-    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventsrio", "Clasificación", 
-    "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros"
+    "Recepción", "Talento Humano", "Contabilidad", "Tesorería", "Compras", 
+    "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Bodega", 
+    "Conductores", "Auxiliares", "Calidad", "Seguridad", "Aseo", 
+    "Mantenimiento", "Voluntariado", "Proyectos", "Gerencia", "Otro"
 ];
 const CARGOS = ["Director", "Coordinador", "Analista", "Auxiliar", "Operario", "Pasante"];
 const ESTADOS = ["Sin Prioridad", "Con Prioridad"];
@@ -36,14 +37,14 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
     area_asignada: '',
     sub_area_asignada: '',
     cargo_asignado: '',
-    estado: 'Sin Prioridad'
+    estado: 'Sin Prioridad' // Valor por defecto para nuevos items
   });
 
   const [cargando, setCargando] = useState(false);
-  const [calculandoCodigo, setCalculandoCodigo] = useState(false); // Estado visual
+  const [calculandoCodigo, setCalculandoCodigo] = useState(false);
   const [mensaje, setMensaje] = useState('');
 
-  // 1. Cargar datos si es edición
+  // 1. CARGAR DATOS SI ESTAMOS EDITANDO
   useEffect(() => {
     if (itemToEdit) {
       let tiposArray = [];
@@ -56,19 +57,19 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
       setFormData({
           ...itemToEdit,
           tipo_producto: tiposArray,
-          estado: itemToEdit.estado || 'Sin Prioridad'
+          // AQUÍ ESTÁ LA CORRECCIÓN:
+          // Cargamos el estado que viene de la BD. Si viene vacío o nulo, ponemos 'Sin Prioridad'
+          estado: itemToEdit.estado || 'Sin Prioridad' 
       });
     }
   }, [itemToEdit]);
 
-  // 2. EFECTO CLAVE: CALCULAR CÓDIGO AUTOMÁTICO
-  // Se ejecuta cada vez que cambia la categoría seleccionada (si es nuevo registro)
+  // 2. CALCULAR CÓDIGO AUTOMÁTICO (Solo para nuevos)
   useEffect(() => {
     if (!itemToEdit && formData.categoria) {
         const obtenerSiguienteCodigo = async () => {
             setCalculandoCodigo(true);
             try {
-                // Llama al backend para ver cuál es el siguiente número (ej: FLT0005)
                 const response = await fetch(`${API_BASE_URL}/inventario/siguiente-codigo/${formData.categoria}`);
                 
                 if (response.ok) {
@@ -86,7 +87,6 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
         };
         obtenerSiguienteCodigo();
     } else if (!itemToEdit && !formData.categoria) {
-        // Si no hay categoría, limpiamos el campo
         setFormData(prev => ({ ...prev, codigo_serie: '' }));
     }
   }, [formData.categoria, itemToEdit]);
@@ -148,7 +148,6 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
 
       if (!response.ok) throw new Error(data.mensaje || 'Error al guardar');
 
-      // Extraer el código final del mensaje del servidor
       const codigoFinal = data.mensaje.split('Código: ')[1] || formData.codigo_serie;
       const msgExito = itemToEdit 
           ? 'Item actualizado correctamente' 
@@ -196,13 +195,12 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 2. CÓDIGO DE SERIE (VISUALIZACIÓN) */}
+                  {/* 2. CÓDIGO DE SERIE */}
                   <div className="form-group">
                       <label>Código de Serie</label>
                       <input 
                         type="text" 
                         name="codigo_serie" 
-                        // Muestra "Calculando..." o el código real (ej: FLT0005)
                         value={
                             calculandoCodigo ? "Calculando..." : 
                             (formData.codigo_serie || "Seleccione categoría...")
@@ -310,7 +308,7 @@ function InventarioForm({ onClose, itemToEdit, onSuccess }) {
                       </select>
                   </div>
 
-                  {/* 10. ESTADO */}
+                  {/* 10. ESTADO (CRUCIAL PARA ACTUALIZAR) */}
                   <div className="form-group">
                       <label>Estado / Prioridad</label>
                       <select 
