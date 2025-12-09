@@ -13,9 +13,6 @@ const CATEGORIAS = [
     { codigo: 'ECOM', nombre: 'Equipo de Computación y Comunicación' },
     { codigo: 'FLT', nombre: 'Flota y Equipo de Transporte' }
 ];
-
-const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
-
 const CENTROS = ["Medellín", "Rionegro", "Apartadó", "Urrao", "Sonsón", "Templos comedores"];
 const TIPOS_PRODUCTO = ["Computador Portátil", "Computador de Escritorio", "Monitor", "Sillas", "Tablet", "Periférico", "Mobiliario", "Otro"];
 const AREAS = ["Administrativa", "Operativa", "Logística", "Social", "Comercial", "Dirección", "Tecnología"];
