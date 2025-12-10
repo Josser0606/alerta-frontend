@@ -1,4 +1,9 @@
 import React, { useState, useCallback } from 'react';
+import { MdOutlineInventory2 } from "react-icons/md";
+import { RiFileList3Line } from "react-icons/ri";
+import { IoPeopleOutline } from "react-icons/io5";
+import { IoAddCircleOutline } from "react-icons/io5";
+import { LuTruck } from "react-icons/lu";
 
 // Importamos los componentes de tarjetas (Widgets)
 import TransporteAlertas from '../features/transporte/TransporteAlertas';
@@ -111,7 +116,7 @@ function DashboardPage({
         
         <div className="titulo-y-acciones">
             {/* Título del Dashboard */}
-            <h1>Tablero de Alertas <small>({usuario.rol})</small></h1>
+            <h1>Tablero de Información <small>({usuario.rol})</small></h1>
             
             {/* --- GRUPO 1: BOTONES VOLUNTARIOS --- */}
             { (usuario.rol === 'admin' || usuario.rol === 'voluntarios') && (
@@ -120,14 +125,14 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVoluntarios} 
                     >
-                        👥 Ver Lista Voluntarios
+                        <IoPeopleOutline /> Ver Lista Voluntarios
                     </button>
 
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirVoluntario} 
                     >
-                        + Nuevo Voluntario
+                        <IoAddCircleOutline /> Nuevo Voluntario
                     </button>
                 </div>
             )}
@@ -139,14 +144,14 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirLista} 
                     >
-                        📋 Ver Lista Benefactores
+                        <RiFileList3Line /> Ver Lista Benefactores
                     </button>
 
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirFormulario} 
                     >
-                        + Agregar Benefactor
+                        <IoAddCircleOutline /> Agregar Benefactor
                     </button>
                 </div>
             )}
@@ -158,14 +163,14 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaVehiculos} 
                     >
-                        🚌 Ver Flota
+                        <LuTruck /> Ver Flota
                     </button>
 
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirVehiculo} 
                     >
-                        + Nuevo Vehículo
+                        <IoAddCircleOutline /> Nuevo Vehículo
                     </button>
                 </div>
             )}
@@ -177,14 +182,14 @@ function DashboardPage({
                         className="btn-agregar-benefactor btn-secundario" 
                         onClick={onAbrirListaInventario} 
                     >
-                        📦 Ver Inventario
+                        <MdOutlineInventory2 /> Ver Inventario
                     </button>
 
                     <button 
                         className="btn-agregar-benefactor" 
                         onClick={onAbrirInventario} 
                     >
-                        + Nuevo Item
+                        <IoAddCircleOutline /> Nuevo Item
                     </button>
                 </div>
             )}
