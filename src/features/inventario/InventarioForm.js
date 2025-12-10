@@ -21,7 +21,7 @@ const SUB_AREAS = [
     "Sistemas", "Comunicación", "Trabajo Social", "Nutrición", "Mantenimiento de vihiculos", "Alistamiento", "Inventario", "Clasificación", 
     "Calidad", "Subasta", "Reagro", "Templos Comedores", "Alimentación Preparada", "Otros", "Dirección"
 ];
-const CARGOS = ["Director", "Coordinador", "Lider", "Auxiliar", "Operario", "Practicante"];
+const CARGOS = ["Director", "Coordinador", "Lider", "Auxiliar", "Operario", "Promotor", "Practicante"];
 
 // --- AQUÍ AGREGAMOS "Inactivo" ---
 const ESTADOS = ["Sin Prioridad", "Con Prioridad", "Inactivo"];
