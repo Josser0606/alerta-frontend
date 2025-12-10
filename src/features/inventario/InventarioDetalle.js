@@ -62,7 +62,7 @@ function InventarioDetalle({ onClose, item }) {
                           <p>{item.centro_operacion}</p>
                       </div>
                       <div>
-                          <label style={{fontWeight:'bold', color:'#555'}}>Ubicación Específica</label>
+                          <label style={{fontWeight:'bold', color:'#555'}}>Nombre de la persona</label>
                           <p>{item.area_principal}</p>
                       </div>
                       <div>
