@@ -49,7 +49,7 @@ function InventarioResumen() {
             doc.setFontSize(11);
             doc.text(`Fecha de generación: ${new Date().toLocaleDateString()}`, 14, 30);
 
-            const tableColumn = ["Código", "Categoría", "Producto", "Descripción", "Centro", "Ubicación", "Estado"];
+            const tableColumn = ["Código", "Categoría", "Producto", "Descripción", "Centro", "Nombre", "Estado"];
             const tableRows = [];
 
             items.forEach(item => {
