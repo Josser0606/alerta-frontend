@@ -41,7 +41,7 @@ function DashboardPage({
 
     // Props Inventario
     onAbrirInventario,
-    onAbrirListaInventario
+    onAbrirListaInventario,
 
      // Prop para refrescar
     refreshInventario
