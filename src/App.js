@@ -58,6 +58,9 @@ function App() {
   const [mostrarFormInventario, setMostrarFormInventario] = useState(false);
   const [mostrarListaInventario, setMostrarListaInventario] = useState(false);
   const [itemAEditar, setItemAEditar] = useState(null);
+  
+  // Estado para forzar recarga del widget de resumen en el Dashboard
+  const [refreshInventario, setRefreshInventario] = useState(0);
 
   // --- B. FUNCIONES DEL SISTEMA ---
 
@@ -117,6 +120,12 @@ function App() {
       setMostrarFormInventario(true);
   };
 
+  // Función que se ejecuta al guardar/editar un item de inventario exitosamente
+  const handleInventarioChange = () => {
+      setRefreshInventario(prev => prev + 1); // Actualiza el contador para refrescar el widget
+      setMostrarListaInventario(true); // Opcional: Vuelve a abrir la lista para ver el cambio
+  };
+
   return (
     <Router>
       <div className="App">
@@ -145,6 +154,9 @@ function App() {
                   // Conexión Inventario (¡NUEVO!)
                   onAbrirInventario={abrirCrearInventario}
                   onAbrirListaInventario={() => setMostrarListaInventario(true)}
+                  
+                  // Señal de refresco para el widget
+                  refreshInventario={refreshInventario}
                 />
                 
                 {/* --- MODALES FLOTANTES --- */}
@@ -197,10 +209,7 @@ function App() {
                   <InventarioForm 
                     onClose={() => setMostrarFormInventario(false)}
                     itemToEdit={itemAEditar}
-                    onSuccess={() => {
-                       // Si quieres reabrir la lista tras guardar, descomenta:
-                       // setMostrarListaInventario(true);
-                    }}
+                    onSuccess={handleInventarioChange}
                   />
                 )}
                 {mostrarListaInventario && (
