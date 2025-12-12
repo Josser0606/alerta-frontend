@@ -42,6 +42,9 @@ function DashboardPage({
     // Props Inventario
     onAbrirInventario,
     onAbrirListaInventario
+
+     // Prop para refrescar
+    refreshInventario
 }) {
 
   const [panelAbierto, setPanelAbierto] = useState(false);
