@@ -220,7 +220,7 @@ function DashboardPage({
 
           {/* Módulo Inventario (¡NUEVO!) */}
           { (usuario.rol === 'admin' || usuario.rol === 'inventario') && (
-            <InventarioResumen />
+            <InventarioResumen key={refreshInventario} />
           )}
           
         </div>
