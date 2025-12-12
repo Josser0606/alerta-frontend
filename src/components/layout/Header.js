@@ -33,6 +33,12 @@ function Header({
 
   const mostrarResultados = searchHasBeenRun || (searchResults && searchResults.length > 0);
 
+  const handleLogoutClick = () => {
+    if (window.confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+      onLogoutClick();
+    }
+  };
+
   return (
     <header className="main-header">
       
@@ -63,7 +69,7 @@ function Header({
         {/* Aquí inyectamos el componente inteligente de la campana */}
         <AlertasBell usuario={usuario} />
         
-        <button onClick={onLogoutClick} className="logout-button">
+        <button onClick={handleLogoutClick} className="logout-button">
           Cerrar Sesión
         </button>
       </div>
