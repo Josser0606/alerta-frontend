@@ -128,7 +128,7 @@ const ListaInventario = ({ onClose, onEditar }) => {
                       <th>Código</th>
                       <th>Producto / Descripción</th>
                       <th>Centro</th>
-                      <th>Ubicación / Cargo</th>
+                      <th>Nombre / Cargo</th>
                       <th>Estado</th>
                       <th style={{textAlign: 'center'}}>Acciones</th>
                     </tr>
