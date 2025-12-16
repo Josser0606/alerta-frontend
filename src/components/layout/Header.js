@@ -64,7 +64,7 @@ function Header({
       </div>
 
       {/* Área de Búsqueda */}
-      { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores' || usuario.rol === 'inventario') ? (
+      { (usuario.rol === 'admin' || usuario.rol === 'voluntarios' || usuario.rol === 'benefactores') ? (
         <div className="search-area" ref={searchAreaRef}> 
           <div className="search-widget-container">
             {children} 
